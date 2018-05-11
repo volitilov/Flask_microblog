@@ -1,38 +1,52 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  {% block head %}
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  {% if title %}
-    <title>{{ title }} - microblog</title>
-  {% else %}
-    <title>Welcome to microblog</title>
-  {% endif %}
-  <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="image/x-icon" />
-  <!-- style -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='style/lib/reset.css') }}" />
-  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style/lib/normalize.css') }}" /> -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='style/components/head.css') }}" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='style/components/flash.css') }}" />
-  {% endblock %}
-</head>
-<body>
-  {% include 'components/head.html' %}
-  <main>
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          <ul class="flash">
-          {% for message in messages %}
-              <li>{{ message }} </li>
-          {% endfor %}
-          </ul>
-        {% endif %}
-      {% endwith %}
-      {% block body %}{% endblock %}
-  </main>
-  {% include 'components/footer.html' %}
-</body>
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- Bootstrap CSS -->
+		{# <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> #}
+		<link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.png') }}" type="images/png">
+		<link rel="icon" href="{{ url_for('static', filename='img/favicon.png') }}" type="images/png">
+		<!-- <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.0.0/cerulean/bootstrap.min.css" rel="stylesheet" integrity="sha384-Pu87tkhdc8aoo+5M/Coc7ErjxhR36ayOFNloPU+tR/4PamJKHHjhK9B0EBGKxNet" crossorigin="anonymous"> -->
+
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+		<!-- components -->
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/components/header.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/components/flash.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/components/button_close.css') }}" />
+
+		<title>
+			{% if data %}
+				 {{ data.page_title }}
+			{% else %}
+				Тестовый блог
+			{% endif %}
+		</title>
+	</head>
+	<body>
+		{% include 'components/header.html' %}
+		<main>
+			{% with messages = get_flashed_messages() %} 
+				{% if messages %}
+					<ul class="flash">
+						{% for message in messages %}
+							<button class="close">&times;</button>
+							<li>{{ message|safe }} </li>
+						{% endfor %}
+					</ul>
+				{% endif %}
+			{% endwith %}
+			{% block content %}{% endblock %}
+		</main>
+
+		<!-- Optional JavaScript -->
+		<script src="{{ url_for('static', filename='js/button_close.js') }}"></script>
+		
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		 {# <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+		 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> #}
+	</body>
 </html>

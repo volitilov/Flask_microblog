@@ -1,0 +1,9 @@
+.flash {
+    display: block;
+    position: relative;
+    padding: 20px;
+    list-style: none;
+    border: 2px solid rgb(255, 0, 0);
+    border-radius: 4px;
+    margin: 10px 0px;
+}

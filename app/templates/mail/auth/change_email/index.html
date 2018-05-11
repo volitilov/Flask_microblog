@@ -1,0 +1,10 @@
+<section>
+    <p>Привет,
+        <i style="color:green;">{{ user.name }}</i>,</p>
+    <p>Потвердите свой новый email-адрес нажав на ссылку ниже:</p>
+    <br>
+    <a href="{{ url_for('auth.changeEmail', token=token, _external=True) }}">...потвердить email...</a>
+    <p>
+        <small>Примечание: ответы на этот адрес электронной почты удаляются автоматически.</small>
+    </p>
+</section>

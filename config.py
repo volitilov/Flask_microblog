@@ -1,26 +1,72 @@
+# config.py
+
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
 import os
 
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+class Config:
+    SECRET_KEY = os.getenv('SECRET_KEY', default=os.urandom(24))
 
-# путь к файлу к базе данных.
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
-# папка, где храняться файлы SQLAlchemy-migrate
-SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
-# отслеживет изменение объектов и испускает сигналы
-SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # включение / отключение CSRF
+    CSRF_ENABLED = True
+
+    # папка, где храняться файлы SQLAlchemy-migrate
+    SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
+    # отслеживет изменение объектов и испускает сигналы
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    FLASKY_MAIL_SENDER = 'Admin volitilov@gmail.com'
+    FLASKY_MAIL_SUBJECT_PREFIX = '[ voliTilov ] '
+    FLASKY_ADMIN = 'volitilov@gmail.com'
+
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 465
+    MAIL_USERNAME = 'volitilov@gmail.com'
+    MAIL_PASSWORD = 'Kendar6709'
+    MAIL_USE_SSL = True
+    MAIL_DEFAULT_SENDER = MAIL_USERNAME
+
+    @staticmethod
+    def init_app(app): pass
+
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+class DevelopmentConfig(Config):
+    # включение / отключение отладчика
+    DEBUG = True
+
+    # путь к файлу к базе данных.
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
+        'sqlite:///' + os.path.join(basedir, 'data_dev.sqlite')
 
 
-# включение / отключение CSRF
-CSRF_ENABLED = True
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+class TestingConfig(Config):
+    TESTING = True
 
-SECRET_KEY = os.urandom(24)
+    # путь к файлу к базе данных.
+    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
+        'sqlite:///' + os.path.join(basedir, 'data_test.sqlite')
 
-  
-OPENID_PROVIDERS = [
-  { 'name': 'Google', 'url': 'https://www.google.com/accounts/o8/id' },
-  { 'name': 'Yahoo', 'url': 'https://me.yahoo.com' },
-  { 'name': 'AOL', 'url': 'http://openid.aol.com/<username>' },
-  { 'name': 'Flickr', 'url': 'http://www.flickr.com/<username>' },
-  { 'name': 'MyOpenID', 'url': 'https://www.myopenid.com' }]
+
+
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+class ProductionConfig(Config):
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+        'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+
+
+
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+config = {
+    'development': DevelopmentConfig,
+    'testing': TestingConfig,
+    'production': ProductionConfig,
+
+    'default': DevelopmentConfig
+}

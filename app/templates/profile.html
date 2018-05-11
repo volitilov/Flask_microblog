@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% from 'macros/_formhelpers.html' import render_field %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+    <h3>Ваш профиль.</h3>
+    <article>
+        <p>Login: 
+            <i>{{ data.name }}</i> 
+            <a href="{{ url_for('auth.changeLogin_page') }}">
+                <small>изменить</small>
+            </a>
+        </p>
+        <p>Email: 
+            <i>{{ data.email }}</i>
+            <a href="{{ url_for('auth.changeEmailRequest_page') }}">
+                <small>изменить</small>
+            </a>
+        </p>
+        
+        {% if data.confirmed %}
+            <a href="{{ url_for('auth.changePassword_page') }}">
+                <small>изменить пароль</small>
+            </a>
+            <p>Статус: <i>подтверждён</i></p>
+        {% else %}
+            <p>Статус: <i>не подверждён</i></p>
+        {% endif %}
+    </article>
+
+{% endblock %}

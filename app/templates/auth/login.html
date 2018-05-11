@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% from 'macros/_formhelpers.html' import render_field %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+	<h3>Форма входа</h3>
+
+	<form method="POST" action="/login">
+		{{ data.form.csrf_token }}
+		{{ render_field(data.form.email) }}
+		{{ render_field(data.form.password) }}
+		{{ render_field(data.form.remember_me) }}
+		<button>Войти на сайт</button>
+	</form>
+	<div>
+		<a href="{{ url_for('auth.passwordResetRequest_page') }}">Забыли пароль?</a>
+		<a href="{{ url_for('auth.registration_page') }}">Нажмите сдесь для регистрации.</a>
+	</div>
+
+{% endblock %}

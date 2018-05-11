@@ -3,11 +3,8 @@
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
 {% block content %}
-
-	{% if current_user.is_authenticated %}
-		<h3>Hello {{ current_user.name }}</h3>
-	{% else %}
-		<h3>Hello Stranger</h3>
-	{% endif %}
-	
+	<article>
+		<h3>{{ data.title }}</h3>
+		<p>{{ data.content }}</p>	
+	</article>
 {% endblock %}

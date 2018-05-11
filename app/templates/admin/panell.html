@@ -3,11 +3,5 @@
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
 {% block content %}
-
-	{% if current_user.is_authenticated %}
-		<h3>Hello {{ current_user.name }}</h3>
-	{% else %}
-		<h3>Hello Stranger</h3>
-	{% endif %}
-	
+    <h3>Привет, Бос.</h3>
 {% endblock %}

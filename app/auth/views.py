@@ -35,12 +35,13 @@ def before_request():
 	- конечная точка запроса находится за пределами макета аутентификации.
 	Если все условия выполняются, производится переадрисация на 
 	auth/unconfirmed, для потверждения учетной записи.'''
-	if current_user.is_authenticated \
-		and not current_user.confirmed \
-		and request.endpoint \
-		and request.endpoint[:5] != 'auth.' \
-		and request.endpoint != 'static':
-			return redirect(url_for('auth.unconfirmed_page'))
+	if current_user.is_authenticated:
+		current_user.ping()
+		if not current_user.confirmed \
+			and request.endpoint \
+			and request.endpoint[:5] != 'auth.' \
+			and request.endpoint != 'static':
+				return redirect(url_for('auth.unconfirmed_page'))
 
 
 
@@ -61,7 +62,7 @@ def login_page():
 		user = User.query.filter_by(email=email).first()
 		if user is not None and user.verify_password(password):
 			login_user(user, remember_me)
-			return redirect(request.args.get('next') or url_for('main.home_page'))
+			return redirect(url_for('main.home_page'))
 
 		flash('Неправильное имя пользователя или пароль.')
 
@@ -120,7 +121,7 @@ def registration_page():
 			user=user, token=token)
 		flash('Письмо для подтверждения регистрации отправленно, на почтовый ящик')
 
-		return redirect(url_for('auth.login'))
+		return redirect(url_for('auth.login_page'))
 
 	return render_template('auth/registr.html', data=data)
 
@@ -185,7 +186,7 @@ def passwordResetRequest_page():
 			send_email(user.email, 'Сброс пароля', 'mail/auth/reset_password/reset', 
 			user=user, token=token, next=request.args.get('next'))
 		flash('Письмо для сброса пароля было отправленно вам на почтовый ящик.')
-		return redirect(url_for('auth.login'))
+		return redirect(url_for('auth.login_page'))
 	return render_template('auth/reset_password_request.html', data=data)
 
 

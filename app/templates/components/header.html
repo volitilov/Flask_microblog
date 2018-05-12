@@ -10,7 +10,7 @@
 		<li><a href="{{ url_for('main.home_page') }}">Главная</a></li>
 		{% if current_user.is_authenticated %}
 			<li><a href="{{ url_for('main.addPost_page') }}">Добавить пост</a></li>
-			<li><a href="{{ url_for('main.profile_page') }}">{{ current_user.name }}</a></li>
+			<li><a href="{{ url_for('main.profile_page', name=current_user.name) }}">{{ current_user.name }}</a></li>
 			<li><a href="{{ url_for('auth.logout_page') }}">Выйти</a></li>
 		{% else %}
 			<li><a href="{{ url_for('auth.login_page') }}">Войти</a></li>

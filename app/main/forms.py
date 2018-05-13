@@ -1,3 +1,5 @@
+# main/forms.py
+
 # 
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -14,3 +16,6 @@ class AddPost_form(Form):
 	title = StringField(label='title', validators=[DataRequired()])
 	text = TextAreaField(label='text for post', validators=[DataRequired()])
 
+
+# class EditProfile_form(Form):
+# 	'''Форма редактирования профиля'''

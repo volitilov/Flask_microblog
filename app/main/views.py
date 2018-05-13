@@ -63,7 +63,7 @@ def addPost_page():
 
 
 
-@main.route('/user/<name>')
+@main.route('/<name>')
 def profile_page(name):
 	'''Генерирует страницу профиля пользователя.'''
 	data = {
@@ -74,5 +74,17 @@ def profile_page(name):
 	if user is None:
 		abort(404)
 
-	return render_template('profile.html', data=data)
+	return render_template('user_profile.html', data=data)
 
+
+@main.route('/settings/profile')
+def userSettings_page():
+	'''Генерирует страницу настроек пользователя'''
+	data = {
+		'page_title': 'Страница настроек пользователя'
+	}
+
+	if not current_user.is_anonymous:
+		return render_template('profile.html', data=data)
+	else:
+		return render_template(url_for('auth.login_page'))

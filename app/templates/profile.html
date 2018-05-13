@@ -4,61 +4,19 @@
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
 {% block content %}
-    <h3>Ваш профиль.</h3>
-    <div>
-        <p>
-            Имя и Фамилия:
-            {% if current_user.full_name %}
-                <i>{{ current_user.full_name }}</i>
-                <a href="#">
-                    <small>изменить</small>
-                </a>
-            {% endif %}
-        </p>
-        <p>
-            Login:
-            <i>{{ current_user.name }}</i>
-            <a href="{{ url_for('auth.changeLogin_page') }}">
-                <small>изменить</small>
-            </a>
-        </p>
-        <p>
-            Email: 
-            <i>{{ current_user.email }}</i>
-            <a href="{{ url_for('auth.changeEmailRequest_page') }}">
-                <small>изменить</small>
-            </a>
-        </p>
-        <p>
-            Обо мне:
-            {% if current_user.about %}
-                <i>{{ current_user.about }}</i>
-                <a href="#">
-                    <small>изменить</small>
-                </a>
-            {% endif %}
-        </p>
-        <p>
-            Местоположение:
-            {% if current_user.location %}
-                <i>{{ current_user.location }}</i>
-                <a href="#">
-                    <small>изменить</small>
-                </a>
-            {% endif %}
-        </p>
-        <p>
-            Зарегестрирован на сайте: 
-            <b>{{ data.date_registration }}</b>
-        </p>
-        {% if current_user.confirmed %}
-            <a href="{{ url_for('auth.changePassword_page') }}">
-                <small>изменить пароль</small>
-            </a>
-            <p>Статус: <i>подтверждён</i></p>
-        {% else %}
-            <p>Статус: <i>не подверждён</i></p>
-        {% endif %}
-    </div>
-
+    <aside>
+        <h4>Персанальные настройки:</h4>
+        <ul>
+            <li><a href="#">Профиль</a></li>
+            <li><a href="#">Аккаунт</a></li>
+            <li><a href="#">Email</a></li>
+            <li><a href="#">Уведомления</a></li>
+            <li><a href="#">Безопасность</a></li>
+            <li><a href="#">Настройки сайта</a></li>
+        </ul>
+    </aside>
+    <section>
+        <h3>Публичный профиль</h3>
+        
+    </section>
 {% endblock %}

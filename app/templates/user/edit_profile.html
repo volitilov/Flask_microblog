@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% from 'macros/_formhelpers.html' import render_field %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+    <script>
+        var data_value = '{{ current_user.about_me }}';
+    </script>
+    <aside>
+        <h4>Персанальные настройки:</h4>
+        <ul>
+            <li><a href="{{ url_for('user.editProfile_page') }}">Профиль</a></li>
+            <li><a href="{{ url_for('user.editAccount_page') }}">Аккаунт</a></li>
+            <li><a href="#">Email</a></li>
+            <li><a href="#">Уведомления</a></li>
+            <li><a href="#">Безопасность</a></li>
+            <li><a href="#">Настройки сайта</a></li>
+        </ul>
+    </aside>
+    <section>
+        <h3>Настройки профиля</h3>
+        <form method="POST">
+            {{ data.form.csrf_token }}
+            {{ render_field(data.form.first_name, value=current_user.first_name) }}
+            {{ render_field(data.form.last_name, value=current_user.last_name) }}
+            {{ render_field(data.form.about, cols=50, rows=10) }}
+            {{ render_field(data.form.location, value=current_user.location) }}
+            <button>Сохранить</button>
+        </form>
+    </section>
+    <script>
+        var el = document.getElementById('about');
+        el.value = data_value;
+    </script>
+{% endblock %}

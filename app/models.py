@@ -160,7 +160,7 @@ class User(UserMixin, db.Model):
 
 
     def __str__(self):
-        return '<User - {}>'.format(self.username)
+        return '<User - {}>'.format(self.name)
 
 
 

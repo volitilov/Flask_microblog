@@ -11,6 +11,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY', default=os.urandom(24))
+    WTF_CSRF_SECRET_KEY = os.getenv('WTF_CSRF_SECRET_KEY', default=os.urandom(24))
 
     # включение / отключение CSRF
     CSRF_ENABLED = True

@@ -11,48 +11,36 @@
     </ul>
     <div>
         <p>
-            Имя и Фамилия:
+            <b>Имя и Фамилия:</b>
             {% if current_user.first_name or current_user.last_name %}
                 <i>{{ current_user.first_name }} </i>
                 <i>{{ current_user.last_name }}</i>
             {% endif %}
         </p>
         <p>
-            Email: 
+            <b>Email:</b> 
             <i>{{ current_user.email }}</i>
-            <a href="{{ url_for('auth.changeEmailRequest_page') }}">
-                <small>изменить</small>
-            </a>
         </p>
         <p>
-            Обо мне:
-            {% if current_user.about %}
-                <i>{{ current_user.about }}</i>
-                <a href="#">
-                    <small>изменить</small>
-                </a>
+            <b>Обо мне:</b>
+            {% if current_user.about_me %}
+                <i>{{ current_user.about_me }}</i>
             {% endif %}
         </p>
         <p>
-            Местоположение:
+           <b> Местоположение:</b>
             {% if current_user.location %}
                 <i>{{ current_user.location }}</i>
-                <a href="#">
-                    <small>изменить</small>
-                </a>
             {% endif %}
         </p>
         <p>
-            Зарегестрирован на сайте: 
-            <b>{{ data.date_registration }}</b>
+            <b>Зарегестрирован на сайте:</b> 
+            <b>{{ current_user.date_registration.strftime('%Y/%m/%d %H:%M:%S') }}</b>
         </p>
         {% if current_user.confirmed %}
-            <a href="{{ url_for('auth.changePassword_page') }}">
-                <small>изменить пароль</small>
-            </a>
-            <p>Статус: <i>подтверждён</i></p>
+            <p><b>Статус:</b> <i>подтверждён</i></p>
         {% else %}
-            <p>Статус: <i>не подверждён</i></p>
+            <p><b>Статус:</b> <i>не подверждён</i></p>
         {% endif %}
     </div>
 

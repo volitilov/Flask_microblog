@@ -2,6 +2,6 @@
 
 Потвердите свой новый адрес, нажмите на ссылку нмже:
 
-{{ url_for('auth.changeEmail', token=token, _external=True) }}
+{{ url_for('user.changeEmail', token=token, _external=True) }}
 
 Примечание: ответы на этот адрес электронной почты автоматически удаляются.

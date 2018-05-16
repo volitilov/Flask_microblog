@@ -12,8 +12,7 @@ from flask import (
 from . import auth
 from .forms import (
 	Login_form, Registration_form, PasswordResetRequest_form, 
-	PasswordReset_form, ChangeEmail_form, ChangeLogin_form,
-	ChangePassword_form
+	PasswordReset_form
 )
 from .. import db
 from ..models import User
@@ -47,14 +46,13 @@ def before_request():
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login_page():
-	form = Login_form(request.form)
+	form = Login_form()
 	data = {
 		'form': form,
 		'page_title': 'Страница авторизации.'
 	}
 
-
-	if form.validate():
+	if form.validate_on_submit():
 		email = form.email.data
 		password = form.password.data
 		remember_me = form.remember_me.data
@@ -70,26 +68,6 @@ def login_page():
 
 
 
-@auth.route('/change_login', methods=['POST', 'GET'])
-def changeLogin_page():
-	form = ChangeLogin_form(request.form)
-	data = {
-		'page_title': 'Страница изменения логина',
-		'form': form
-	}
-
-	if form.validate():
-		current_user.name = form.name.data
-
-		flash('Ваш login успешно изменён.')
-		db.session.add(current_user)
-		db.session.commit()
-		return redirect(url_for('main.home_page'))
-
-	return render_template('auth/change-login.html', data=data)
-
-
-
 @auth.route('/logout')
 @login_required
 def logout_page():
@@ -101,13 +79,13 @@ def logout_page():
 
 @auth.route('/register', methods=['GET', 'POST'])
 def registration_page():
-	form = Registration_form(request.form)
+	form = Registration_form()
 	data = {
 		'form': form,
 		'page_title': 'Страница регистрации.'
 	}
 
-	if form.validate():
+	if form.validate_on_submit():
 		username = form.username.data
 		email = form.email.data
 		password = form.password.data
@@ -172,14 +150,14 @@ def resend_confirmation():
 @auth.route('/reset_password', methods=['GET', 'POST'])
 def passwordResetRequest_page():
 	'''Генерирует страницу запроса для сброса пароля'''
-	form = PasswordResetRequest_form(request.form)
+	form = PasswordResetRequest_form()
 	data = {
 		'page_title': 'Страница запроса на сброс пароля',
 		'form': form
 	}
 	if not current_user.is_anonymous:
 		return redirect(url_for('main.home_page'))
-	if form.validate():
+	if form.validate_on_submit():
 		user = User.query.filter_by(email=form.email.data).first()
 		if user:
 			token = user.generate_resetPassword_token()
@@ -195,14 +173,14 @@ def passwordResetRequest_page():
 @login_required
 def passwordReset_page(token):
 	'''Обрабатывает запрос на изменения пароля'''
-	form = PasswordReset_form(request.form)
+	form = PasswordReset_form()
 	data = {
 		'page_title': 'Страница запроса на сброс пароля',
 		'form': form
 	}
 	if not current_user.is_anonymous:
 		return redirect(url_for('main.home_page'))
-	if form.validate():
+	if form.validate_on_submit():
 		if User.reset_password(token, form.password.data):
 			db.session.commit()
 			flash('Ваш пароль успешно изменён.')
@@ -211,61 +189,3 @@ def passwordReset_page(token):
 			return redirect(url_for('main.home_page'))
 	return render_template('auth/reset_password.html', data=data)
 
-
-
-@auth.route('/change_password', methods=['POST', 'GET'])
-def changePassword_page():
-	form = ChangePassword_form(request.form)
-	data = {
-		'page_title': 'Страница изменения пароля',
-		'form': form
-	}
-
-	if form.validate():
-		if current_user.verify_password(form.old_password.data):
-			current_user.password = form.password.data
-
-			flash('Ваш пароль успешно изменён.')
-			db.session.add(current_user)
-			db.session.commit()
-			return redirect(url_for('main.home_page'))
-
-	return render_template('auth/change-password.html', data=data)
-
-
-
-@auth.route('/change_email', methods=['POST', 'GET'])
-def changeEmailRequest_page():
-	'''Генерирует страницу запроса на изменения email'''
-	form = ChangeEmail_form(request.form)
-	new_email = form.email.data
-	data = {
-		'page_title': 'Страница запроса на изменения email',
-		'form': form
-	}
-	if form.validate():
-		if current_user.verify_password(form.password.data):
-			current_user.email = new_email
-			token = current_user.generate_changeEmail_token(new_email)
-			send_email(new_email, 'Потвердите свой email адрес', 
-				'mail/auth/change_email/index', user=current_user, token=token)
-			flash('''На ваш новый почтовый адрес отправленно письмо с инструкциями,
-					для потверждения нового адреса''')
-			return redirect(url_for('main.home_page'))
-		else:
-			flash('Неверный пароль')
-
-	return render_template('auth/change_email.html', data=data)
-
-
-
-@auth.route('/change_email/<token>', methods=['POST', 'GET'])
-@login_required
-def changeEmail(token):
-	'''Обрабатывает запрос на изменения email.'''
-	if current_user.change_email(token):
-		db.session.commit()
-		flash('Ваш email адрес обновлён.')
-	else:
-		flash('Неверный запрос.')
-	return redirect(url_for('main.home_page'))

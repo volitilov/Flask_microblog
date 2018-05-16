@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+    <aside>
+        <h4>Персанальные настройки:</h4>
+        <ul>
+            <li><a href="{{ url_for('user.editProfile_page') }}">Профиль</a></li>
+            <li><a href="{{ url_for('user.editAccount_page') }}">Аккаунт</a></li>
+            <li><a href="#">Уведомления</a></li>
+            <li><a href="#">Безопасность</a></li>
+            <li><a href="#">Настройки сайта</a></li>
+        </ul>
+    </aside>
+    <section>
+        <h3>Настройки аккаунта</h3>
+        <div>
+            <h4>Изменить пароль</h4>
+            <hr>
+            <form method="POST" action="/change_password">
+                {{ data.password_form.csrf_token }}
+                {{ data.password_form.old_password.label }} <br> {{ data.password_form.old_password }} <br>
+                {{ data.password_form.password.label }} <br> {{ data.password_form.password }} <br>
+                {{ data.password_form.password2.label }} <br> {{ data.password_form.password2 }} <br>
+                <button>Изменить пароль</button>
+            </form>
+        </div>
+        <div>
+            <h4>Изменить login</h4>
+            <hr>
+            <form method="POST" action="/change_login">
+                {{ data.login_form.csrf_token }}
+                {{ data.login_form.name(value=current_user.name) }} <br>
+                <button>Изменить логин</button>
+            </form>
+        </div>
+        <div>
+            <h4>Изменить email</h4>
+            <hr>
+            <form method="POST" action="/change_email">
+                {{ data.email_form.csrf_token }}
+                {{ data.email_form.email(value=current_user.email)|safe }} <br>
+                <button>Изменить email</button>
+            </form>
+        </div>
+        <div>
+            <h4>Удалить аккаунт</h4>
+            <hr>
+            <form method="POST" action="/delete_account">
+                {{ data.password_form.csrf_token }}
+                <button>Удалить аккаунт</button>
+            </form>
+        </div>
+    </section>
+{% endblock %}

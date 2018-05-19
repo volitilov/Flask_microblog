@@ -19,11 +19,12 @@ from .forms import (
 )
 from ..models import Post, User
 from ..email import send_email
+from ..utils import create_response
 from .. import db
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@user.route('/add_post', methods=['GET', 'POST'])
+@user.route(rule='/add_post', methods=['GET', 'POST'])
 def addPost_page():
 	'''Генерирует страницу с формай создания постов.'''
 	form = AddPost_form(request.form)
@@ -51,11 +52,12 @@ def addPost_page():
 		flash('Пост: <b>{}</b> - добавлен'.format(title))
 		return redirect(url_for('main.home_page'))
 
-	return render_template('user/add_post.html', data=data)
+	return make_response(template='user/add_post.html', data=data)
 
 
 
-@user.route('/<name>')
+@user.route(rule='/<name>')
+@login_required
 def profile_page(name):
 	'''Генерирует страницу профиля пользователя.'''
 	data = {
@@ -65,11 +67,12 @@ def profile_page(name):
 	if user is None:
 		abort(404)
 
-	return render_template('user/profile.html', data=data)
+	return make_response(template='user/profile.html', data=data)
 
 
 
-@user.route('/settings/profile', methods=['GET', 'POST'])
+@user.route(rule='/settings/profile', methods=['GET', 'POST'])
+@login_required
 def editProfile_page():
 	'''Генерирует страницу настроек пользователя'''
 	form = EditProfile_form()
@@ -79,35 +82,31 @@ def editProfile_page():
 		'form': form
 	}
 
-	if not current_user.is_anonymous:
-		bro = User.query.filter_by(name=current_user.name).first()
+	bro = User.query.filter_by(name=current_user.name).first()
 
-		first_name = form.first_name.data
-		last_name = form.last_name.data
-		about = form.about.data
-		location = form.location.data
+	first_name = form.first_name.data
+	last_name = form.last_name.data
+	about = form.about.data
+	location = form.location.data
 
-		if form.validate_on_submit():
-			bro.first_name = first_name
-			bro.last_name = last_name
-			bro.about_me = about
-			bro.location = location
-			db.session.add(bro)
-			db.session.commit()
-			
-			flash('Новые данные сохранены.')
-			redirect(url_for('user.editProfile_page'))
-		else:
-			redirect(url_for('user.editProfile_page'))
+	if form.validate_on_submit():
+		bro.first_name = first_name
+		bro.last_name = last_name
+		bro.about_me = about
+		bro.location = location
+		db.session.add(bro)
+		db.session.commit()
+		
+		flash('Новые данные сохранены.')
+		return redirect(url_for('user.editProfile_page'))
 
-	else:
-		return redirect(url_for('auth.login_page'))
 	
-	return render_template('user/edit_profile.html', data=data)
+	return create_response(template='user/edit_profile.html', data=data)
 
 
 
-@user.route('/settings/account')
+@user.route(rule='/settings/account')
+@login_required
 def editAccount_page():
 	changeLogin_form = ChangeLogin_form()
 	changePassword_form = ChangePassword_form()
@@ -119,11 +118,11 @@ def editAccount_page():
 		'password_form': changePassword_form,
 		'email_form': changeEmail_form
 	}
-	return render_template('user/edit_account.html', data=data)
+	return create_response(template='user/edit_account.html', data=data)
 
 
 
-@user.route('/change_login', methods=['POST'])
+@user.route(rule='/change_login', methods=['POST'])
 def changeLogin_request():
 	form = ChangeLogin_form()
 
@@ -140,7 +139,7 @@ def changeLogin_request():
 
 
 
-@user.route('/change_password', methods=['POST'])
+@user.route(rule='/change_password', methods=['POST'])
 def changePassword_request():
 	form = ChangePassword_form()
 
@@ -161,7 +160,7 @@ def changePassword_request():
 
 
 
-@user.route('/change_email', methods=['POST'])
+@user.route(rule='/change_email', methods=['POST'])
 def changeEmail_request():
 	form = ChangeEmail_form()
 	new_email = form.email.data
@@ -180,7 +179,7 @@ def changeEmail_request():
 
 
 
-@user.route('/change_email/<token>')
+@user.route(rule='/change_email/<token>')
 @login_required
 def changeEmail(token):
 	'''Обрабатывает запрос на изменения email.'''

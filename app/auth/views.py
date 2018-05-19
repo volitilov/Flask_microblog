@@ -5,7 +5,7 @@
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 from flask import (
-	render_template, redirect, url_for, flash, request
+	render_template, redirect, url_for, flash, request, session
 )
 
 # app modules
@@ -17,10 +17,11 @@ from .forms import (
 from .. import db
 from ..models import User
 from ..email import send_email
+from ..utils import create_response
 
 # installed modules
 from flask_login import (
-	login_user, login_required, current_user, logout_user
+	login_user, login_required, current_user, logout_user, login_url
 )
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -44,7 +45,7 @@ def before_request():
 
 
 
-@auth.route('/login', methods=['GET', 'POST'])
+@auth.route(rule='/login', methods=['GET', 'POST'])
 def login_page():
 	form = Login_form()
 	data = {
@@ -60,15 +61,18 @@ def login_page():
 		user = User.query.filter_by(email=email).first()
 		if user is not None and user.verify_password(password):
 			login_user(user, remember_me)
-			return redirect(url_for('main.home_page'))
+			next = request.cookies.get('next')
+			if next is None:
+				next = url_for('main.home_page')
+			return redirect(next)
 
 		flash('Неправильное имя пользователя или пароль.')
 
-	return render_template('auth/login.html', data=data)
+	return create_response(template='auth/login.html', data=data)
 
 
 
-@auth.route('/logout')
+@auth.route(rule='/logout')
 @login_required
 def logout_page():
 	logout_user()
@@ -77,7 +81,7 @@ def logout_page():
 
 
 
-@auth.route('/register', methods=['GET', 'POST'])
+@auth.route(rule='/register', methods=['GET', 'POST'])
 def registration_page():
 	form = Registration_form()
 	data = {
@@ -101,11 +105,11 @@ def registration_page():
 
 		return redirect(url_for('auth.login_page'))
 
-	return render_template('auth/registr.html', data=data)
+	return create_response(template='auth/registr.html', data=data)
 
 
 
-@auth.route('/confirm/<token>')
+@auth.route(rule='/confirm/<token>')
 @login_required
 def confirm(token):
 	'''Подверждает учетную запись.
@@ -123,7 +127,7 @@ def confirm(token):
 
 
 
-@auth.route('/unconfirmed')
+@auth.route(rule='/unconfirmed')
 def unconfirmed_page():
 	data = {
 		'page_title': 'Страница с предложением потвердить свою учетную запись'
@@ -131,11 +135,11 @@ def unconfirmed_page():
 	'''Генерирует страницу с предложением потвердить свою учетную запись'''
 	if current_user.is_anonymous or current_user.confirmed:
 		return redirect(url_for('main.home_page'))
-	return render_template('auth/unconfirmed.html', data=data)
+	return create_response(template='auth/unconfirmed.html', data=data)
 
 
 
-@auth.route('/confirm')
+@auth.route(rule='/confirm')
 @login_required
 def resend_confirmation():
 	'''Делает повторную отправку письма со сылкой для потверждения'''
@@ -147,7 +151,7 @@ def resend_confirmation():
 
 
 
-@auth.route('/reset_password', methods=['GET', 'POST'])
+@auth.route(rule='/reset_password', methods=['GET', 'POST'])
 def passwordResetRequest_page():
 	'''Генерирует страницу запроса для сброса пароля'''
 	form = PasswordResetRequest_form()
@@ -165,11 +169,11 @@ def passwordResetRequest_page():
 			user=user, token=token, next=request.args.get('next'))
 		flash('Письмо для сброса пароля было отправленно вам на почтовый ящик.')
 		return redirect(url_for('auth.login_page'))
-	return render_template('auth/reset_password_request.html', data=data)
+	return create_response(template='auth/reset_password_request.html', data=data)
 
 
 
-@auth.route('/reset/<token>', methods=['GET', 'POST'])
+@auth.route(rule='/reset/<token>', methods=['GET', 'POST'])
 @login_required
 def passwordReset_page(token):
 	'''Обрабатывает запрос на изменения пароля'''
@@ -187,5 +191,5 @@ def passwordReset_page(token):
 			return redirect(url_for('auth.login'))
 		else:
 			return redirect(url_for('main.home_page'))
-	return render_template('auth/reset_password.html', data=data)
+	return create_response(template='auth/reset_password.html', data=data)
 

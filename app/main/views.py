@@ -10,6 +10,7 @@ from flask import render_template
 
 # 
 from . import main
+from ..models import Post
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -17,6 +18,7 @@ from . import main
 def home_page():
 	'''Генерирует стартовую страницу.'''
 	data = {
-		'page_title': 'Главная страница.'
+		'page_title': 'Главная страница.',
+		'posts': Post.query.order_by(Post.data_creation.desc()).all()
 	}
 	return render_template('index.html', data=data)

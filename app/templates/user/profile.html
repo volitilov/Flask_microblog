@@ -3,45 +3,30 @@
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
 {% block content %}
-    <h3>Ваш профиль.</h3>
+    <h3>Пользователь.</h3>
     <ul>
-        <li><a href="#">Профиль</a></li>
-        <li><a href="#">Публикации</a></li>
+        <li><a href="{{ url_for('user.profile_page', username=data.user.name) }}">Профиль</a></li>
+        <li><a href="{{ url_for('post.userPosts_page', username=data.user.name) }}">Публикации</a></li>
         <li><a href="#">Комментарии</a></li>
     </ul>
     <div>
+        <img src="{{ data.user.gravatar(default='mm') }}" alt="Аватар">
         <p>
-            <b>Имя и Фамилия:</b>
-            {% if current_user.first_name or current_user.last_name %}
-                <i>{{ current_user.first_name }} </i>
-                <i>{{ current_user.last_name }}</i>
+            {% if data.user.first_name or data.user.last_name %}
+                <i>{{ data.user.first_name }} </i>
+                <i>{{ data.user.last_name }}</i>
             {% endif %}
-        </p>
-        <p>
-            <b>Email:</b> 
-            <i>{{ current_user.email }}</i>
         </p>
         <p>
             <b>Обо мне:</b>
-            {% if current_user.about_me %}
-                <i>{{ current_user.about_me }}</i>
-            {% endif %}
-        </p>
-        <p>
-           <b> Местоположение:</b>
-            {% if current_user.location %}
-                <i>{{ current_user.location }}</i>
+            {% if data.user.about_me %}
+                <i>{{ data.user.about_me }}</i>
             {% endif %}
         </p>
         <p>
             <b>Зарегестрирован на сайте:</b> 
-            <b>{{ current_user.date_registration.strftime('%Y/%m/%d %H:%M:%S') }}</b>
+            <b>{{ data.user.date_registration.strftime('%Y/%m/%d в %H:%M:%S') }}</b>
         </p>
-        {% if current_user.confirmed %}
-            <p><b>Статус:</b> <i>подтверждён</i></p>
-        {% else %}
-            <p><b>Статус:</b> <i>не подверждён</i></p>
-        {% endif %}
     </div>
 
 {% endblock %}

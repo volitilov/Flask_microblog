@@ -4,10 +4,16 @@
 
 {% block content %}
 
-	{% if current_user.is_authenticated %}
-		<h3>Hello {{ current_user.name }}</h3>
+	{% if data.posts %}
+		<ul>
+			{% for post in data.posts %}
+				<li>
+					{% include 'components/_post_small.html' %}
+				</li>
+			{% endfor %}
+		</ul>
 	{% else %}
-		<h3>Hello Stranger</h3>
+		<p>Постов на данный момент нет.</p>
 	{% endif %}
 	
 {% endblock %}

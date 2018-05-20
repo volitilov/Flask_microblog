@@ -1,0 +1,13 @@
+<article>
+    <p>
+        <a href="{{ url_for('user.profile_page', username=post.author.name) }}">
+            <small>
+                <img src="{{ post.author.gravatar(size=50) }}" alt="Аватар">
+                {{ post.author.name }}
+            </small>
+        </a>
+        <small>{{ post.data_creation.strftime('%Y/%m/%d') }}</small> 
+    </p>
+    <h4><a href="#">{{ post.title }}</a></h4>
+    <p>{{ post.text }}</p>
+</article>

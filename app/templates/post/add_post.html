@@ -6,7 +6,7 @@
 {% block content %}
 	<h3>Форма добавления постов</h3>
 
-	<form method="POST" action="/add_post">
+	<form method="POST">
 		{{ data.form.csrf_token }}
 		{{ render_field(data.form.title) }}
 		{{ render_field(data.form.text) }}

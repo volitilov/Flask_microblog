@@ -5,6 +5,7 @@
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 from datetime import datetime
+from hashlib import md5
 
 from flask import current_app
 
@@ -21,7 +22,7 @@ class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
-    users = db.relationship('User', backref='role', lazy=True)
+    users = db.relationship('User', backref='role', lazy='dynamic')
 
     def __str__(self):
         return '<Role - {}>'.format(self.name)
@@ -42,14 +43,27 @@ class User(UserMixin, db.Model):
     confirmed = db.Column(db.Boolean, default=False)
     date_registration = db.Column(db.DateTime(), default=datetime.utcnow()) 
     last_visit = db.Column(db.DateTime(), default=datetime.utcnow())
+    avatar_hash = db.Column(db.String(32))
+    posts = db.relationship('Post', backref='author', lazy='dynamic')
+
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
+        if self.email is not None and self.avatar_hash is None:
+            self.avatar_hash = md5(self.email.encode('utf-8')).hexdigest()
+
         if self.role is None:
             if self.email == current_app.config['FLASKY_ADMIN']:
-                self.role = Role.query.filter_by(name='Admin').first()
+                if Role.query.filter_by(name='Admin').first() is None:
+                    self.role = Role(name='Admin')
+                else:
+                    self.role = Role.query.filter_by(name='Admin').first()
             else:
-                self.role = Role.query.filter_by(name='User').first()
+                if Role.query.filter_by(name='User').first() is None:
+                    self.role = Role(name='User')
+                else:
+                    self.role = Role.query.filter_by(name='User').first()
+
 
     def generate_confirmation_token(self, expiration=3600):
         '''Генерирует маркер со сроком хранения (по умолчанию на один час)
@@ -143,6 +157,7 @@ class User(UserMixin, db.Model):
         if self.query.filter_by(email=new_email).first() is not None:
             return False
         self.email = new_email
+        self.avatar_hash = md5(self.email.encode('utf-8')).hexdigest()
         db.session.add(self)
         return True
 
@@ -159,6 +174,13 @@ class User(UserMixin, db.Model):
         db.session.add(self)
 
 
+    def gravatar(self, size=100, default='identicon', rating='g'):
+        url = 'https://ru.gravatar.com/avatar'
+        hash = self.avatar_hash or md5(self.email.encode('utf-8')).hexdigest()
+        return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(url=url,
+                hash=hash, size=size, default=default, rating=rating)
+
+
     def __str__(self):
         return '<User - {}>'.format(self.name)
 
@@ -172,6 +194,8 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, unique=True)
     text = db.Column(db.Text)
+    data_creation = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
 
 

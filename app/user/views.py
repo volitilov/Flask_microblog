@@ -14,7 +14,7 @@ from flask_login import current_user, login_required
 # 
 from . import user
 from .forms import (
-	AddPost_form, EditProfile_form, ChangeEmail_form, ChangeLogin_form, 
+	EditProfile_form, ChangeEmail_form, ChangeLogin_form, 
 	ChangePassword_form
 )
 from ..models import Post, User
@@ -24,54 +24,20 @@ from .. import db
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@user.route(rule='/add_post', methods=['GET', 'POST'])
-def addPost_page():
-	'''Генерирует страницу с формай создания постов.'''
-	form = AddPost_form(request.form)
-	data = {
-		'page_title': 'Страница добавления поста.',
-		'form': form,
-	}
-
-	if form.validate():
-		title = form.title.data
-		text = form.text.data
-		
-		post = Post(title=title, text=text)
-		db.session.add(post)
-		db.session.commit()
-
-		send_email('otivito@mail.ru', 'Добавлен пост.', 'mail/new_post/add_post', 
-                    title=title, text=text)
-
-		data['post'] = {
-			'title': title,
-			'text': text
-		}
-
-		flash('Пост: <b>{}</b> - добавлен'.format(title))
-		return redirect(url_for('main.home_page'))
-
-	return make_response(template='user/add_post.html', data=data)
-
-
-
-@user.route(rule='/<name>')
-@login_required
-def profile_page(name):
+@user.route(rule='/users/<username>')
+def profile_page(username):
 	'''Генерирует страницу профиля пользователя.'''
+	user = User.query.filter_by(name=username).first_or_404()
 	data = {
-		'page_title': 'Страница профиля'
+		'page_title': 'Страница профиля',
+		'user': user
 	}
-	user = User.query.filter_by(name=name).first()
-	if user is None:
-		abort(404)
 
-	return make_response(template='user/profile.html', data=data)
+	return create_response(template='user/profile.html', data=data)
 
 
 
-@user.route(rule='/settings/profile', methods=['GET', 'POST'])
+@user.route(rule='/users/settings/profile', methods=['GET', 'POST'])
 @login_required
 def editProfile_page():
 	'''Генерирует страницу настроек пользователя'''
@@ -105,7 +71,7 @@ def editProfile_page():
 
 
 
-@user.route(rule='/settings/account')
+@user.route(rule='/users/settings/account')
 @login_required
 def editAccount_page():
 	changeLogin_form = ChangeLogin_form()

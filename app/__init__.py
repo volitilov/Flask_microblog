@@ -53,4 +53,7 @@ def create_app(config_name):
     from .user import user
     app.register_blueprint(user)
 
+    from .post import post
+    app.register_blueprint(post)
+
     return app

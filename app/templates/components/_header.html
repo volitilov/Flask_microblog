@@ -9,11 +9,11 @@
 	<nav>
 		<li><a href="{{ url_for('main.home_page') }}">Главная</a></li>
 		{% if current_user.is_authenticated %}
-			<li><a href="{{ url_for('user.addPost_page') }}">Добавить пост</a></li>
+			<li><a href="{{ url_for('post.addPost_page') }}">Добавить пост</a></li>
 			<li>
 				<a href="#">{{ current_user.name }}</a>
 				<ul>
-					<li><a href="{{ url_for('user.profile_page', name=current_user.name) }}">Профиль</a></li>
+					<li><a href="{{ url_for('user.profile_page', username=current_user.name) }}">Профиль</a></li>
 					<li><a href="{{ url_for('user.editProfile_page') }}">Настройка</a></li>
 					<li><a href="{{ url_for('auth.logout_page') }}">Выйти</a></li>
 				</ul>

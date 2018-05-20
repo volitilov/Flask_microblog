@@ -15,12 +15,6 @@ from ..models import User
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-class AddPost_form(FlaskForm):
-	'''Форма добавления постов'''
-	title = StringField(label='title', validators=[DataRequired()])
-	text = TextAreaField(label='text for post', validators=[DataRequired()])
-
-
 class EditProfile_form(FlaskForm):
 	'''Форма редактирования профиля'''
 	first_name = StringField(label='Имя:', validators=[DataRequired()])

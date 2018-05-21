@@ -1,4 +1,4 @@
-# app/models.py
+# app/models/model_user.py
 
 #
 
@@ -13,20 +13,10 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
-from . import db, login_manager
+from .role import Role
+from .. import db, login_manager
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-class Role(db.Model):
-    '''Создаёт роли для пользователей'''
-    __tablename__ = 'roles'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True, nullable=False)
-    users = db.relationship('User', backref='role', lazy='dynamic')
-
-    def __str__(self):
-        return '<Role - {}>'.format(self.name)
-
 
 class User(UserMixin, db.Model):
     '''Создаёт пользователей'''
@@ -208,36 +198,6 @@ class User(UserMixin, db.Model):
 
     def __str__(self):
         return '<User - {}>'.format(self.name)
-
-
-
-
-
-class Post(db.Model):
-    '''Создаёт статьи'''
-    __tablename__ = 'posts'
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String, unique=True)
-    text = db.Column(db.Text)
-    data_creation = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-
-    @staticmethod
-    def generate_fake(count=100):
-        from random import seed, randint
-        import forgery_py as forgery
-
-        seed()
-        user_count = User.query.count()
-        for i in range(count):
-            u = User.query.offset(randint(0, user_count - 1)).first()
-            p = Post(title=forgery.lorem_ipsum.title(),
-                    text=forgery.lorem_ipsum.sentences(randint(1, 4)),
-                    author=u,
-                    data_creation=forgery.date.date(True))
-            db.session.add(p)
-            db.session.commit()
-
 
 
 

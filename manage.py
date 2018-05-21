@@ -7,7 +7,9 @@
 import os, click
 from app import create_app
 from app import db as database
-from app.models import User, Role, Post
+from app.models.user import User
+from app.models.role import Role
+from app.models.post import Post
 
 from flask_migrate import Migrate, MigrateCommand
 

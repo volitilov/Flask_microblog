@@ -15,7 +15,7 @@ from .forms import (
 	PasswordReset_form
 )
 from .. import db
-from ..models import User
+from ..models.user import User
 from ..email import send_email
 from ..utils import create_response
 

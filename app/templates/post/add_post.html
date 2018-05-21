@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% from 'macros/_formhelpers.html' import render_field %}
+{% block scripts %}
+	{{ pagedown.include_pagedown() }}
+{% endblock %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
@@ -9,7 +12,7 @@
 	<form method="POST">
 		{{ data.form.csrf_token }}
 		{{ render_field(data.form.title) }}
-		{{ render_field(data.form.text) }}
+		{{ render_field(data.form.text, rows=10, cols=60) }}
 		<button>Добавить пост</button>
 	</form>
 {% endblock %}

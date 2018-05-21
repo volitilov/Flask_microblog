@@ -11,7 +11,7 @@ from wtforms import (
 from wtforms.validators import (
 	DataRequired, Email, Length, EqualTo, Regexp
 )
-from ..models import User
+from ..models.user import User
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

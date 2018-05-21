@@ -14,7 +14,8 @@ from flask_login import current_user, login_required
 # 
 from . import post
 from .forms import AddPost_form
-from ..models import Post, User
+from ..models.post import Post
+from ..models.user import User
 from ..email import send_email
 from ..utils import create_response
 from .. import db

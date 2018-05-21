@@ -13,7 +13,6 @@ from flask_login import current_user, login_user
 
 # app modules
 from . import admin
-from ..models import User, Post, Role
 from ..email import send_email
 from .. import db
 

@@ -10,7 +10,7 @@ from flask import render_template, request, current_app
 
 # 
 from . import main
-from ..models import Post
+from ..models.post import Post
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

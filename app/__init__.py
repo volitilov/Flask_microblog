@@ -14,6 +14,7 @@ from flask_mail import Mail
 from flask_login import LoginManager
 from flaskext.lesscss import lesscss
 from flask_wtf.csrf import CSRFProtect
+from flask_pagedown import PageDown
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -22,6 +23,7 @@ toolbar = DebugToolbarExtension()
 mail = Mail()
 login_manager = LoginManager()
 csrf = CSRFProtect()
+pagedown = PageDown()
 
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login_page'
@@ -39,6 +41,7 @@ def create_app(config_name):
     mail.init_app(app)
     login_manager.init_app(app)
     csrf.init_app(app)
+    pagedown.init_app(app)
     lesscss(app)
 
     from .main import main

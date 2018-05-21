@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from 'macros/_pagination.html' import render_pagination %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
@@ -15,5 +16,8 @@
 	{% else %}
 		<p>Постов на данный момент нет.</p>
 	{% endif %}
+	<div class="pagination">
+		{{ render_pagination(data.pagination, 'main.home_page') }}
+	</div>
 	
 {% endblock %}

@@ -181,6 +181,31 @@ class User(UserMixin, db.Model):
                 hash=hash, size=size, default=default, rating=rating)
 
 
+    @staticmethod
+    def generate_fake(count=100):
+        from sqlalchemy.exc import IntegrityError
+        from random import seed
+        import forgery_py as forgery
+
+        seed()
+
+        for i in range(count):
+            u = User(email=forgery.internet.email_address(),
+                name=forgery.internet.user_name(True),
+                password=forgery.lorem_ipsum.word(),
+                confirmed=True,
+                first_name=forgery.name.first_name(),
+                last_name=forgery.name.last_name(),
+                location=forgery.address.country(),
+                about_me=forgery.lorem_ipsum.sentence(),
+                date_registration=forgery.date.date(True))
+            db.session.add(u)
+            try:
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
+
+
     def __str__(self):
         return '<User - {}>'.format(self.name)
 
@@ -196,6 +221,22 @@ class Post(db.Model):
     text = db.Column(db.Text)
     data_creation = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    @staticmethod
+    def generate_fake(count=100):
+        from random import seed, randint
+        import forgery_py as forgery
+
+        seed()
+        user_count = User.query.count()
+        for i in range(count):
+            u = User.query.offset(randint(0, user_count - 1)).first()
+            p = Post(title=forgery.lorem_ipsum.title(),
+                    text=forgery.lorem_ipsum.sentences(randint(1, 4)),
+                    author=u,
+                    data_creation=forgery.date.date(True))
+            db.session.add(p)
+            db.session.commit()
 
 
 

@@ -60,3 +60,14 @@ def userPosts_page(username):
 	}
 
 	return create_response(template='post/user_posts.html', data=data)
+
+
+@post.route(rule='/post/<int:id>')
+def post_page(id):
+	'''Генерирует страницу запрошенного поста'''
+	post = Post.query.get_or_404(id)
+	data = {
+		'page_title': post.title,
+		'post': post
+	}
+	return create_response(template='post/post.html', data=data)

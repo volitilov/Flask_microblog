@@ -4,7 +4,22 @@
 
 {% block content %}
 	<article>
-		<h3>{{ data.title }}</h3>
-		<p>{{ data.content }}</p>	
+		<p>
+			<a href="{{ url_for('user.profile_page', username=data.post.author.name) }}">
+				<small>
+					<img src="{{ data.post.author.gravatar(size=50) }}" alt="Аватар">
+					{{ data.post.author.name }}
+				</small>
+			</a>
+			<small>{{ data.post.data_creation.strftime('%Y/%m/%d') }}</small> 
+		</p>
+		<h4>{{ data.post.title }}</h4>
+		<p>
+			{% if data.post.body_html %}
+				{{ data.post.body_html|safe }}
+			{% else %}
+				{{ data.post.text }}
+			{% endif %}
+		</p>
 	</article>
 {% endblock %}

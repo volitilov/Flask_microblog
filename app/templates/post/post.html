@@ -12,6 +12,11 @@
 				</small>
 			</a>
 			<small>{{ data.post.data_creation.strftime('%Y/%m/%d') }}</small> 
+			{% if current_user == data.post.author %}
+				<a href="{{ url_for('post.editPost_page', id=data.post.id) }}">
+					Редактировать пост
+				</a>
+			{% endif %}
 		</p>
 		<h4>{{ data.post.title }}</h4>
 		<p>

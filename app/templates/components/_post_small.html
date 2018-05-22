@@ -11,9 +11,9 @@
     <h4><a href="{{ url_for('post.post_page', id=post.id) }}">{{ post.title }}</a></h4>
     <p>
         {% if post.body_html %}
-            {{ post.body_html|safe }}
+            {{ post.body_html|safe|truncate(500) }}
         {% else %}
-            {{ post.text }}
+            {{ post.text|truncate(500) }}
         {% endif %}
     </p>
 </article>

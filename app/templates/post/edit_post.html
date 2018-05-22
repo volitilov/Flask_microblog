@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% from 'macros/_formhelpers.html' import render_field %}
+{% block scripts %}
+	{{ pagedown.include_pagedown() }}
+{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+	<h3>Форма добавления постов</h3>
+
+	<form method="POST">
+		{{ data.form.csrf_token }}
+		{{ render_field(data.form.title, value=data.post.title) }}
+		<!-- {{ render_field(data.form.text, rows=10, cols=60, only_input=True) }} -->
+		{{ render_field(data.form.text, rows=10, cols=60) }}
+		<button>Сохранить пост</button>
+	</form>
+{% endblock %}

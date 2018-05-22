@@ -23,6 +23,7 @@ from .. import db
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 @post.route(rule='/add_post', methods=['GET', 'POST'])
+@login_required
 def addPost_page():
 	'''Генерирует страницу с формай создания постов.'''
 	form = AddPost_form()
@@ -38,9 +39,6 @@ def addPost_page():
 		post = Post(title=title, text=text, author=current_user)
 		db.session.add(post)
 		db.session.commit()
-
-		send_email('otivito@mail.ru', 'Добавлен пост.', 'mail/new_post/add_post', 
-                    title=title, text=text)
 
 		flash('Пост: <b>{}</b> - добавлен'.format(title))
 		return redirect(url_for('main.home_page'))
@@ -71,3 +69,34 @@ def post_page(id):
 		'post': post
 	}
 	return create_response(template='post/post.html', data=data)
+
+
+@post.route(rule='/post/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def editPost_page(id):
+	'''Генерирует страницу редактирования поста.'''
+	form = AddPost_form()
+	post = Post.query.get_or_404(id)
+
+	# form.title.data = post.title
+	# form.text.data = post.body_html or post.text
+	
+	data = {
+		'page_title': 'Страница редактирования поста',
+		'form': form,
+		'post': post
+	}
+	if form.validate_on_submit():
+		post.title = form.title.data
+		post.text = form.text.data
+
+		db.session.add(post)
+		db.session.commit()
+
+		flash('Пост успешно сохранён.')
+		return redirect(url_for('post.editPost_page', id=post.id))
+	
+	form.text.data = post.text
+
+	return create_response(template='post/edit_post.html', data=data)
+

@@ -9,5 +9,11 @@
         <small>{{ post.data_creation.strftime('%Y/%m/%d') }}</small> 
     </p>
     <h4><a href="#">{{ post.title }}</a></h4>
-    <p>{{ post.text }}</p>
+    <p>
+        {% if post.body_html %}
+            {{ post.body_html|safe }}
+        {% else %}
+            {{ post.text }}
+        {% endif %}
+    </p>
 </article>

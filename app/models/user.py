@@ -1,4 +1,4 @@
-# app/models/model_user.py
+# app/models/user.py
 
 #
 

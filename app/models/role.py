@@ -1,4 +1,4 @@
-# app/models/model_role.py
+# app/models/role.py
 
 #
 

@@ -5,7 +5,8 @@
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 from flask import (
-	render_template, redirect, request, url_for, flash, session, abort
+	render_template, redirect, request, url_for, flash, session, abort,
+	current_app
 )
 
 # flask extensions
@@ -156,3 +157,86 @@ def changeEmail(token):
 	else:
 		flash('Неверный запрос.')
 		return redirect(url_for('user.editAccount_page'))
+	
+
+
+@user.route(rule='/follow/<user_id>')
+@login_required
+def follow(user_id):
+	user = User.query.filter_by(id=user_id).first()
+	if user is None:
+		flash('Недействительный пользователь.')
+		return redirect(url_for('main.home_page'))
+	if current_user.is_following(user):
+		flash('Вы уже читаете данного пользователя.')
+		return redirect(url_for('user.profile_page', username=user.name))
+	current_user.follow(user)
+	flash('Вы подписаны на {}'.format(user.name))
+	return redirect(url_for('user.profile_page', username=user.name))
+
+
+
+@user.route(rule='/unfollow/<user_id>')
+@login_required
+def unfollow(user_id):
+	user = User.query.filter_by(id=user_id).first()
+	print(current_user.is_following(user))
+	if user is None:
+		flash('Недействительный пользователь.')
+		return redirect(url_for('main.home_page'))
+	if not current_user.is_following(user):
+		flash('Вы уже отписаны.')
+		return redirect(url_for('user.profile_page', username=user.name))
+	current_user.unfollow(user)
+	flash('Вы отписаны от {}'.format(user.name))
+	return redirect(url_for('user.profile_page', username=user.name))
+
+
+
+@user.route(rule='/users/followers/<user_id>')
+def followers_page(user_id):
+	user = User.query.filter_by(id=user_id).first()
+	data = {
+		'page_title': 'Страница подписчиков.',
+		'user': user
+	}
+	if user is None:
+		flash('Недействительный пользователь.')
+		return redirect(url_for('main.home_page'))
+	page = request.args.get('page', 1, type=int)
+	pagination = user.followers.paginate(
+		page, per_page=current_app.config['FLASKY_FOLLOWERS_PER_PAGE'],
+		error_out=False)
+	follows = [{'user': item.follower, 'timestamp': item.timestamp} 
+				for item in pagination.items]
+	data['pagination'] = pagination
+	data['follows'] = follows
+	data['endpoint'] = 'user.followers_page'
+	data['title'] = 'Всего подписчиков: {}'.format(user.followers.count())
+
+	return create_response(template='user/followers.html', data=data)
+
+
+
+@user.route(rule='/users/followed_by/<user_id>')
+def followedBy_page(user_id):
+	user = User.query.filter_by(id=user_id).first()
+	data = {
+		'page_title': 'Страница подписок.',
+		'user': user
+	}
+	if user is None:
+		flash('Недействительный пользователь.')
+		return redirect(url_for('main.home_page'))
+	page = request.args.get('page', 1, type=int)
+	pagination = user.followed.paginate(
+		page, per_page=current_app.config['FLASKY_FOLLOWERS_PER_PAGE'],
+		error_out=False)
+	follows = [{'user': item.followed, 'timestamp': item.timestamp} 
+				for item in pagination.items]
+	data['pagination'] = pagination
+	data['follows'] = follows
+	data['endpoint'] = 'user.followedBy_page'
+	data['title'] = 'Всего подписан на: {}'.format(user.followed.count())
+
+	return create_response(template='user/followers.html', data=data)

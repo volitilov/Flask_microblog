@@ -10,7 +10,6 @@ from markdown import markdown
 import bleach
 
 from .. import db
-from .user import User
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -23,22 +22,6 @@ class Post(db.Model):
     data_creation = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     body_html = db.Column(db.Text)
-
-    @staticmethod
-    def generate_fake(count=100):
-        from random import seed, randint
-        import forgery_py as forgery
-
-        seed()
-        user_count = User.query.count()
-        for i in range(count):
-            u = User.query.offset(randint(0, user_count - 1)).first()
-            p = Post(title=forgery.lorem_ipsum.title(),
-                    text=forgery.lorem_ipsum.sentences(randint(1, 4)),
-                    author=u,
-                    data_creation=forgery.date.date(True))
-            db.session.add(p)
-            db.session.commit()
 
 
     @staticmethod

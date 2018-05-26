@@ -11,6 +11,24 @@
     </ul>
     <div>
         <img src="{{ data.user.gravatar(default='mm') }}" alt="Аватар">
+        {% if current_user != data.user %}
+            {% if current_user.is_anonymous or not current_user.is_following(data.user) %}
+                <a href="{{ url_for('user.follow', user_id=data.user.id) }}">Подписаться</a> |
+            {% else %}
+                <a href="{{ url_for('user.unfollow', user_id=data.user.id) }}">Отписаться</a> |
+            {% endif %}
+        {% endif %}
+        <a href="{{ url_for('user.followers_page', user_id=data.user.id) }}">
+            Подписчиков: <span>{{ data.user.followers.count() }}</span> |
+        </a>
+        <a href="{{ url_for('user.followedBy_page', user_id=data.user.id) }}">
+            Подписан: <span>{{ data.user.followed.count() }}</span> |
+        </a>
+        {% if current_user.is_authenticated and 
+            data.user != current_user and 
+            data.user.is_following(current_user) %}
+                | <span>Читает вас.</span>
+        {% endif %}
         <p>
             {% if data.user.first_name or data.user.last_name %}
                 <i>{{ data.user.first_name }} </i>

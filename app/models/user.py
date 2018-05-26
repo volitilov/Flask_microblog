@@ -18,6 +18,15 @@ from .. import db, login_manager
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+class Follow(db.Model):
+    __tablename__ = 'follows'
+    follower_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    followed_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow())
+
+
+
+
 class User(UserMixin, db.Model):
     '''Создаёт пользователей'''
     __tablename__ = 'users'
@@ -34,7 +43,14 @@ class User(UserMixin, db.Model):
     date_registration = db.Column(db.DateTime(), default=datetime.utcnow()) 
     last_visit = db.Column(db.DateTime(), default=datetime.utcnow())
     avatar_hash = db.Column(db.String(32))
+
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+    followed = db.relationship('Follow', foreign_keys=[Follow.followed_id],
+            backref=db.backref('follower', lazy='joined'),
+            lazy='dynamic', cascade='all, delete-orphan')
+    followers = db.relationship('Follow', foreign_keys=[Follow.follower_id],
+            backref=db.backref('followed', lazy='joined'),
+            lazy='dynamic', cascade='all, delete-orphan')
 
 
     def __init__(self, **kwargs):
@@ -171,29 +187,37 @@ class User(UserMixin, db.Model):
                 hash=hash, size=size, default=default, rating=rating)
 
 
-    @staticmethod
-    def generate_fake(count=100):
-        from sqlalchemy.exc import IntegrityError
-        from random import seed
-        import forgery_py as forgery
+    def follow(self, user):
+        '''Реализует подписку на пользователя.'''
+        if not self.is_following(user):
+            f = Follow(follower=self, followed=user)
+            db.session.add(f)
+            db.session.commit()
 
-        seed()
 
-        for i in range(count):
-            u = User(email=forgery.internet.email_address(),
-                name=forgery.internet.user_name(True),
-                password=forgery.lorem_ipsum.word(),
-                confirmed=True,
-                first_name=forgery.name.first_name(),
-                last_name=forgery.name.last_name(),
-                location=forgery.address.country(),
-                about_me=forgery.lorem_ipsum.sentence(),
-                date_registration=forgery.date.date(True))
-            db.session.add(u)
-            try:
-                db.session.commit()
-            except IntegrityError:
-                db.session.rollback()
+    def unfollow(self, user):
+        '''Реализует отписку от пользователя на кототорого подписан.'''
+        f = self.followed.filter_by(follower_id=user.id).first()
+        if f:
+            db.session.delete(f)
+            db.session.commit()
+
+    
+    def is_following(self, user):
+        '''Возвращает True если текущий пользователь подписан на 
+        запрашиваемого пользователя.'''
+        if user.id is None:
+            return False
+        if self.followed.filter_by(follower_id=user.id).first() is not None:
+            return True
+
+
+    def is_followed_by(self, user):
+        '''Вернёт True если запрашиваемый пользователь подписан на текущего.'''
+        if user.id is None:
+            return False
+        if self.followers.filter_by(followed_id=user.id).first() is not None:
+            return True
 
 
     def __str__(self):

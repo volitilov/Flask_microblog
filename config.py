@@ -16,8 +16,9 @@ class Config:
     # включение / отключение CSRF
     CSRF_ENABLED = True
 
-    # задаёт кол-во постов на станице
+    # задаёт кол-во элементов на станице
     FLASKY_POST_PER_PAGE = 5
+    FLASKY_FOLLOWERS_PER_PAGE = 10
 
     # папка, где храняться файлы SQLAlchemy-migrate
     SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')

@@ -13,21 +13,21 @@ from .. import db
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-class Post(db.Model):
-    '''Создаёт статьи'''
-    __tablename__ = 'posts'
+class Comment(db.Model):
+    '''Создаёт комментарии'''
+    __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String, unique=True)
-    text = db.Column(db.Text)
-    data_creation = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    body = db.Column(db.Text)
     body_html = db.Column(db.Text)
-    comments = db.relationship('Comment', backref='post', lazy='dynamic')
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    disabled = db.Column(db.Boolean)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
 
 
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
-        '''Функция создаёт HTML-версию поста и сохраняет её в поле 
+        '''Функция создаёт HTML-версию комментария и сохраняет его в поле 
         body_html, обеспечивая тем самым автоматическое преобразование
         разметки Markdown в html'''
         allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
@@ -38,4 +38,4 @@ class Post(db.Model):
             tags=allowed_tags, strip=True))
 
 
-db.event.listen(Post.text, 'set', Post.on_changed_body)
+db.event.listen(Comment.body, 'set', Comment.on_changed_body)

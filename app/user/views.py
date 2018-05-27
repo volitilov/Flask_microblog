@@ -240,3 +240,4 @@ def followedBy_page(user_id):
 	data['title'] = 'Всего подписан на: {}'.format(user.followed.count() - 1)
 
 	return create_response(template='user/followers.html', data=data)
+

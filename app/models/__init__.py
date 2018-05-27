@@ -6,4 +6,4 @@ models = Blueprint('models', __name__)
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from . import post, role, user
+from . import post, role, user, comment

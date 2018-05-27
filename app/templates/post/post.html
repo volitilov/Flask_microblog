@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+{% from 'macros/_formhelpers.html' import render_field %}
+{% block scripts %}
+	{{ pagedown.include_pagedown() }}
+{% endblock %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
@@ -26,5 +30,30 @@
 				{{ data.post.text }}
 			{% endif %}
 		</p>
+		<h2>комментарии:</h2>
+		<hr>
+		{% if not current_user.is_anonymous %}
+			<section>
+				<h3>Добавить комментарий:</h3>
+				<form method="POST">
+					{{ data.form.csrf_token }}
+					{# TODO: 
+						only_input - показывает только форму редактирования,
+						only_preview - показывает только презитацию того что было написано в форме
+						например: 
+						{{ render_field(data.form.body, rows=10, cols=60, only_input=True) }} 
+					#}
+					{{ render_field(data.form.body, rows=10, cols=60) }}
+					<button>Добавить комментарий</button>
+				</form>
+			</section>
+		{% else %}
+			<p>Войдите чтобы оставить комментарий. <a href="{{ url_for('auth.login_page') }}">Войти</a></p>
+		{% endif %}
+		{% for comment in data.comments %}
+			<ul>
+				{% include 'components/_comment.html' %}
+			</ul>
+		{% endfor %}
 	</article>
 {% endblock %}

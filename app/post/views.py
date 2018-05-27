@@ -8,14 +8,13 @@ from flask import (
 	render_template, redirect, request, url_for, flash, session, abort
 )
 
-# flask extensions
 from flask_login import current_user, login_required
 
-# 
 from . import post
-from .forms import AddPost_form
+from .forms import AddPost_form, AddComment_form
 from ..models.post import Post
 from ..models.user import User
+from ..models.comment import Comment
 from ..email import send_email
 from ..utils import create_response
 from .. import db
@@ -60,14 +59,28 @@ def userPosts_page(username):
 	return create_response(template='post/user_posts.html', data=data)
 
 
-@post.route(rule='/post/<int:id>')
+@post.route(rule='/post/<int:id>', methods=['GET', 'POST'])
 def post_page(id):
 	'''Генерирует страницу запрошенного поста'''
 	post = Post.query.get_or_404(id)
+	form = AddComment_form()
+
 	data = {
 		'page_title': post.title,
-		'post': post
+		'post': post,
+		'form': form,
+		'comments': post.comments
 	}
+
+	if form.validate_on_submit():
+		body = form.body.data
+
+		comment = Comment(body=body, post=post, author=current_user)
+		db.session.add(comment)
+		db.session.commit()
+		flash('Ваш комментарий опубликован.')
+		return redirect(url_for('post.post_page', id=id))
+
 	return create_response(template='post/post.html', data=data)
 
 

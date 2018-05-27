@@ -39,6 +39,7 @@ def generate_fake_posts(count=100):
 		db.session.commit()
 
 
+
 def generate_fake(count=100):
 	'''Генерирует фейковых пользователей в заданном кол-ве.'''
 	i = 0
@@ -58,3 +59,15 @@ def generate_fake(count=100):
 			i +=1
 		except IntegrityError:
 			db.session.rollback()
+
+
+
+def add_self_follows():
+	'''Регестрация существующих пользователей как читающих
+	самих себя.'''
+	for user in User.query.all():
+		if not user.is_following(user):
+			user.follow(user)
+			db.session.add(user)
+			db.session.commit()
+

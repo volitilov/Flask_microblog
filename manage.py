@@ -7,7 +7,7 @@
 import os, click
 from app import create_app
 from app import db as database
-from app.models.user import User
+from app.models.user import User, Follow
 from app.models.role import Role
 from app.models.post import Post
 
@@ -44,7 +44,8 @@ def db():
 @app.shell_context_processor
 def make_shell_context():
     '''Запускает shell со сконфигурированым контекстом'''
-    return dict(app=app, db=database, User=User, Post=Post, Role=Role)
+    return dict(app=app, db=database, User=User, Post=Post, Role=Role, 
+        Follow=Follow)
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

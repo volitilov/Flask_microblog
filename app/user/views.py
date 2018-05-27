@@ -212,7 +212,7 @@ def followers_page(user_id):
 	data['pagination'] = pagination
 	data['follows'] = follows
 	data['endpoint'] = 'user.followers_page'
-	data['title'] = 'Всего подписчиков: {}'.format(user.followers.count())
+	data['title'] = 'Всего подписчиков: {}'.format(user.followers.count() - 1)
 
 	return create_response(template='user/followers.html', data=data)
 
@@ -237,6 +237,6 @@ def followedBy_page(user_id):
 	data['pagination'] = pagination
 	data['follows'] = follows
 	data['endpoint'] = 'user.followedBy_page'
-	data['title'] = 'Всего подписан на: {}'.format(user.followed.count())
+	data['title'] = 'Всего подписан на: {}'.format(user.followed.count() - 1)
 
 	return create_response(template='user/followers.html', data=data)

@@ -14,6 +14,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
 from .role import Role
+from .post import Post
 from .. import db, login_manager
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -23,6 +24,10 @@ class Follow(db.Model):
     follower_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     followed_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow())
+
+    def __str__(self):
+        return '<Follow: follower_id -> {}, followed_id -> {}>'.format(
+            self.follower_id, self.followed_id)
 
 
 
@@ -55,6 +60,7 @@ class User(UserMixin, db.Model):
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
+        self.follow(self)
         if self.email is not None and self.avatar_hash is None:
             self.avatar_hash = md5(self.email.encode('utf-8')).hexdigest()
 
@@ -102,6 +108,12 @@ class User(UserMixin, db.Model):
     def password(self, password):
         '''Генерирует хеш из пароля'''
         self.password_hash = generate_password_hash(password)
+
+
+    @property
+    def followed_posts(self):
+        return Post.query.join(Follow, Follow.follower_id==Post.author_id) \
+            .filter(Follow.followed_id==self.id)
 
 
     @staticmethod

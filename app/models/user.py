@@ -7,7 +7,7 @@
 from datetime import datetime
 from hashlib import md5
 
-from flask import current_app
+from flask import current_app, url_for
 
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -99,6 +99,11 @@ class User(UserMixin, db.Model):
         return s.dumps({ 'change_email': self.id, 'new_email': new_email }).decode('utf-8')
 
 
+    def generate_auth_token(self, expiration):
+        s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
+        return s.dumps({'id': self.id})
+    
+
     @property
     def password(self):
         '''Закрывает доступ на чтение пароля'''
@@ -132,6 +137,16 @@ class User(UserMixin, db.Model):
         db.session.add(user)
         db.session.commit()
         return True
+
+
+    @staticmethod
+    def verify_auth_token(token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = loads(token)
+        except:
+            return None
+        return User.query.get(data['id'])
 
 
     def verify_password(self, password):
@@ -231,6 +246,23 @@ class User(UserMixin, db.Model):
             return False
         if self.followers.filter_by(followed_id=user.id).first() is not None:
             return True
+
+
+    def to_json(self):
+        json_user = {
+            'url': url_for('api.get_user', id=self.id, _external=True),
+            'username': self.name,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'about': self.about_me,
+            'location': self.location,
+            'data_registartion': self.date_registration,
+            'last_visit': self.last_visit,
+            'posts': url_for('api.get_userPosts', id=self.id, _external=True),
+            'followed_posts': url_for('api.get_userFollowedPosts', id=self.id, _external=True),
+            'post_count': self.post.count()
+        }
+        return json_user
 
 
     def __str__(self):

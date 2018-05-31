@@ -6,15 +6,10 @@
 
 from flask import request, jsonify
 from app.exceptions import ValidationError
+
 from . import api
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-def forbidden(message):
-    response = jsonify({'error': 'forbidden', 'message': message})
-    response.status_code = 403
-    return response
-
 
 def bad_request(message):
     response = jsonify({'error': 'bad_request', 'message': message})
@@ -28,11 +23,16 @@ def unauthorized(message):
     return response
 
 
+def forbidden(message):
+    response = jsonify({'error': 'forbidden', 'message': message})
+    response.status_code = 403
+    return response
+
+
 def method_not_allowed(message):
     response = jsonify({'error': 'method_not_allowed', 'message': message})
     response.status_code = 405
     return response
-
 
 
 @api.errorhandler(ValidationError)

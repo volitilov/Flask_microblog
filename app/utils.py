@@ -40,7 +40,7 @@ def generate_fake_posts(count=100):
 
 
 
-def generate_fake(count=100):
+def generate_fake_users(count=100):
 	'''Генерирует фейковых пользователей в заданном кол-ве.'''
 	i = 0
 	while i < count:

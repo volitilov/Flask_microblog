@@ -1,4 +1,4 @@
-# app/models/post.py
+# app/models/comment.py
 
 #
 

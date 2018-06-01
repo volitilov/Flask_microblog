@@ -17,7 +17,7 @@ class Config:
     CSRF_ENABLED = True
 
     # задаёт кол-во элементов на станице
-    FLASKY_POST_PER_PAGE = 5
+    FLASKY_POSTS_PER_PAGE = 5
     FLASKY_FOLLOWERS_PER_PAGE = 10
 
     # папка, где храняться файлы SQLAlchemy-migrate

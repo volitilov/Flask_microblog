@@ -7,11 +7,13 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import jsonify, request, url_for, current_app
+from flask import jsonify, request, url_for, current_app, g
 
 from . import api
 from .errors import forbidden
+from .. import db
 from ..models.post import Post
+from ..models.comment import Comment
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -33,7 +35,7 @@ def get_posts():
         'posts': [post.to_json() for post in posts],
         'prev': prev,
         'next': next,
-        'count': pogination.total
+        'count': pagination.total
     })
 
 

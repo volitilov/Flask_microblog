@@ -260,7 +260,7 @@ class User(UserMixin, db.Model):
             'last_visit': self.last_visit,
             'posts': url_for('api.get_userPosts', id=self.id, _external=True),
             'followed_posts': url_for('api.get_userFollowedPosts', id=self.id, _external=True),
-            'post_count': self.post.count()
+            'post_count': self.posts.count()
         }
         return json_user
 

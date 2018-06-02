@@ -65,7 +65,8 @@ def edit_post(id):
     post = Post.query.get_or_404(id)
     if g.current_user != post.author:
         return forbidden('Insufficient permissions')
-    post.body = request.json.get('body', post.text)
+    post.title = request.json.get('title', post.title)
+    post.text = request.json.get('body', post.text)
     db.session.add(post)
     db.session.commit()
     return jsonify(post.to_json())

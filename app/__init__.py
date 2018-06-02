@@ -13,7 +13,6 @@ from flask_debugtoolbar import DebugToolbarExtension
 from flask_mail import Mail
 from flask_login import LoginManager
 from flaskext.lesscss import lesscss
-from flask_wtf.csrf import CSRFProtect
 from flask_pagedown import PageDown
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -22,7 +21,6 @@ db = SQLAlchemy()
 toolbar = DebugToolbarExtension()
 mail = Mail()
 login_manager = LoginManager()
-csrf = CSRFProtect()
 pagedown = PageDown()
 
 login_manager.session_protection = 'strong'
@@ -40,7 +38,6 @@ def create_app(config_name):
     # toolbar.init_app(app)
     mail.init_app(app)
     login_manager.init_app(app)
-    csrf.init_app(app)
     pagedown.init_app(app)
     lesscss(app)
 
@@ -60,6 +57,6 @@ def create_app(config_name):
     app.register_blueprint(post)
 
     from .api_1_0 import api as api_blueprint
-    app.register_blueprint(api_blueprint, url_prfix='/api/v1.0')
+    app.register_blueprint(api_blueprint, url_prefix='/api/v1.0')
 
     return app

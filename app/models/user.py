@@ -101,7 +101,7 @@ class User(UserMixin, db.Model):
 
     def generate_auth_token(self, expiration):
         s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
-        return s.dumps({'id': self.id})
+        return s.dumps({'id': self.id}).decode('utf-8')
     
 
     @property
@@ -143,7 +143,7 @@ class User(UserMixin, db.Model):
     def verify_auth_token(token):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
-            data = loads(token)
+            data = s.loads(token)
         except:
             return None
         return User.query.get(data['id'])
@@ -260,7 +260,7 @@ class User(UserMixin, db.Model):
             'last_visit': self.last_visit,
             'posts': url_for('api.get_userPosts', id=self.id, _external=True),
             'followed_posts': url_for('api.get_userFollowedPosts', id=self.id, _external=True),
-            'post_count': self.post.count()
+            'post_count': self.posts.count()
         }
         return json_user
 

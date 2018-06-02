@@ -20,7 +20,7 @@ from ..utils import create_response
 @main.route('/')
 def home_page():
 	'''Генерирует стартовую страницу.'''
-	count_items = current_app.config['FLASKY_POST_PER_PAGE']
+	count_items = current_app.config['FLASKY_POSTS_PER_PAGE']
 
 	if not current_user.is_anonymous:
 		show_followed = bool(request.cookies.get(key='show_followed'))

@@ -4,7 +4,9 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-import os, click
+import os, click, logging
+from logging.handlers import RotatingFileHandler
+
 from app import create_app
 from app import db as database
 from app.models.user import User, Follow
@@ -17,6 +19,11 @@ from flask_migrate import Migrate, MigrateCommand
 
 app = create_app(os.getenv('FLASK_CONFIG', default='default'))
 migrate = Migrate(app, database)
+
+if not app.debug:
+    handler = RotatingFileHandler('tmp/loggs/wrning.log', maxBytes=10000)
+    handler.setLevel(logging.WARNING)
+    app.logger.addHandler(handler)
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 # команды командной строки

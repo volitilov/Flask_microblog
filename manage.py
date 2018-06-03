@@ -69,6 +69,22 @@ def profile(length):
         restrictions=[length], profile_dir=abs_path+'/tmp/profiler/')
     app.run(debug=False)
 
+
+# flask deploy
+@app.cli.command()
+def deploy():
+    '''Выполняет операции связанные с развёртыванием'''
+    from flask_migrate import upgrade
+    from app.utils import add_self_follows
+
+    # обновляет базу данных до последней версии
+    upgrade()
+
+    # обновляет пользователей как читающих самих себя
+    add_self_follows()
+
+
+
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 if __name__ == '__main__':

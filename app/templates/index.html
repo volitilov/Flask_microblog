@@ -27,6 +27,13 @@
 			{{ render_pagination(data.pagination, 'main.home_page') }}
 		</div>
 	{% else %}
+		<h1>Hello, 
+			{% if current_user.is_authenticated %}
+				{{ current_user.name }}
+			{% else %}
+				Stranger
+			{% endif %}!
+		</h1>
 		<p>Постов на данный момент нет.</p>
 	{% endif %}
 	

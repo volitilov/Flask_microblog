@@ -1,4 +1,4 @@
-# test_basics.py
+# tests/test_basics.py
 
 # 
 

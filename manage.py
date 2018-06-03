@@ -54,6 +54,21 @@ def make_shell_context():
     return dict(app=app, db=database, User=User, Post=Post, Role=Role, 
         Follow=Follow)
 
+
+# flask profile
+@app.cli.command()
+@click.option('--length', default=15, 
+    help='Number of functions to include in the profiler report.')
+def profile(length):
+    '''Запускает приложение с профилированием запросов'''
+
+    from werkzeug.contrib.profiler import ProfilerMiddleware, MergeStream
+
+    abs_path = os.path.abspath('')
+    app.wsgi_app = ProfilerMiddleware(app.wsgi_app, 
+        restrictions=[length], profile_dir=abs_path+'/tmp/profiler/')
+    app.run(debug=False)
+
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 if __name__ == '__main__':

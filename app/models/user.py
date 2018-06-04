@@ -250,16 +250,16 @@ class User(UserMixin, db.Model):
 
     def to_json(self):
         json_user = {
-            'url': url_for('api.get_user', id=self.id, _external=True),
+            'url': url_for('api.get_user', id=self.id),
             'username': self.name,
             'first_name': self.first_name,
             'last_name': self.last_name,
             'about': self.about_me,
             'location': self.location,
-            'data_registartion': self.date_registration,
+            'date_registration': self.date_registration,
             'last_visit': self.last_visit,
-            'posts': url_for('api.get_userPosts', id=self.id, _external=True),
-            'followed_posts': url_for('api.get_userFollowedPosts', id=self.id, _external=True),
+            'posts_url': url_for('api.get_userPosts', id=self.id),
+            'followed_posts_url': url_for('api.get_userFollowedPosts', id=self.id),
             'post_count': self.posts.count()
         }
         return json_user

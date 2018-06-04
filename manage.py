@@ -14,10 +14,15 @@ from app.models.role import Role
 from app.models.post import Post
 
 from flask_migrate import Migrate, MigrateCommand
+from dotenv import load_dotenv, find_dotenv, dotenv_values
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-app = create_app(os.getenv('FLASK_CONFIG', default='default'))
+# загрузка переменных необходимых для работы приложения в виртуальное
+# окружение приложения
+load_dotenv(find_dotenv('.flaskenv'))
+
+app = create_app(os.getenv('FLASK_CONFIG'))
 migrate = Migrate(app, database)
 
 if not app.debug:
@@ -27,18 +32,6 @@ if not app.debug:
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 # команды командной строки
-
-# flask test
-@app.cli.command()
-def test():
-    '''Запускает модульные тесты'''
-    import unittest, subprocess
-    tests = unittest.TestLoader().discover('tests')
-    print()
-    unittest.TextTestRunner(verbosity=2).run(tests)
-    print()
-    subprocess.call('rm -r data_test.sqlite', shell=True)
-
 
 # flask db
 @app.cli.command()

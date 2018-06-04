@@ -20,6 +20,11 @@ class Config:
     FLASKY_POSTS_PER_PAGE = 5
     FLASKY_FOLLOWERS_PER_PAGE = 10
 
+    # включает запись информации о запросах
+    SQLALCHEMY_RECORD_QUERIES = True
+    # устанавливает порог выше которого запросы считаются медленными
+    FLASKY_SLOW_DB_QUERY_TIME = 0.5
+
     # папка, где храняться файлы SQLAlchemy-migrate
     SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
     # отслеживет изменение объектов и испускает сигналы

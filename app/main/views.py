@@ -10,12 +10,25 @@ from flask import (
 )
 
 from flask_login import current_user, login_required
+from flask_sqlalchemy import get_debug_queries
 
 from . import main
 from ..models.post import Post
 from ..utils import create_response
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+@main.after_app_request
+def after_request(response):
+	'''Ведёт отчёт в виде списка о медлиных запросов к базе данных'''
+	for query in get_debug_queries():
+		if query.duration >= current_app.config['FLASKY_SLOW_DB_QUERY_TIME']:
+			current_app.logger.warning(
+				'Slow query: %s\nParameters: %s\nDuration: %fs\nContext: %s\n'
+				% (query.statement, query.parameters, query.duration,
+				query.context))
+	return response
+
 
 @main.route('/')
 def home_page():

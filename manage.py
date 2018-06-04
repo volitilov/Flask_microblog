@@ -4,12 +4,8 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-<<<<<<< HEAD
-import os, click
-=======
 import os, click, logging
 from logging.handlers import RotatingFileHandler
->>>>>>> dev
 
 from app import create_app
 from app import db as database
@@ -27,13 +23,10 @@ load_dotenv(find_dotenv('.env'))
 app = create_app(os.getenv('FLASK_CONFIG'))
 migrate = Migrate(app, database)
 
-<<<<<<< HEAD
-=======
 if not app.debug:
     handler = RotatingFileHandler('tmp/loggs/wrning.log', maxBytes=10000)
     handler.setLevel(logging.WARNING)
     app.logger.addHandler(handler)
->>>>>>> dev
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 # команды командной строки

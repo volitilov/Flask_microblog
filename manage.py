@@ -18,7 +18,9 @@ from dotenv import load_dotenv, find_dotenv, dotenv_values
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-load_dotenv(find_dotenv('.env'))
+# загрузка переменных необходимых для работы приложения в виртуальное
+# окружение приложения
+load_dotenv(find_dotenv('.flaskenv'))
 
 app = create_app(os.getenv('FLASK_CONFIG'))
 migrate = Migrate(app, database)

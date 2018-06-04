@@ -1,4 +1,4 @@
-# config.py
+# instance/config.py
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -14,7 +14,7 @@ class Config:
     WTF_CSRF_SECRET_KEY = os.getenv('WTF_CSRF_SECRET_KEY', default=os.urandom(24))
 
     # включение / отключение CSRF
-    CSRF_ENABLED = True
+    WTF_CSRF_ENABLED = True
 
     # задаёт кол-во элементов на станице
     FLASKY_POSTS_PER_PAGE = 5
@@ -52,6 +52,7 @@ class DevelopmentConfig(Config):
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 class TestingConfig(Config):
     TESTING = True
+    WTF_CSRF_ENABLED = False
 
     # путь к файлу к базе данных.
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \

@@ -3,3 +3,5 @@ venv/
 .vscode/
 data_dev.sqlite
 data_dev.sqlite-journal
+tmp/
+migrations/

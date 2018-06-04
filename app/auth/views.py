@@ -76,7 +76,7 @@ def login_page():
 @login_required
 def logout_page():
 	logout_user()
-	flash('Вы вышли из системы.')
+	flash('You have been logged out')
 	return redirect(url_for('main.home_page'))
 
 
@@ -120,7 +120,7 @@ def confirm(token):
 	if current_user.confirm(token):
 		db.session.add(current_user)
 		db.session.commit()
-		flash('Ваш аккаунт потверждён спосибо!')
+		flash('You have confirmed your account')
 	else:
 		flash('Ваша ссылка не действительна либо истекло время ссылки.')
 	return redirect(url_for('main.home_page'))

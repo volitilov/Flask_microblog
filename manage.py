@@ -33,44 +33,6 @@ if not app.debug:
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 # команды командной строки
 
-# flask test
-@app.cli.command()
-def test():
-    '''Запускает модульные тесты'''
-    import unittest, subprocess
-    tests = unittest.TestLoader().discover('tests')
-    print()
-    unittest.TextTestRunner(verbosity=2).run(tests)
-    print()
-        
-    subprocess.call('rm -r data_test.sqlite', shell=True)
-
-
-# flask test_cov
-@app.cli.command()
-def test_cov():
-    import coverage, unittest, subprocess
-    cov = coverage.coverage(branch=True, include='app/*')
-    cov.start()
-
-    tests = unittest.TestLoader().discover('tests')
-    print()
-    unittest.TextTestRunner(verbosity=2).run(tests)
-    print()
-    
-    cov.stop()
-    cov.save()
-    print('Coverag Summary:')
-    cov.report()
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    covdir = os.path.join(basedir, 'tmp/coverage')
-    cov.html_report(directory=covdir)
-    print('HTML version: file://{}/index.html'.format(covdir))
-    cov.erase()
-        
-    subprocess.call('rm -r data_test.sqlite', shell=True)
-
-
 # flask db
 @app.cli.command()
 def db():

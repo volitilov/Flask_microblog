@@ -3,15 +3,17 @@
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 import os
+from dotenv import load_dotenv, find_dotenv
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(find_dotenv('.env'))
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 class Config:
-    SECRET_KEY = os.getenv('SECRET_KEY', default=os.urandom(24))
-    WTF_CSRF_SECRET_KEY = os.getenv('WTF_CSRF_SECRET_KEY', default=os.urandom(24))
+    SECRET_KEY = os.getenv('SECRET_KEY')
+    WTF_CSRF_SECRET_KEY = os.getenv('WTF_CSRF_SECRET_KEY')
 
     # включение / отключение CSRF
     WTF_CSRF_ENABLED = True
@@ -34,12 +36,12 @@ class Config:
 
     FLASKY_MAIL_SENDER = 'Admin volitilov@gmail.com'
     FLASKY_MAIL_SUBJECT_PREFIX = '[ voliTilov ] '
-    FLASKY_ADMIN = 'volitilov@gmail.com'
+    FLASKY_ADMIN = os.getenv('FLASK_ADMIN')
 
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 465
-    MAIL_USERNAME = 'volitilov@gmail.com'
-    MAIL_PASSWORD = 'Kendar6709'
+    MAIL_USERNAME = os.getenv('MAIL_USERNAME')
+    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
     MAIL_USE_SSL = True
     MAIL_DEFAULT_SENDER = MAIL_USERNAME
 
@@ -52,23 +54,12 @@ class DevelopmentConfig(Config):
     DEBUG = True
 
     # путь к файлу к базе данных.
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'data_dev.sqlite')
-
-
-# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-class TestingConfig(Config):
-    TESTING = True
-    WTF_CSRF_ENABLED = False
-
-    # путь к файлу к базе данных.
-    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'data_test.sqlite')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DEV_DATABASE_URL')
 
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+    SQLALCHEMY_DATABASE_URI = os.environ.get('PROD_DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 
     @classmethod
@@ -102,9 +93,7 @@ class ProductionConfig(Config):
 
 config = {
     'development': DevelopmentConfig,
-    'testing': TestingConfig,
     'production': ProductionConfig,
-    'heroku': HerokuConfig,
 
     'default': DevelopmentConfig
 }

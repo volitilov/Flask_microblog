@@ -14,7 +14,6 @@ Flask-Mail==0.9.1
 Flask-Migrate==2.1.1
 Flask-PageDown==0.2.2
 Flask-SQLAlchemy==2.3.2
-Flask-SSLify==0.1.5
 Flask-WTF==0.14.2
 ForgeryPy==0.1
 gunicorn==19.8.1
@@ -25,6 +24,8 @@ Jinja2==2.10
 Mako==1.0.7
 Markdown==2.6.11
 MarkupSafe==1.0
+psycopg2==2.7.4
+psycopg2-binary==2.7.4
 pycodestyle==2.4.0
 Pygments==2.2.0
 python-dateutil==2.7.2

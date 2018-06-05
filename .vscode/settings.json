@@ -1,4 +1,3 @@
 {
-    "python.linting.pylintEnabled": false,
-    "python.pythonPath": "/home/x/Works/.VENVS/BLOG/bin/python3.5"
+    "python.linting.pylintEnabled": false
 }

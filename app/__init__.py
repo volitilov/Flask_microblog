@@ -21,6 +21,7 @@ mail = Mail()
 login_manager = LoginManager()
 pagedown = PageDown()
 
+
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login_page'
 login_manager.login_message = '''Чтобы открыть данную страницу вам 
@@ -32,6 +33,11 @@ def create_app(config_name):
     app.config.from_object(config[config_name])
     
     config[config_name].init_app(app)
+
+    if app.config['SSL_REDIRECT']:
+        from flask_sslify import SSLify
+        sslify = SSLify(app)
+
     db.init_app(app)
     mail.init_app(app)
     login_manager.init_app(app)

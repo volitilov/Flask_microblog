@@ -6,6 +6,6 @@ data_dev.sqlite
 data_dev.sqlite-journal
 tmp/
 migrations/
-.env
 .gitexcludes
+.venv/
 " >> ~/.gitexcludes

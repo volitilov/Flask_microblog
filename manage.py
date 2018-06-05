@@ -14,13 +14,13 @@ from app.models.role import Role
 from app.models.post import Post
 
 from flask_migrate import Migrate, MigrateCommand
-from dotenv import load_dotenv, find_dotenv, dotenv_values
+from dotenv import load_dotenv, find_dotenv
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 # загрузка переменных необходимых для работы приложения в виртуальное
 # окружение приложения
-load_dotenv(find_dotenv('.flaskenv'))
+load_dotenv(find_dotenv('.env'))
 
 app = create_app(os.getenv('FLASK_CONFIG'))
 migrate = Migrate(app, database)
@@ -48,20 +48,6 @@ def make_shell_context():
         Follow=Follow)
 
 
-# flask profile
-@app.cli.command()
-@click.option('--length', default=15, 
-    help='Number of functions to include in the profiler report.')
-def profile(length):
-    '''Запускает приложение с профилированием запросов'''
-
-    from werkzeug.contrib.profiler import ProfilerMiddleware, MergeStream
-
-    abs_path = os.path.abspath('')
-    app.wsgi_app = ProfilerMiddleware(app.wsgi_app, 
-        restrictions=[length], profile_dir=abs_path+'/tmp/profiler/')
-    app.run(debug=False)
-
 
 # flask deploy
 @app.cli.command()
@@ -81,4 +67,5 @@ def deploy():
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 if __name__ == '__main__':
+    app.config['DEBUG'] = True
     app.run()

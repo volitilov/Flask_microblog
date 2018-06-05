@@ -1,12 +1,7 @@
 [[source]]
-url = "https://github.com/volitilov/Flask_microblog"
-name = "deeploger"
+name = "deeplogger"
 verify_ssl = true
-
-[dev-packages]
-
-[requires]
-python_version = "3.5"
+url = "https://github.com/volitilov/Flask_microblog"
 
 [packages]
 alembic = "==0.9.9"
@@ -48,3 +43,8 @@ SQLAlchemy = "==1.2.7"
 Werkzeug = "==0.14.1"
 WTForms = "==2.1"
 Flask-SSLify = "==0.1.5"
+
+[dev-packages]
+
+[requires]
+python_version = "3.5"

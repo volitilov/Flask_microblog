@@ -25,6 +25,8 @@ class Config:
     # устанавливает порог выше которого запросы считаются медленными
     FLASKY_SLOW_DB_QUERY_TIME = 0.5
 
+    SSL_REDIRECT = False
+
     # папка, где храняться файлы SQLAlchemy-migrate
     SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
     # отслеживет изменение объектов и испускает сигналы
@@ -64,7 +66,6 @@ class TestingConfig(Config):
         'sqlite:///' + os.path.join(basedir, 'data_test.sqlite')
 
 
-
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
@@ -96,6 +97,25 @@ class ProductionConfig(Config):
         app.logger.addHandler(mail_handler) 
 
 
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+class HerokuConfig(ProductionConfig):
+    SSL_REDIRECT = True if os.getenv('DYNO') else False
+
+    @classmethod
+    def init_app(cls, app):
+        ProductionConfig.init_app(app)
+
+        # обработка заголовков прокси-сервера
+        from werkzeug.contrib.fixers import ProxyFix
+        app.wsgi_app = ProxyFix(app.wsgi_app)
+
+        # журналирование в поток stderr
+        import logging
+        from logging import StreamHandler
+        file_handler = StreamHandler()
+        file_handler.setLevel(logging.INFO)
+        app.logger.addHandler(file_handler)
+
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -103,6 +123,7 @@ config = {
     'development': DevelopmentConfig,
     'testing': TestingConfig,
     'production': ProductionConfig,
+    'heroku': HerokuConfig,
 
     'default': DevelopmentConfig
 }

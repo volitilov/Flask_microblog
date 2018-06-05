@@ -1,5 +1,5 @@
 [[source]]
-name = "deeplogger"
+name = "Flask_microblog"
 verify_ssl = true
 url = "https://github.com/volitilov/Flask_microblog"
 

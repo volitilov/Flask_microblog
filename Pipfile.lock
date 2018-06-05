@@ -9,7 +9,7 @@
         },
         "sources": [
             {
-                "name": "deeplogger",
+                "name": "Flask_microblog",
                 "url": "https://github.com/volitilov/Flask_microblog",
                 "verify_ssl": true
             }

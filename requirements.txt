@@ -14,8 +14,10 @@ Flask-Mail==0.9.1
 Flask-Migrate==2.1.1
 Flask-PageDown==0.2.2
 Flask-SQLAlchemy==2.3.2
+Flask-SSLify==0.1.5
 Flask-WTF==0.14.2
 ForgeryPy==0.1
+gunicorn==19.8.1
 html5lib==1.0.1
 idna==2.6
 itsdangerous==0.24
@@ -35,6 +37,3 @@ urllib3==1.22
 webencodings==0.5.1
 Werkzeug==0.14.1
 WTForms==2.1
-Flask-SSLify==0.1.5
-gunicorn==19.8.1
-

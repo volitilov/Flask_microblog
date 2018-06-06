@@ -1,5 +1,4 @@
 __pycache__/
-venv/
 .vscode/
 data_dev.sqlite
 data_dev.sqlite-journal
@@ -7,3 +6,4 @@ migrations/
 .gitexcludes
 .venv/
 .env
+tmp/

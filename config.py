@@ -88,12 +88,21 @@ class ProductionConfig(Config):
         app.logger.addHandler(mail_handler) 
 
 
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+class TestingConfig(Config):
+    TESTING = True
+    WTF_CSRF_ENABLED = False
+
+    # путь к файлу к базе данных.
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 
+        'data_test.sqlite')
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 config = {
     'development': DevelopmentConfig,
     'production': ProductionConfig,
+    'testing': TestingConfig,
 
     'default': DevelopmentConfig
 }

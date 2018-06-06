@@ -48,6 +48,59 @@ def make_shell_context():
         Follow=Follow)
 
 
+# flask test
+@app.cli.command()
+def test():
+    '''Запускает модульные тесты'''
+    import unittest, subprocess
+    tests = unittest.TestLoader().discover('tests')
+    print()
+    unittest.TextTestRunner(verbosity=2).run(tests)
+    print()
+        
+    subprocess.call('rm -r data_test.sqlite', shell=True)
+
+
+# flask test_cov
+@app.cli.command()
+def test_cov():
+    import coverage, unittest, subprocess
+    cov = coverage.coverage(branch=True, include='app/*')
+    cov.start()
+
+    tests = unittest.TestLoader().discover('tests')
+    print()
+    unittest.TextTestRunner(verbosity=2).run(tests)
+    print()
+
+    cov.stop()
+    cov.save()
+    print('Coverag Summary:')
+    cov.report()
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    covdir = os.path.join(basedir, 'tmp/coverage')
+    cov.html_report(directory=covdir)
+    print('HTML version: file://{}/index.html'.format(covdir))
+    cov.erase()
+        
+    subprocess.call('rm -r data_test.sqlite', shell=True)
+
+
+# flask profile
+@app.cli.command()
+@click.option('--length', default=15, 
+    help='Number of functions to include in the profiler report.')
+def profile(length):
+    '''Запускает приложение с профилированием запросов'''
+
+    from werkzeug.contrib.profiler import ProfilerMiddleware, MergeStream
+
+    abs_path = os.path.abspath('')
+    app.wsgi_app = ProfilerMiddleware(app.wsgi_app, 
+        restrictions=[length], profile_dir=abs_path+'/tmp/profiler/')
+    app.run(debug=False)
+
+
 
 # flask deploy
 @app.cli.command()
@@ -67,5 +120,4 @@ def deploy():
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 if __name__ == '__main__':
-    app.config['DEBUG'] = True
     app.run()

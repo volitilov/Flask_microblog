@@ -1,4 +1,4 @@
-#!/home/x/Works/.VENVS/BLOG/bin/python3.5
+#!.venv/bin/python3
 
 # manage.py
 
@@ -20,13 +20,13 @@ from dotenv import load_dotenv, find_dotenv
 
 # загрузка переменных необходимых для работы приложения в виртуальное
 # окружение приложения
-load_dotenv(find_dotenv('.env'))
+load_dotenv()
 
-app = create_app(os.getenv('FLASK_CONFIG'))
+app = create_app(os.getenv('FLASK_ENV'))
 migrate = Migrate(app, database)
 
 if not app.debug:
-    handler = RotatingFileHandler('tmp/loggs/wrning.log', maxBytes=10000)
+    handler = RotatingFileHandler('tmp/loggs/warning.log', maxBytes=10000)
     handler.setLevel(logging.WARNING)
     app.logger.addHandler(handler)
 
@@ -99,6 +99,20 @@ def profile(length):
     app.wsgi_app = ProfilerMiddleware(app.wsgi_app, 
         restrictions=[length], profile_dir=abs_path+'/tmp/profiler/')
     app.run(debug=False)
+
+
+# flask generate_fake_data 'count'
+@app.cli.command()
+@click.argument('count', default=10)
+def generate_fake_data(count):
+    '''Генерирует фейковые данные (посты, пользователи)'''
+    from app.utils import (
+        generate_fake_posts, generate_fake_users, add_self_follows
+    )
+
+    generate_fake_users(count)
+    add_self_follows()
+    generate_fake_posts(count)
 
 
 

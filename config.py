@@ -8,7 +8,7 @@ from dotenv import load_dotenv, find_dotenv
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-load_dotenv(find_dotenv('.env'))
+load_dotenv()
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 class Config:
@@ -51,7 +51,7 @@ class Config:
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 class DevelopmentConfig(Config):
     # включение / отключение отладчика
-    DEBUG = True
+    FLASK_DEBUG = True
 
     # путь к файлу к базе данных.
     SQLALCHEMY_DATABASE_URI = os.getenv('DEV_DATABASE_URL')
@@ -93,7 +93,5 @@ class ProductionConfig(Config):
 
 config = {
     'development': DevelopmentConfig,
-    'production': ProductionConfig,
-
-    'default': DevelopmentConfig
+    'production': ProductionConfig
 }

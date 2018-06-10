@@ -10,7 +10,7 @@ from flask import (
 )
 
 # flask extensions
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required, fresh_login_required
 
 # 
 from . import user
@@ -39,7 +39,6 @@ def profile_page(username):
 
 
 @user.route(rule='/users/settings/profile', methods=['GET', 'POST'])
-@login_required
 def editProfile_page():
 	'''Генерирует страницу настроек пользователя'''
 	form = EditProfile_form()
@@ -73,7 +72,6 @@ def editProfile_page():
 
 
 @user.route(rule='/users/settings/account')
-@login_required
 def editAccount_page():
 	changeLogin_form = ChangeLogin_form()
 	changePassword_form = ChangePassword_form()
@@ -90,6 +88,7 @@ def editAccount_page():
 
 
 @user.route(rule='/change_login', methods=['POST'])
+@fresh_login_required
 def changeLogin_request():
 	form = ChangeLogin_form()
 
@@ -128,6 +127,7 @@ def changePassword_request():
 
 
 @user.route(rule='/change_email', methods=['POST'])
+@fresh_login_required
 def changeEmail_request():
 	form = ChangeEmail_form()
 	new_email = form.email.data
@@ -147,7 +147,6 @@ def changeEmail_request():
 
 
 @user.route(rule='/change_email/<token>')
-@login_required
 def changeEmail(token):
 	'''Обрабатывает запрос на изменения email.'''
 	if current_user.change_email(token):
@@ -161,7 +160,6 @@ def changeEmail(token):
 
 
 @user.route(rule='/follow/<user_id>')
-@login_required
 def follow(user_id):
 	user = User.query.filter_by(id=user_id).first()
 	if user is None:
@@ -177,7 +175,6 @@ def follow(user_id):
 
 
 @user.route(rule='/unfollow/<user_id>')
-@login_required
 def unfollow(user_id):
 	user = User.query.filter_by(id=user_id).first()
 	print(current_user.is_following(user))
@@ -241,3 +238,16 @@ def followedBy_page(user_id):
 
 	return create_response(template='user/followers.html', data=data)
 
+
+@user.route(rule='/delete_account', methods=['POST'])
+@fresh_login_required
+def deleteAccount_request():
+	user = User.query.get(current_user.id)
+	for post in user.posts:
+		db.session.delete(post)
+	for comment in user.comments:
+		db.session.delete(comment)
+		
+	db.session.delete(user)
+	db.session.commit()
+	return redirect(url_for('main.home_page'))

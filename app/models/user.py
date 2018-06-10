@@ -25,11 +25,6 @@ class Follow(db.Model):
     followed_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow())
 
-    def __str__(self):
-        return '<Follow: follower_id -> {}, followed_id -> {}>'.format(
-            self.follower_id, self.followed_id)
-
-
 
 
 class User(UserMixin, db.Model):
@@ -66,7 +61,7 @@ class User(UserMixin, db.Model):
             self.avatar_hash = md5(self.email.encode('utf-8')).hexdigest()
 
         if self.role is None:
-            if self.email == current_app.config['FLASKY_ADMIN']:
+            if self.email == current_app.config['APP_ADMIN']:
                 if Role.query.filter_by(name='Admin').first() is None:
                     self.role = Role(name='Admin')
                 else:
@@ -198,7 +193,7 @@ class User(UserMixin, db.Model):
 
     def is_admin(self):
         '''Проверяет является ли текущий пользователь администратором.'''
-        if self.email == current_app.config['FLASKY_ADMIN']:
+        if self.email == current_app.config['APP_ADMIN']:
             return True
         return False
 

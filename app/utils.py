@@ -20,6 +20,7 @@ def create_response(template, data):
 	'''Делает обёртку для объекта ответа.'''
 	resp = make_response(render_template(template, data=data))
 	resp.delete_cookie('next')
+	resp.set_cookie(key='current_page', value=request.full_path)
 	if request.args.get('next') is not None: 
 		resp.set_cookie(key='next', value=request.args.get('next'))
 	return resp

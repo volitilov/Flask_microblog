@@ -12,6 +12,7 @@ from app import db as database
 from app.models.user import User, Follow
 from app.models.role import Role
 from app.models.post import Post
+from app.models.comment import Comment
 
 from flask_migrate import Migrate, MigrateCommand
 from dotenv import load_dotenv, find_dotenv
@@ -22,7 +23,7 @@ from dotenv import load_dotenv, find_dotenv
 # окружение приложения
 load_dotenv()
 
-app = create_app(os.getenv('FLASK_ENV'))
+app = create_app(os.getenv('APP_ENV'))
 migrate = Migrate(app, database)
 
 if not app.debug:
@@ -45,7 +46,7 @@ def db():
 def make_shell_context():
     '''Запускает shell со сконфигурированым контекстом'''
     return dict(app=app, db=database, User=User, Post=Post, Role=Role, 
-        Follow=Follow)
+        Follow=Follow, Comment=Comment)
 
 
 # flask test
@@ -134,4 +135,5 @@ def deploy():
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 if __name__ == '__main__':
+    print('Hello world')
     app.run()

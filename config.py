@@ -27,16 +27,14 @@ class Config:
     # устанавливает порог выше которого запросы считаются медленными
     FLASKY_SLOW_DB_QUERY_TIME = 0.5
 
-    SSL_REDIRECT = False
-
     # папка, где храняться файлы SQLAlchemy-migrate
     SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
     # отслеживет изменение объектов и испускает сигналы
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    FLASKY_MAIL_SENDER = 'Admin volitilov@gmail.com'
-    FLASKY_MAIL_SUBJECT_PREFIX = '[ voliTilov ] '
-    FLASKY_ADMIN = os.getenv('FLASK_ADMIN')
+    APP_MAIL_SENDER = 'Admin volitilov@gmail.com'
+    APP_MAIL_SUBJECT_PREFIX = '[ voliTilov ] '
+    APP_ADMIN = os.getenv('APP_ADMIN')
 
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 465
@@ -79,9 +77,9 @@ class ProductionConfig(Config):
                 secure = ()
         mail_handler = SMTPHandler(
             mailhost=(cls.MAIL_SERVER, cls.MAIL_PORT),
-            fromaddr=cls.FLASKY_MAIL_SENDER,
-            toaddrs=[cls.FLASKY_ADMIN],
-            subject=cls.FLASKY_MAIL_SUBJECT_PREFIX + ' Application Error',
+            fromaddr=cls.APP_MAIL_SENDER,
+            toaddrs=[cls.APP_ADMIN],
+            subject=cls.APP_MAIL_SUBJECT_PREFIX + ' Application Error',
             credentials=credentials,
             secure=secure)
         mail_handler.setLevel(logging.ERROR)

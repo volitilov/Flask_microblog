@@ -8,7 +8,7 @@ from flask import (
 	render_template, redirect, request, url_for, flash, session, abort
 )
 
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required, fresh_login_required
 
 from . import post
 from .forms import AddPost_form, AddComment_form
@@ -22,7 +22,7 @@ from .. import db
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 @post.route(rule='/add_post', methods=['GET', 'POST'])
-@login_required
+@fresh_login_required
 def addPost_page():
 	'''Генерирует страницу с формай создания постов.'''
 	form = AddPost_form()
@@ -85,7 +85,7 @@ def post_page(id):
 
 
 @post.route(rule='/post/edit/<int:id>', methods=['GET', 'POST'])
-@login_required
+@fresh_login_required
 def editPost_page(id):
 	'''Генерирует страницу редактирования поста.'''
 	form = AddPost_form()
@@ -113,3 +113,11 @@ def editPost_page(id):
 
 	return create_response(template='post/edit_post.html', data=data)
 
+
+@post.route(rule='/delete_post/<int:id>', methods=['POST'])
+@fresh_login_required
+def deletePost_request(id):
+	post = Post.query.get(id)
+	db.session.delete(post)
+	db.session.commit()
+	return redirect(url_for('main.home_page'))

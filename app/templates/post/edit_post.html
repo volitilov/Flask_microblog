@@ -16,4 +16,9 @@
 		{{ render_field(data.form.text, rows=10, cols=60) }}
 		<button>Сохранить пост</button>
 	</form>
+
+	<form method="POST" action="{{ url_for('post.deletePost_request', id=data.post.id) }}">
+		{{ data.form.csrf_token }}
+		<button>Удалить пост</button>
+	</form>
 {% endblock %}

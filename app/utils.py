@@ -72,3 +72,21 @@ def add_self_follows():
 			db.session.add(user)
 			db.session.commit()
 
+
+def check_recaptcha(response, recaptcha_private_key):
+	'''Проверка reCaptcha'''
+	import urllib, json
+
+	url = 'https://www.google.com/recaptcha/api/siteverify?'
+	url = url + 'secret=' +recaptcha_private_key
+	url = url + '&response=' +response
+	
+	try:
+		jsonobj = json.loads(urllib.urlopen(url).read())
+		if jsonobj['success']:
+			return True
+		else:
+			return False
+	except Exception as e:
+		print(e)
+		return False

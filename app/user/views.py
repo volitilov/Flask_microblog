@@ -4,10 +4,13 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+import os
+
 from flask import (
 	render_template, redirect, request, url_for, flash, session, abort,
-	current_app
+	current_app, send_from_directory
 )
+from werkzeug.utils import secure_filename
 
 # flask extensions
 from flask_login import current_user, login_required, fresh_login_required
@@ -28,38 +31,46 @@ from .. import db
 @user.route(rule='/users/<username>')
 def profile_page(username):
 	'''Генерирует страницу профиля пользователя.'''
-	user = User.query.filter_by(name=username).first_or_404()
-	data = {
+	return create_response(template='user/profile.html', data={
 		'page_title': 'Страница профиля',
-		'user': user
-	}
-
-	return create_response(template='user/profile.html', data=data)
+		'user': User.query.filter_by(name=username).first_or_404()
+	})
 
 
 
 @user.route(rule='/users/settings/profile', methods=['GET', 'POST'])
+@fresh_login_required
 def editProfile_page():
 	'''Генерирует страницу настроек пользователя'''
 	form = EditProfile_form()
-
-	data = {
-		'page_title': 'Страница редактирования профиля',
-		'form': form
-	}
-
+	upload_folder = current_app.config['UPLOAD_FOLDER']
+	allowed_extensions = current_app.config['ALLOWED_EXTENSIONS']
 	bro = User.query.filter_by(name=current_user.name).first()
 
 	first_name = form.first_name.data
 	last_name = form.last_name.data
 	about = form.about.data
 	location = form.location.data
+	photo = form.photo.data
 
 	if form.validate_on_submit():
+		if photo:
+			filename = secure_filename(photo.filename)
+			_, ext = os.path.splitext(filename)
+			if ext in allowed_extensions:
+				photo_base_url = os.path.join(upload_folder, 'photos', filename)
+				photo.save(photo_base_url)
+
+				bro.photo_url = 'photos/' + filename
+			else:
+				flash('Поддерживаются только следующие форматы: png, jpg, jpeg, gif')
+				return redirect(url_for('user.editProfile_page'))
+
 		bro.first_name = first_name
 		bro.last_name = last_name
 		bro.about_me = about
 		bro.location = location
+
 		db.session.add(bro)
 		db.session.commit()
 		
@@ -67,23 +78,26 @@ def editProfile_page():
 		return redirect(url_for('user.editProfile_page'))
 
 	
-	return create_response(template='user/edit_profile.html', data=data)
+	return create_response(template='user/edit_profile.html', data={
+		'page_title': 'Страница редактирования профиля',
+		'form': form
+	})
 
 
 
 @user.route(rule='/users/settings/account')
+@fresh_login_required
 def editAccount_page():
 	changeLogin_form = ChangeLogin_form()
 	changePassword_form = ChangePassword_form()
 	changeEmail_form = ChangeEmail_form()
 
-	data = {
+	return create_response(template='user/edit_account.html', data={
 		'page_title': 'Страница редактирования аккаунта',
 		'login_form': changeLogin_form,
 		'password_form': changePassword_form,
 		'email_form': changeEmail_form
-	}
-	return create_response(template='user/edit_account.html', data=data)
+	})
 
 
 
@@ -147,6 +161,7 @@ def changeEmail_request():
 
 
 @user.route(rule='/change_email/<token>')
+@fresh_login_required
 def changeEmail(token):
 	'''Обрабатывает запрос на изменения email.'''
 	if current_user.change_email(token):
@@ -160,6 +175,7 @@ def changeEmail(token):
 
 
 @user.route(rule='/follow/<user_id>')
+@fresh_login_required
 def follow(user_id):
 	user = User.query.filter_by(id=user_id).first()
 	if user is None:
@@ -175,6 +191,7 @@ def follow(user_id):
 
 
 @user.route(rule='/unfollow/<user_id>')
+@fresh_login_required
 def unfollow(user_id):
 	user = User.query.filter_by(id=user_id).first()
 	print(current_user.is_following(user))
@@ -193,10 +210,6 @@ def unfollow(user_id):
 @user.route(rule='/users/followers/<user_id>')
 def followers_page(user_id):
 	user = User.query.filter_by(id=user_id).first()
-	data = {
-		'page_title': 'Страница подписчиков.',
-		'user': user
-	}
 	if user is None:
 		flash('Недействительный пользователь.')
 		return redirect(url_for('main.home_page'))
@@ -205,23 +218,22 @@ def followers_page(user_id):
 		page, per_page=current_app.config['FLASKY_FOLLOWERS_PER_PAGE'],
 		error_out=False)
 	follows = [{'user': item.follower, 'timestamp': item.timestamp} 
-				for item in pagination.items]
-	data['pagination'] = pagination
-	data['follows'] = follows
-	data['endpoint'] = 'user.followers_page'
-	data['title'] = 'Всего подписчиков: {}'.format(user.followers.count() - 1)
+				for item in pagination.items] 
 
-	return create_response(template='user/followers.html', data=data)
+	return create_response(template='user/followers.html', data={
+		'page_title': 'Страница подписчиков.',
+		'user': user,
+		'pagination': pagination,
+		'follows': follows,
+		'endpoint': 'user.followers_page',
+		'title': 'Всего подписчиков: {}'.format(user.followers.count() - 1)
+	})
 
 
 
 @user.route(rule='/users/followed_by/<user_id>')
 def followedBy_page(user_id):
 	user = User.query.filter_by(id=user_id).first()
-	data = {
-		'page_title': 'Страница подписок.',
-		'user': user
-	}
 	if user is None:
 		flash('Недействительный пользователь.')
 		return redirect(url_for('main.home_page'))
@@ -231,12 +243,15 @@ def followedBy_page(user_id):
 		error_out=False)
 	follows = [{'user': item.followed, 'timestamp': item.timestamp} 
 				for item in pagination.items]
-	data['pagination'] = pagination
-	data['follows'] = follows
-	data['endpoint'] = 'user.followedBy_page'
-	data['title'] = 'Всего подписан на: {}'.format(user.followed.count() - 1)
 
-	return create_response(template='user/followers.html', data=data)
+	return create_response(template='user/followers.html', data={
+		'page_title': 'Страница подписок.',
+		'user': user,
+		'pagination': pagination,
+		'follows': follows,
+		'endpoint': 'user.followedBy_page',
+		'title': 'Всего подписан на: {}'.format(user.followed.count() - 1)
+	})
 
 
 @user.route(rule='/delete_account', methods=['POST'])

@@ -5,6 +5,7 @@
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 from flask import Flask
+from werkzeug import SharedDataMiddleware
 from config import config
 
 # extension
@@ -26,6 +27,11 @@ def create_app(config_name):
     login_manager.init_app(app)
     pagedown.init_app(app)
     lesscss(app)
+
+    app.add_url_rule('/uploads/<filename>', 'uploads', build_only=True)
+    app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
+        '/uploads':  app.config['UPLOAD_FOLDER']
+    })
 
     from .main import main
     app.register_blueprint(main)

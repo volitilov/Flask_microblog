@@ -11,6 +11,7 @@ from wtforms import (
 from wtforms.validators import (
 	DataRequired, Email, Length, EqualTo, Regexp
 )
+from flask_wtf.file import FileField, FileRequired
 
 from ..models.user import User
 
@@ -22,6 +23,7 @@ class EditProfile_form(FlaskForm):
 	last_name = StringField(label='Фамилия:', validators=[DataRequired()])
 	about = TextAreaField(label='Обо мне:', validators=[DataRequired()])
 	location = StringField(label='Местоположение:', validators=[DataRequired()])
+	photo = FileField(label='Фото')
 
 
 class ChangeEmail_form(FlaskForm):

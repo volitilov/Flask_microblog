@@ -4,7 +4,7 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo
 from wtforms import ValidationError
@@ -34,6 +34,7 @@ class Registration_form(FlaskForm):
                         EqualTo('password2', message='Пароли должны совпадать.')])
     password2 = PasswordField(label='Повторить пароль', 
         validators=[DataRequired('password2')])
+    recaptcha = RecaptchaField()
 
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():

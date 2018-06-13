@@ -18,7 +18,7 @@ from .forms import (
 from .. import db
 from ..models.user import User
 from ..email import send_email
-from ..utils import create_response
+from ..utils import create_response, check_recaptcha
 
 # installed modules
 from flask_login import (
@@ -85,26 +85,29 @@ def logout_page():
 @auth.route(rule='/register', methods=['GET', 'POST'])
 def registration_page():
 	form = Registration_form()
+	recaptcha_private_key = current_app.config['RECAPTCHA_PRIVATE_KEY']
 	data = {
 		'form': form,
 		'page_title': 'Страница регистрации.'
 	}
 
 	if form.validate_on_submit():
-		username = form.username.data
-		email = form.email.data
-		password = form.password.data
+		response = request.form.get('g-recaptcha-response')
+		if check_recaptcha(response, recaptcha_private_key):
+			username = form.username.data
+			email = form.email.data
+			password = form.password.data
 
-		user = User(name=username, email=email, password=password)
-		db.session.add(user)
-		db.session.commit()
+			user = User(name=username, email=email, password=password)
+			db.session.add(user)
+			db.session.commit()
 
-		token = user.generate_confirmation_token()
-		send_email(user.email, 'Потверждение учетной записи', 'mail/auth/confirm/confirm', 
-			user=user, token=token)
-		flash('Письмо для подтверждения регистрации отправленно, на почтовый ящик')
+			token = user.generate_confirmation_token()
+			send_email(user.email, 'Потверждение учетной записи', 'mail/auth/confirm/confirm', 
+				user=user, token=token)
+			flash('Письмо для подтверждения регистрации отправленно, на почтовый ящик')
 
-		return redirect(url_for('auth.login_page'))
+			return redirect(url_for('auth.login_page'))
 
 	return create_response(template='auth/registr.html', data=data)
 

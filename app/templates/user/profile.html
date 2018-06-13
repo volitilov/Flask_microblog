@@ -10,7 +10,11 @@
         <li><a href="#">Комментарии</a></li>
     </ul>
     <div>
-        <img src="{{ data.user.gravatar(default='mm') }}" alt="Аватар">
+        {% if current_user.photo_url %}
+            <img src="{{ url_for('uploads', filename=current_user.photo_url) }}" alt="photo" />
+        {% else %}
+            <img src="{{ current_user.gravatar(default='mm') }}" alt="Аватар" />
+        {% endif %}
         {% if current_user != data.user %}
             {% if current_user.is_anonymous or not current_user.is_following(data.user) %}
                 <a href="{{ url_for('user.follow', user_id=data.user.id) }}">Подписаться</a> |

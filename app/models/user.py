@@ -43,6 +43,7 @@ class User(UserMixin, db.Model):
     date_registration = db.Column(db.DateTime(), default=datetime.utcnow()) 
     last_visit = db.Column(db.DateTime(), default=datetime.utcnow())
     avatar_hash = db.Column(db.String(32))
+    photo_url = db.Column(db.String)
 
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')

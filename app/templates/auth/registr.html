@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% from 'macros/_formhelpers.html' import render_field %}
 
+
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
 {% block content %}
@@ -12,10 +13,13 @@
 		{{ render_field(data.form.email) }}
 		{{ render_field(data.form.password) }}
 		{{ render_field(data.form.password2) }}
+		{{ render_field(data.form.recaptcha) }}
 		<button>Зарегестрироваться</button>
 	</form>
 	<div>
 		<a href="{{ url_for('auth.login_page') }}"> Уже есть аккаунт.</a>
 	</div>
-
+	
 {% endblock %}
+	
+<script src='https://www.google.com/recaptcha/api.js'></script>

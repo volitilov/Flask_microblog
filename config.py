@@ -15,8 +15,8 @@ class Config:
     SECRET_KEY = os.getenv('SECRET_KEY')
     WTF_CSRF_SECRET_KEY = os.getenv('WTF_CSRF_SECRET_KEY')
 
-    RECAPTCHA_PUBLIC_KEY = '6Lccpl4UAAAAAC-HYiCQwBjIhGAJO5zIr6_dYRD0'
-    RECAPTCHA_PRIVATE_KEY = '6Lccpl4UAAAAANS227HBTAPqS7AyEOhL-JtNNF7a'
+    RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY')
+    RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY')
     RECAPTCHA_DATA_ATTRS = {'theme': 'light'}
 
     # включение / отключение CSRF
@@ -39,7 +39,7 @@ class Config:
     # путь загрузки файлов
     UPLOAD_FOLDER = basedir + os.getenv('UPLOAD_FOLDER')
     # разрешонные расширения для изображений
-    ALLOWED_EXTENSIONS = set(['.png', '.jpg', '.jpeg', '.gif'])
+    ALLOWED_EXTENSIONS = set(['.png', '.jpg', '.jpeg', '.gif', '.svg'])
 
     APP_MAIL_SENDER = 'Admin volitilov@gmail.com'
     APP_MAIL_SUBJECT_PREFIX = '[ voliTilov ] '

@@ -7,6 +7,7 @@
 from flask import Flask
 from werkzeug import SharedDataMiddleware
 from config import config
+from pymemcache.client import base
 
 # extension
 from flaskext.lesscss import lesscss
@@ -32,6 +33,7 @@ def create_app(config_name):
     app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
         '/uploads':  app.config['UPLOAD_FOLDER']
     })
+    app.memory = base.Client(('localhost', 11211))
 
     from .main import main
     app.register_blueprint(main)
@@ -47,6 +49,9 @@ def create_app(config_name):
 
     from .post import post
     app.register_blueprint(post)
+
+    from .comment import comment
+    app.register_blueprint(comment)
 
     from .api_1_0 import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api/v1.0')

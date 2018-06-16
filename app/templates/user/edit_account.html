@@ -3,56 +3,63 @@
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
 {% block content %}
-    <aside>
-        <h4>Персанальные настройки:</h4>
-        <ul>
-            <li><a href="{{ url_for('user.editProfile_page') }}">Настройки профиля</a></li>
-            <li><a href="{{ url_for('user.editAccount_page') }}">Настройки аккаунта</a></li>
-            <li><a href="#">Настройки уведомления</a></li>
-            <li><a href="#">Настройки публикаций</a></li>
-            <li><a href="#">Настройки комментарий</a></li>
-            <li><a href="#">Настройки безопасности</a></li>
-            <li><a href="#">Настройки сайта</a></li>
-        </ul>
-    </aside>
-    <section>
-        <h3>Настройки аккаунта</h3>
-        <div>
-            <h4>Изменить пароль</h4>
-            <hr>
-            <form method="POST" action="/change_password">
-                {{ data.password_form.csrf_token }}
-                {{ data.password_form.old_password.label }} <br> {{ data.password_form.old_password }} <br>
-                {{ data.password_form.password.label }} <br> {{ data.password_form.password }} <br>
-                {{ data.password_form.password2.label }} <br> {{ data.password_form.password2 }} <br>
-                <button>Изменить пароль</button>
-            </form>
-        </div>
-        <div>
-            <h4>Изменить login</h4>
-            <hr>
-            <form method="POST" action="/change_login">
-                {{ data.login_form.csrf_token }}
-                {{ data.login_form.name(value=current_user.name) }} <br>
-                <button>Изменить логин</button>
-            </form>
-        </div>
-        <div>
-            <h4>Изменить email</h4>
-            <hr>
-            <form method="POST" action="/change_email">
-                {{ data.email_form.csrf_token }}
-                {{ data.email_form.email(value=current_user.email)|safe }} <br>
-                <button>Изменить email</button>
-            </form>
-        </div>
-        <div>
-            <h4>Удалить аккаунт</h4>
-            <hr>
-            <form method="POST" action="/delete_account">
-                {{ data.password_form.csrf_token }}
-                <button>Удалить аккаунт</button>
-            </form>
+    <section class="columns mt-3 edit-account">
+        <aside class="one-fourth column">
+            {% include 'components/_nav_settings.html' %}
+        </aside>
+        <div class="three-fourths column">
+            <div class="Box">
+                <div class="Box-header">
+                    <small>Настройки аккаунта</small>
+                </div>
+                <div class="Box-row">
+                    <h4>Изменить пароль</h4>
+                    <form method="POST" action="/change_password">
+                        {{ data.password_form.csrf_token }}
+                        <dl class="form-group">
+                            <dt>{{ data.password_form.old_password.label }}</dt>
+                            <dd>{{ data.password_form.old_password(class="form-control") }}</dd>
+                        </dl>
+                        <dl class="form-group">
+                            <dt>{{ data.password_form.password.label }}</dt>
+                            <dd>{{ data.password_form.password(class="form-control") }}</dd>
+                        </dl>
+                        <dl class="form-group">
+                            <dt>{{ data.password_form.password2.label }}</dt>
+                            <dd>{{ data.password_form.password2(class="form-control") }}</dd>
+                        </dl>
+                        <button class="btn btn-sm" type="submit">Изменить пароль</button>
+                    </form>
+                </div>
+                <div class="Box-row">
+                    <h4>Изменить login</h4>
+                    <form method="POST" action="/change_login">
+                        {{ data.login_form.csrf_token }}
+                        <dl class="form-group">
+                            <dd>{{ data.login_form.name(value=current_user.name, class="form-control") }}</dd>
+                        </dl>
+                        <button class="btn btn-sm" type="submit">Изменить логин</button>
+                    </form>
+                </div>
+                <div class="Box-row">
+                    <h4>Изменить email</h4>
+                    <form method="POST" action="/change_email">
+                        {{ data.email_form.csrf_token }}
+                        <dl class="form-group">
+                            <dd>{{ data.email_form.email(value=current_user.email, class="form-control")|safe }}</dd>
+                        </dl>
+                        <button class="btn btn-sm" type="submit">Изменить email</button>
+                    </form>
+                </div>
+                <div class="Box-row">
+                    <h4>Удалить аккаунт</h4>
+                    <form method="POST" action="/delete_account">
+                        {{ data.password_form.csrf_token }}
+                        <button class="btn btn-sm btn-danger" type="submit">Удалить аккаунт</button>
+                    </form>
+                </div>
+                
+            </div>
         </div>
     </section>
 {% endblock %}

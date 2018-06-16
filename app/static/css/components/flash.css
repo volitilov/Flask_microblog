@@ -1,9 +1,13 @@
-.flash {
-    display: block;
-    position: relative;
-    padding: 20px;
-    list-style: none;
-    border: 2px solid rgb(255, 0, 0);
-    border-radius: 4px;
-    margin: 10px 0px;
+.flash-messages {
+  margin-top: 15px;
+  margin-bottom: 0px;
+}
+.flash-messages .close {
+  position: absolute;
+  right: 10px;
+  top: 7px;
+  background-color: transparent;
+  border: none;
+  font-size: 25px;
+  cursor: pointer;
 }

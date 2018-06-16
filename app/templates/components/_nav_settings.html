@@ -1,0 +1,19 @@
+<section class="nav nav-left">
+    <div class="Box nav-user-avatar">
+        {% if current_user.photo_url %}
+            <img src="{{ url_for('uploads', filename=current_user.photo_url) }}" alt="photo" />
+        {% else %}
+            <img src="{{ current_user.gravatar(default='mm') }}" alt="Аватар" />
+        {% endif %}
+    </div>
+    <nav class="menu">
+        <span class="menu-heading">Персоналные настройки</span>
+        <a class="menu-item selected" href="{{ url_for('user.editProfile_page') }}">Настройки профиля</a>
+        <a class="menu-item" href="{{ url_for('user.editAccount_page') }}">Настройки аккаунта</a>
+        <a class="menu-item" href="#">Настройки уведомления</a>
+        <a class="menu-item" href="#">Настройки публикаций</a>
+        <a class="menu-item" href="#">Настройки комментарий</a>
+        <a class="menu-item" href="#">Настройки безопасности</a>
+        <a class="menu-item" href="#">Настройки сайта</a>
+    </nav>
+</section>

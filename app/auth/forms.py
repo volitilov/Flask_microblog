@@ -15,25 +15,25 @@ from ..models.user import User
 
 class Login_form(FlaskForm):
     email = StringField(label='Email', 
-        validators=[DataRequired(), Email(), Length(1, 64)])
+        validators=[DataRequired(message='Это поле обязательно'), Email(), Length(1, 64)])
     password = PasswordField(label='Пароль', 
-        validators=[DataRequired()])
+        validators=[DataRequired(message='Это поле обязательно')])
     remember_me = BooleanField(label='Запомнить меня')
 
 
 class Registration_form(FlaskForm):
     username = StringField(label='Login', 
-        validators=[DataRequired('username'), Length(1, 64),
+        validators=[DataRequired(message='Это поле обязательно'), Length(1, 64),
                                   Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0, 
         'Имена пользователей должны иметь только числа, точки или символы подчеркивания')])
 
     email = StringField(label='Email', 
-        validators=[DataRequired('email'), Email(), Length(1, 64)])
+        validators=[DataRequired(message='Это поле обязательно'), Email(), Length(1, 64)])
     password = PasswordField(label='Пароль', 
-        validators=[DataRequired('password'), 
+        validators=[DataRequired(message='Это поле обязательно'), 
                         EqualTo('password2', message='Пароли должны совпадать.')])
     password2 = PasswordField(label='Повторить пароль', 
-        validators=[DataRequired('password2')])
+        validators=[DataRequired(message='Это поле обязательно')])
     recaptcha = RecaptchaField()
 
     def validate_email(self, field):
@@ -47,11 +47,12 @@ class Registration_form(FlaskForm):
 
 class PasswordResetRequest_form(FlaskForm):
     email = StringField(label='Email', 
-        validators=[DataRequired(), Length(1, 64), Email()])
+        validators=[DataRequired(message='Это поле обязательно'), Length(1, 64), Email()])
 
 
 class PasswordReset_form(FlaskForm):
-    password = PasswordField(label='Новый пароль', 
-        validators=[DataRequired(), EqualTo('password2', message='Пароли должны сопадать')])
+    password = PasswordField(label='Новый пароль', validators=[
+        DataRequired(message='Это поле обязательно'), 
+        EqualTo('password2', message='Пароли должны сопадать')])
     password2 = PasswordField(label='Повторите пароль', 
-        validators=[DataRequired()])
+        validators=[DataRequired(message='Это поле обязательно')])

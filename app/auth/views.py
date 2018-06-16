@@ -49,10 +49,6 @@ def before_request():
 @auth.route(rule='/login', methods=['GET', 'POST'])
 def login_page():
 	form = Login_form()
-	data = {
-		'form': form,
-		'page_title': 'Страница авторизации.'
-	}
 
 	if form.validate_on_submit():
 		email = form.email.data
@@ -65,11 +61,15 @@ def login_page():
 			next = request.cookies.get('next')
 			if next is None:
 				next = url_for('main.home_page')
+			flash(message='Вы успешно авторизовались')
 			return redirect(next)
 
-		flash('Неправильное имя пользователя или пароль.')
+		flash(message='Неправильное имя пользователя или пароль.', category='error')
 
-	return create_response(template='auth/login.html', data=data)
+	return create_response(template='auth/login.html', data={
+		'form': form,
+		'page_title': 'Страница авторизации.'
+	})
 
 
 
@@ -77,7 +77,7 @@ def login_page():
 @login_required
 def logout_page():
 	logout_user()
-	flash('You have been logged out')
+	flash('Вы успешно вышли')
 	return redirect(url_for('main.home_page'))
 
 

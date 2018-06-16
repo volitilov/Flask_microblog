@@ -5,21 +5,25 @@
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
 {% block content %}
-	<h3>Форма регистрации.</h3>
-
-	<form method="POST" action="/register">
-		{{ data.form.csrf_token }}
-		{{ render_field(data.form.username) }}
-		{{ render_field(data.form.email) }}
-		{{ render_field(data.form.password) }}
-		{{ render_field(data.form.password2) }}
-		{{ render_field(data.form.recaptcha) }}
-		<button>Зарегестрироваться</button>
-	</form>
-	<div>
-		<a href="{{ url_for('auth.login_page') }}"> Уже есть аккаунт.</a>
+	<div class="Box one-half centered mt-3">
+		<div class="Box-header">
+			<small>Форма регистрации</small>
+		</div>
+		<div class="Box-body">
+			<form method="POST" action="/register">
+				{{ data.form.csrf_token }}
+				{{ render_field(data.form.username, class="form-control", autofocus=true) }}
+				{{ render_field(data.form.email, class="form-control") }}
+				{{ render_field(data.form.password, class="form-control") }}
+				{{ render_field(data.form.password2, class="form-control") }}
+				{{ render_field(data.form.recaptcha) }}
+				<button class="btn btn-primary" type="submit">Зарегестрироваться</button>
+			</form>
+		</div>
+		<div class="Box-footer">
+			<a href="{{ url_for('auth.login_page') }}"> Уже есть аккаунт.</a>
+		</div>
 	</div>
-	
 {% endblock %}
 	
 <script src='https://www.google.com/recaptcha/api.js'></script>

@@ -1,0 +1,36 @@
+<section class="nav nav-left">
+    <div class="Box nav-user-avatar">
+        {% if data.user.photo_url %}
+            <img src="{{ url_for('uploads', filename=data.user.photo_url) }}" alt="photo" />
+        {% else %}
+            <img src="{{ data.user.gravatar(default='mm') }}" alt="Аватар" />
+        {% endif %}
+    </div>
+    <nav class="menu">
+        <span class="menu-heading">Информация о пользователе</span>
+        <a class="menu-item selected" href="{{ url_for('user.profile_page', username=data.user.name) }}">Профиль</a>
+        <a class="menu-item" href="{{ url_for('post.posts_page', username=data.user.name) }}">
+            Публикации
+            <span class="Counter">{{ data.user.posts.count() }}</span>
+        </a>
+        <a class="menu-item" href="{{ url_for('comment.comments_page', username=data.user.name) }}">
+            Комментарии
+            <span class="Counter">{{ data.user.comments.count() }}</span>
+        </a>
+        <a class="menu-item" href="{{ url_for('user.followers_page', user_id=data.user.id) }}">
+            Подписчики 
+            <span class="Counter">{{ data.user.followers.count() - 1 }}</span>
+        </a>
+        <a class="menu-item" href="{{ url_for('user.followedBy_page', user_id=data.user.id) }}">
+            Подписан 
+            <span class="Counter">{{ data.user.followed.count() - 1 }}</span>
+        </a>
+    </nav>
+    {% if current_user != data.user %}
+        {% if current_user.is_anonymous or not current_user.is_following(data.user) %}
+            <a class="btn btn-block btn-primary" role="btn" href="{{ url_for('user.follow', user_id=data.user.id) }}">Подписаться</a>
+        {% else %}
+            <a class="btn btn-block btn-danger" role="btn" href="{{ url_for('user.unfollow', user_id=data.user.id) }}">Отписаться</a>
+        {% endif %}
+    {% endif %}
+</section>

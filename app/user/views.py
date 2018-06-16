@@ -33,7 +33,8 @@ def profile_page(username):
 	'''Генерирует страницу профиля пользователя.'''
 	return create_response(template='user/profile.html', data={
 		'page_title': 'Страница профиля',
-		'user': User.query.filter_by(name=username).first_or_404()
+		'user': User.query.filter_by(name=username).first_or_404(),
+		'post_count': int(current_app.memory.get(key='post_count'))
 	})
 
 
@@ -63,7 +64,8 @@ def editProfile_page():
 
 				bro.photo_url = 'photos/' + filename
 			else:
-				flash('Поддерживаются только следующие форматы: png, jpg, jpeg, gif')
+				flash(category='warn', 
+					message='Поддерживаются только следующие форматы: png, jpg, jpeg, gif, svg')
 				return redirect(url_for('user.editProfile_page'))
 
 		bro.first_name = first_name
@@ -74,9 +76,8 @@ def editProfile_page():
 		db.session.add(bro)
 		db.session.commit()
 		
-		flash('Новые данные сохранены.')
+		flash(message='Новые данные сохранены.', category='success')
 		return redirect(url_for('user.editProfile_page'))
-
 	
 	return create_response(template='user/edit_profile.html', data={
 		'page_title': 'Страница редактирования профиля',
@@ -109,12 +110,13 @@ def changeLogin_request():
 	if form.validate_on_submit():
 		current_user.name = form.name.data
 
-		flash('Ваш login успешно изменён.')
+		flash(category='success', message='Ваш login успешно изменён.')
 		db.session.add(current_user)
 		db.session.commit()
 		return redirect(url_for('user.editAccount_page'))
 	else:
-		flash('Неверные данные')
+		flash(category='error', message='Неверные данные')
+		return redirect(url_for('user.editAccount_page'))
 
 
 
@@ -127,15 +129,15 @@ def changePassword_request():
 		if current_user.verify_password(form.old_password.data):
 			current_user.password = form.password.data
 
-			flash('Ваш пароль успешно изменён.')
+			flash(category='success', message='Ваш пароль успешно изменён.')
 			db.session.add(current_user)
 			db.session.commit()
 			return redirect(url_for('user.editAccount_page'))
 		else:
-			flash('Неверный пароль.')
+			flash(category='error', message='Неверный пароль.')
 			return redirect(url_for('user.editAccount_page'))
 	else:
-		flash('Неверно заполнена форма.')
+		flash(category='error', message='Неверно заполнена форма.')
 		return redirect(url_for('user.editAccount_page'))
 
 
@@ -151,11 +153,11 @@ def changeEmail_request():
 		token = current_user.generate_changeEmail_token(new_email)
 		send_email(new_email, 'Потвердите свой email адрес', 
 			'mail/confirm_email/index', user=current_user, token=token)
-		flash('''На ваш новый почтовый адрес отправленно письмо с инструкциями,
+		flash(message='''На ваш новый почтовый адрес отправленно письмо с инструкциями,
 				для потверждения нового адреса''')
 		return redirect(url_for('user.editAccount_page'))
 	else:
-		flash('Неверно заполнена форма.')
+		flash(category='error', message='Неверно заполнена форма.')
 		return redirect(url_for('user.editAccount_page'))
 
 
@@ -166,10 +168,10 @@ def changeEmail(token):
 	'''Обрабатывает запрос на изменения email.'''
 	if current_user.change_email(token):
 		db.session.commit()
-		flash('Ваш email адрес обновлён.')
+		flash(category='success', message='Ваш email адрес обновлён.')
 		return redirect(url_for('user.editAccount_page'))
 	else:
-		flash('Неверный запрос.')
+		flash(category='error', message='Неверный запрос.')
 		return redirect(url_for('user.editAccount_page'))
 	
 
@@ -179,13 +181,13 @@ def changeEmail(token):
 def follow(user_id):
 	user = User.query.filter_by(id=user_id).first()
 	if user is None:
-		flash('Недействительный пользователь.')
+		flash(category='error', message='Недействительный пользователь.')
 		return redirect(url_for('main.home_page'))
 	if current_user.is_following(user):
-		flash('Вы уже читаете данного пользователя.')
+		flash(category='warn', message='Вы уже читаете данного пользователя.')
 		return redirect(url_for('user.profile_page', username=user.name))
 	current_user.follow(user)
-	flash('Вы подписаны на {}'.format(user.name))
+	flash(category='success', message='Вы подписаны на {}'.format(user.name))
 	return redirect(url_for('user.profile_page', username=user.name))
 
 
@@ -194,16 +196,13 @@ def follow(user_id):
 @fresh_login_required
 def unfollow(user_id):
 	user = User.query.filter_by(id=user_id).first()
-	print(current_user.is_following(user))
-	if user is None:
-		flash('Недействительный пользователь.')
-		return redirect(url_for('main.home_page'))
 	if not current_user.is_following(user):
-		flash('Вы уже отписаны.')
+		flash(category='warn', message='Вы уже отписаны.')
 		return redirect(url_for('user.profile_page', username=user.name))
 	current_user.unfollow(user)
-	flash('Вы отписаны от {}'.format(user.name))
-	return redirect(url_for('user.profile_page', username=user.name))
+
+	flash(category='success', message='Вы отписаны от {}'.format(user.name))
+	return redirect(request.cookies.get('current_page'))
 
 
 
@@ -211,7 +210,7 @@ def unfollow(user_id):
 def followers_page(user_id):
 	user = User.query.filter_by(id=user_id).first()
 	if user is None:
-		flash('Недействительный пользователь.')
+		flash(category='error', message='Недействительный пользователь.')
 		return redirect(url_for('main.home_page'))
 	page = request.args.get('page', 1, type=int)
 	pagination = user.followers.paginate(
@@ -233,9 +232,11 @@ def followers_page(user_id):
 
 @user.route(rule='/users/followed_by/<user_id>')
 def followedBy_page(user_id):
+	'''Генерирует страницу пользователей на которых подписан 
+	указанный пользователь'''
 	user = User.query.filter_by(id=user_id).first()
 	if user is None:
-		flash('Недействительный пользователь.')
+		flash(category='error', message='Недействительный пользователь.')
 		return redirect(url_for('main.home_page'))
 	page = request.args.get('page', 1, type=int)
 	pagination = user.followed.paginate(

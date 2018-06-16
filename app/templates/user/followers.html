@@ -4,38 +4,31 @@
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
 {% block content %}
-    <div class="page-header">
-        <span>
-            <a href="{{ url_for('user.profile_page', username=data.user.name) }}">
-                <img src="{{ data.user.gravatar(size=32) }}">
-                {{ data.user.name }}
-            </a>
-        </span>
-        <span> - {{ data.title }}:</span>
-    </div>
-    <hr>
-    <table>
-        <thead>
-            <tr>
-                <th>Пользователь</th>
-                <th>Подписан</th>
-            </tr>
-        </thead>
-        {% for follow in data.follows %}
-            {% if follow.user != data.user %}
-                <tr>
-                    <td>
-                        <a href="{{ url_for('user.profile_page', username=follow.user.name) }}">
-                            <img src="{{ follow.user.gravatar(size=32) }}">
-                            {{ follow.user.name }}
-                        </a>
-                    </td>
-                    <td>{{ follow.timestamp.strftime('%Y/%m/%d') }}</td>
-                </tr>
-            {% endif %}
-        {% endfor %}
-    </table>
-    <div class="pagination">
-        {{ render_pagination(data.pagination, data.endpoint, user_id=data.user.id) }}
+    <div class="columns">
+        <aside class="one-fourth column my-3">
+            {% include 'components/_nav_user.html' %}
+        </aside>
+        <div class="three-fourths column">
+            <div class="Box my-3 follow">
+                    <div class="Box-header">
+                        <span class="Box-title">{{ data.title }}</span>
+                    </div>
+                    {% for follow in data.follows %}
+                        {% if follow.user != data.user %}
+                            <div class="Box-row">
+                                <a class="user-avatar" href="{{ url_for('user.profile_page', username=follow.user.name) }}">
+                                    <span><img class="Avatar" src="{{ follow.user.gravatar(size=32) }}"></span>
+                                    <span class="mb-1">{{ follow.user.name }}</span>
+                                </a>
+                                {% if not current_user.is_anonymous and current_user == data.user %}
+                                    <a class="btn btn-sm btn-danger" role="btn" href="{{ url_for('user.unfollow', user_id=follow.user.id) }}">Отписаться</a>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                
+            </div>
+            {{ render_pagination(data.pagination, data.endpoint, user_id=data.user.id) }}
+        </div>
     </div>
 {% endblock %}

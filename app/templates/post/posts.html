@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+    <div class="columns">
+        <aside class="one-fourth column my-3">
+            {% include 'components/_nav_user.html' %}
+        </aside>
+        <div class="three-fourths column">
+            <ul>
+                {% for post in data.posts %}
+                    <li>
+                        {% include 'post/_post_small.html' %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

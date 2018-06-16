@@ -7,18 +7,28 @@
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
 {% block content %}
-	<h3>Форма добавления постов</h3>
+<section class="columns">
+	<aside class="one-fourth column">
+		{% include 'components/_nav_publications.html' %}
+	</aside>
+	<div class="three-fourths column">
+		<div class="Box my-3">
+			<div class="Box-header">
+				<small>Редактирование поста.</small>
+			</div>
+			<div class="Box-body">
+				<form method="POST">
+					{{ data.form.csrf_token }}
+					{{ render_field(data.form.title, value=data.post.title, class="form-control") }}
+					{{ render_field(data.form.text, rows=10, class="form-control") }}
+					<button class="btn btn-sm btn-primary" type="submit">Сохранить пост</button>
+					<a href="{{ url_for('post.deletePost_request', id=data.post.id) }}" 
+						class="btn btn-sm btn-danger" role="button">Удалить пост</a>
+					<a href="javascript:history.go(-1)" class="btn btn-sm" role="button">Отмена</a>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>
 
-	<form method="POST">
-		{{ data.form.csrf_token }}
-		{{ render_field(data.form.title, value=data.post.title) }}
-		<!-- {{ render_field(data.form.text, rows=10, cols=60, only_input=True) }} -->
-		{{ render_field(data.form.text, rows=10, cols=60) }}
-		<button>Сохранить пост</button>
-	</form>
-
-	<form method="POST" action="{{ url_for('post.deletePost_request', id=data.post.id) }}">
-		{{ data.form.csrf_token }}
-		<button>Удалить пост</button>
-	</form>
 {% endblock %}

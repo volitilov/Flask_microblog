@@ -1,17 +1,99 @@
 header {
-    background-color: rgb(214, 221, 228);
-    display: block;
-    overflow: hidden;
+    // border-bottom: 1px solid #c8e1ff;
+    border-bottom: 1px solid #d1d5da;
+    // background-color: #f3f5f8;
+    // background-color: #eff3f6;
+    background-color: #eff3f6;
+    background-image: linear-gradient(-180deg, #fafbfc 0%, #eff3f6 90%);
+    .container {
+        padding: 10px 0;
+    }
+   
     figure {
-        img {}
-        figcaption {
-            h3 {}
-            p {}
+        margin: 1em 0;
+        .logo {
+            position: absolute;
+            margin-top: 5px;
+        }
+        img {
+            position: absolute;
+            margin-top: 5px;
+            border: 1px solid black;
+            padding: 1px;
+            border-radius: 4px;
+        }
+    }
+    figcaption {
+        margin-left: 50px;
+        h1 {
+            color: #fff;
+            margin-top: 0;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        p {
+            font-size: 12px;
+            margin-top: 0;
+            padding-top: 0;
         }
     }
     nav {
+        float: right;
+        padding-top: 23px;
         li {
-            a {}
+            display: inline-block;
+            a {
+                margin-left: 5px;
+                padding: 5px;
+                color: #24292e;
+            }
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            text-align: right;
+        }
+        .dropdown-toggle {
+            text-decoration: none;
+            font-weight: 600;
+            &:focus {
+                outline: 0;
+            }
+            span {
+                display: inline-block;
+                vertical-align: middle;
+                padding-left: 3px;
+                img {
+                    border-radius: 50%;
+                }
+            }
+        }
+        .dropdown-content {
+            transition: all .25s ease;
+            top: 25px;
+            opacity: 0;
+            visibility:hidden;
+            width: 150px;
+            z-index: 99;
+            .Popover-message {
+                width: auto;
+            }
+            li {
+                margin: 0;
+                padding: 0;
+            }
+            a {
+                margin: 0;
+                padding: 8px 10px;
+                display: block;
+                text-decoration: none;
+            }
+        }
+        .dropdown-content:hover,
+        .dropdown-toggle:focus ~ .dropdown-content {
+            opacity: 1;
+            visibility:visible;
+            top: 50px;
         }
     }
 }

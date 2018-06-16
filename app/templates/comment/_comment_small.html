@@ -1,0 +1,30 @@
+<li class="Box my-3">
+    <div class="Box-header">
+        <a class="user-avatar" href="{{ url_for('user.profile_page', username=comment.author.name) }}">
+            <span><img width="33px" src="{{ comment.author.gravatar(size=50) }}" alt="Аватар"></span>
+            <span>{{ comment.author.name }}</span>
+        </a>
+    </div>
+    <div class="Box-body">
+        <small>
+            {{ comment.timestamp.strftime('%d.%m.%Y') }}
+            к посту: 
+            {% if not comment.post.id %}
+                удалён
+            {% else %}
+                 <a href="{{ url_for('post.post_page', id=comment.post.id) }}">{{ comment.post.title }}</a>
+            {% endif %}
+        </small>
+        <p>
+            {% if comment.body_html %}
+                {{ comment.body_html|safe|truncate(400) }}
+                <span class="hidden-text-expander">
+                    <a role="btn" class="ellipsis-expander" 
+                        href="{{ url_for('comment.comment_page', id=comment.id) }}">&hellip;</a>
+                </span>
+            {% else %}
+                {{ comment.text|truncate(400) }}
+            {% endif %}
+        </p>
+    </div>
+</li>

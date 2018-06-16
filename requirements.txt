@@ -29,6 +29,7 @@ psycopg2==2.7.4
 psycopg2-binary==2.7.4
 pycodestyle==2.4.0
 Pygments==2.2.0
+pymemcache==1.4.4
 python-dateutil==2.7.2
 python-dotenv==0.8.2
 python-editor==1.0.3

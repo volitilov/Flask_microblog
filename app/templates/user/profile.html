@@ -3,51 +3,33 @@
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
 {% block content %}
-    <h3>Пользователь.</h3>
-    <ul>
-        <li><a href="{{ url_for('user.profile_page', username=data.user.name) }}">Профиль</a></li>
-        <li><a href="{{ url_for('post.userPosts_page', username=data.user.name) }}">Публикации</a></li>
-        <li><a href="#">Комментарии</a></li>
-    </ul>
-    <div>
-        {% if current_user.photo_url %}
-            <img src="{{ url_for('uploads', filename=current_user.photo_url) }}" alt="photo" />
-        {% else %}
-            <img src="{{ current_user.gravatar(default='mm') }}" alt="Аватар" />
-        {% endif %}
-        {% if current_user != data.user %}
-            {% if current_user.is_anonymous or not current_user.is_following(data.user) %}
-                <a href="{{ url_for('user.follow', user_id=data.user.id) }}">Подписаться</a> |
-            {% else %}
-                <a href="{{ url_for('user.unfollow', user_id=data.user.id) }}">Отписаться</a> |
-            {% endif %}
-        {% endif %}
-        <a href="{{ url_for('user.followers_page', user_id=data.user.id) }}">
-            Подписчиков: <span>{{ data.user.followers.count() - 1 }}</span> |
-        </a>
-        <a href="{{ url_for('user.followedBy_page', user_id=data.user.id) }}">
-            Подписан: <span>{{ data.user.followed.count() - 1 }}</span> |
-        </a>
-        {% if current_user.is_authenticated and 
-            data.user != current_user and 
-            data.user.is_following(current_user) %}
-                | <span>Читает вас.</span>
-        {% endif %}
-        <p>
-            {% if data.user.first_name or data.user.last_name %}
-                <i>{{ data.user.first_name }} </i>
-                <i>{{ data.user.last_name }}</i>
-            {% endif %}
-        </p>
-        <p>
-            <b>Обо мне:</b>
-            {% if data.user.about_me %}
-                <i>{{ data.user.about_me }}</i>
-            {% endif %}
-        </p>
-        <p>
-            <b>Зарегестрирован на сайте:</b> 
-            <b>{{ data.user.date_registration.strftime('%Y/%m/%d в %H:%M:%S') }}</b>
-        </p>
-    </div>
+    <section class="columns mt-3">
+        <aside class="one-fourth column">
+            {% include 'components/_nav_user.html' %}
+        </aside>
+        <div class="three-fourths column">
+            <article class="Box">
+                <div class="Box-header">
+                    <small>Профиль пользователя</small>
+                </div>
+                <div class="Box-body">
+                    <span class="Label Label--outline Label--outline-green mb-3"><small>{{ data.user.name }}</small></span>
+                    {% if data.user.first_name or data.user.last_name %}
+                        <h4>{{ data.user.first_name }} {{ data.user.last_name }}</h4>
+                    {% endif %}
+                    <p>
+                        <span class="text-gray">Зарегестрирован на сайте:</span>
+                        <small>{{ data.user.date_registration.strftime('%d.%m.%Y в %H:%M:%S') }}</small>
+                    </p>
+                    
+                    <b>Обо мне:</b>
+                    {% if data.user.about_me %}
+                        <blockquote>
+                            <p>{{ data.user.about_me }}</p>
+                        </blockquote>
+                    {% endif %}
+                </div>
+            </article>
+        </div>
+    </section>
 {% endblock %}

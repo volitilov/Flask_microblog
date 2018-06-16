@@ -5,17 +5,28 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-		<!-- Bootstrap CSS -->
-		{# <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> #}
 		<link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.png') }}" type="images/png">
 		<link rel="icon" href="{{ url_for('static', filename='img/favicon.png') }}" type="images/png">
-		<!-- <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.0.0/cerulean/bootstrap.min.css" rel="stylesheet" integrity="sha384-Pu87tkhdc8aoo+5M/Coc7ErjxhR36ayOFNloPU+tR/4PamJKHHjhK9B0EBGKxNet" crossorigin="anonymous"> -->
 
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_normalize.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_primer.css') }}">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
 		<!-- components -->
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/components/header.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/components/post.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/components/nav_publications.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/components/nav_user.css') }}" />
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/components/flash.css') }}" />
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/components/button_close.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/components/follow.css') }}" />
+		<!-- pages -->
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/edit_account.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/login.css') }}" />
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_atelier-forest-light.css') }}" /> -->
+		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_atelier-seaside-dark.css') }}" /> -->
+		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_atom-one-dark.css') }}" /> -->
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_atom-one-light.css') }}" />
+		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_monokai-sublime.css') }}" /> -->
 
 		<title>
 			{% if data %}
@@ -27,26 +38,27 @@
 	</head>
 	<body>
 		{% include 'components/_header.html' %}
-		<main>
-			{% with messages = get_flashed_messages() %} 
+		
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+		<script>hljs.initHighlightingOnLoad();</script>
+		<div class="container main">
+			{% with messages = get_flashed_messages(with_categories=true) %} 
 				{% if messages %}
-					<ul class="flash">
-						{% for message in messages %}
-							<button class="close">&times;</button>
-							<li>{{ message|safe }} </li>
+					<ul class="flash-messages">
+						{% for category, message in messages %}
+							<li class="flash flash-{{ category }}">
+								{{ message|safe }}
+								<button class="close">&times;</button>
+							</li>
 						{% endfor %}
 					</ul>
 				{% endif %}
 			{% endwith %}
 			{% block content %}{% endblock %}
-		</main>
+		</div>
 
 		<!-- Optional JavaScript -->
 		<script src="{{ url_for('static', filename='js/buttonClosse_flash.js') }}"></script>
 		
-		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-		 {# <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-		 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-		 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> #}
 	</body>
 </html>

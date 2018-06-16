@@ -1,5 +1,95 @@
 header {
-  background-color: #d6dde4;
+  border-bottom: 1px solid #d1d5da;
+  background-color: #eff3f6;
+  background-image: linear-gradient(-180deg, #fafbfc 0%, #eff3f6 90%);
+}
+header .container {
+  padding: 10px 0;
+}
+header figure {
+  margin: 1em 0;
+}
+header figure .logo {
+  position: absolute;
+  margin-top: 5px;
+}
+header figure img {
+  position: absolute;
+  margin-top: 5px;
+  border: 1px solid black;
+  padding: 1px;
+  border-radius: 4px;
+}
+header figcaption {
+  margin-left: 50px;
+}
+header figcaption h1 {
+  color: #fff;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+header figcaption p {
+  font-size: 12px;
+  margin-top: 0;
+  padding-top: 0;
+}
+header nav {
+  float: right;
+  padding-top: 23px;
+}
+header nav li {
+  display: inline-block;
+}
+header nav li a {
+  margin-left: 5px;
+  padding: 5px;
+  color: #24292e;
+}
+header nav .dropdown {
+  position: relative;
+  display: inline-block;
+  text-align: right;
+}
+header nav .dropdown-toggle {
+  text-decoration: none;
+  font-weight: 600;
+}
+header nav .dropdown-toggle:focus {
+  outline: 0;
+}
+header nav .dropdown-toggle span {
+  display: inline-block;
+  vertical-align: middle;
+  padding-left: 3px;
+}
+header nav .dropdown-toggle span img {
+  border-radius: 50%;
+}
+header nav .dropdown-content {
+  transition: all .25s ease;
+  top: 25px;
+  opacity: 0;
+  visibility: hidden;
+  width: 150px;
+  z-index: 99;
+}
+header nav .dropdown-content .Popover-message {
+  width: auto;
+}
+header nav .dropdown-content li {
+  margin: 0;
+  padding: 0;
+}
+header nav .dropdown-content a {
+  margin: 0;
+  padding: 8px 10px;
   display: block;
-  overflow: hidden;
+  text-decoration: none;
+}
+header nav .dropdown-content:hover,
+header nav .dropdown-toggle:focus ~ .dropdown-content {
+  opacity: 1;
+  visibility: visible;
+  top: 50px;
 }

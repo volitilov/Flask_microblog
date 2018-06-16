@@ -4,37 +4,32 @@
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
 {% block content %}
-
-	<div class="post_tabs">
-		<ul>
-			<li>
-				<a href="{{ url_for('main.allPosts_request') }}">Все посты</a>
-			</li>
-			<li>
-				<a href="{{ url_for('main.followedPosts_request') }}">Подписки</a>
-			</li>
-		</ul>
-	</div>
-	{% if data.posts %}
-		<ul>
-			{% for post in data.posts %}
-				<li>
-					{% include 'components/_post_small.html' %}
-				</li>
-			{% endfor %}
-		</ul>
-		<div class="pagination">
-			{{ render_pagination(data.pagination, 'main.home_page') }}
-		</div>
-	{% else %}
-		<h1>Hello, 
-			{% if current_user.is_authenticated %}
-				{{ current_user.name }}
+	<section class="columns">
+        <aside class="one-fourth column">
+			{% include 'components/_nav_publications.html' %}
+        </aside>
+        <div class="three-fourths column">
+			{% if data.posts %}
+				<ul>
+					{% for post in data.posts %}
+						<li>
+							{% include 'post/_post_small.html' %}
+						</li>
+					{% endfor %}
+				</ul>
+				<div class="pagination">
+					{{ render_pagination(data.pagination, 'main.home_page') }}
+				</div>
 			{% else %}
-				Stranger
-			{% endif %}!
-		</h1>
-		<p>Постов на данный момент нет.</p>
-	{% endif %}
-	
+				<h1>Hello, 
+					{% if current_user.is_authenticated %}
+						{{ current_user.name }}
+					{% else %}
+						Stranger
+					{% endif %}!
+				</h1>
+				<p>Постов на данный момент нет.</p>
+			{% endif %}
+        </div>
+    </section>
 {% endblock %}

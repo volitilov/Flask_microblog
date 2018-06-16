@@ -6,7 +6,7 @@
 
 from flask import (
 	render_template, request, current_app, make_response, redirect, 
-	url_for
+	url_for, current_app
 )
 
 from flask_login import current_user, login_required
@@ -54,7 +54,8 @@ def home_page():
 		'posts': pagination.items,
 		'pagination': pagination,
 		'posts': pagination.items,
-		'show_followed': show_followed
+		'show_followed': show_followed,
+		'post_count': int(current_app.memory.get('post_count'))
 	})
 
 

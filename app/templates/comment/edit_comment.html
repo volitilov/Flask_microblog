@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% from 'macros/_formhelpers.html' import render_field %}
+{% block scripts %}
+	{{ pagedown.include_pagedown() }}
+{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+<section class="columns mt-3">
+	<aside class="one-fourth column">
+		{% include 'components/_nav_user.html' %}
+	</aside>
+	<div class="three-fourths column">
+		<div class="Box">
+			<div class="Box-header">
+				<small>Редактирование коментария.</small>
+			</div>
+			<div class="Box-body">
+				<form action="{{ url_for('comment.editComment_request', comment_id=data.comment.id) }}" method="POST">
+					{{ data.form.csrf_token }}
+					{{ render_field(data.form.body, rows=10, class="form-control") }}
+					<button class="btn btn-sm btn-primary" type="submit">Сохранить</button>
+					<a href="{{ url_for('comment.delComment_request', comment_id=data.comment.id) }}" 
+						class="btn btn-sm btn-danger" role="button">Удалить</a>
+					<a href="javascript:history.go(-1)" class="btn btn-sm" role="button">Отмена</a>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>
+
+{% endblock %}

@@ -132,8 +132,25 @@ def deploy():
 
 
 
+@app.cli.command()
+def set_data():
+    '''Записывает необходимые данные в оперативку'''
+    client = app.memory
+
+    client.set(key='post_count', value=Post.query.count())
+    print('\nЗаписано в память кол-во постов.')
+    
+    client.set(key='user_count', value=User.query.count())
+    print('Записано в память кол-во пользователей.')
+    
+    client.set(key='comment_count', value=Comment.query.count())
+    print('Записано в память кол-во комментариев.')
+
+    print('Работа завершена \n')
+
+
+
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 if __name__ == '__main__':
-    print('Hello world')
     app.run()

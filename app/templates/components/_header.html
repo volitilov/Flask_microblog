@@ -3,8 +3,7 @@
 		<div class="columns">
 			<div class="one-half column">
 				<figure>
-					<!-- <img width="40" height="40" src="{{ url_for('static', filename='img/favicon.ico') }}"> -->
-					<span class="logo"><p>][</p></span>
+					<img width="40" height="40" src="{{ url_for('static', filename='img/favicon.svg') }}">
 					<figcaption>
 						<h3>APIdoc</h3>
 						<p>Библиотека API документации к технологиям.</p>
@@ -15,14 +14,14 @@
 				<nav>
 					<li>
 						<span class="tooltipped tooltipped-n" aria-label="Перейти на главную страницу">
-							<a class="btn btn-sm" role="btn" href="{{ url_for('main.home_page') }}">Публикации</a>
+							<a href="{{ url_for('main.home_page') }}">Публикации</a>
 						</span>
 					</li>
 					{% if current_user.is_authenticated %}
 						<li>
-							<a class="btn btn-sm" role="btn" href="#">
-								Уведомления
-								<span class="Counter">0</span>
+							<a href="{{ url_for('notice.notice_page') }}">
+								<span><i class="material-icons">notifications_none</i></span>
+								<span class="Counter">{{ current_user.notice.count() }}</span>
 							</a>
 						</li>
 						<li class="dropdown">
@@ -42,7 +41,7 @@
 								<ul class="menu Popover-message Box box-shadow-large">
 									<li class="menu-item"><a href="{{ url_for('user.profile_page', username=current_user.name) }}">Профиль</a></li>
 									<li class="menu-item"><a href="{{ url_for('user.editProfile_page') }}">Настройка</a></li>
-									<li class="menu-item"><a href="{{ url_for('auth.logout_page') }}">Выйти</a></li>
+									<li class="menu-item"><a href="{{ url_for('auth.logout_request') }}">Выйти</a></li>
 								</ul>
 							</ul>
 						</li>

@@ -10,6 +10,7 @@
 
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_normalize.css') }}" />
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_primer.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_highlight.min.css') }}">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
 		<!-- components -->
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/components/header.css') }}" />
@@ -21,12 +22,13 @@
 		<!-- pages -->
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/edit_account.css') }}" />
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/login.css') }}" />
-		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/notice.css') }}" />
 		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_atelier-forest-light.css') }}" /> -->
 		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_atelier-seaside-dark.css') }}" /> -->
 		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_atom-one-dark.css') }}" /> -->
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_atom-one-light.css') }}" />
-		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_monokai-sublime.css') }}" /> -->
+		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_atom-one-light.css') }}" /> -->
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_monokai-sublime.css') }}" />
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 		<title>
 			{% if data %}
@@ -48,7 +50,7 @@
 						{% for category, message in messages %}
 							<li class="flash flash-{{ category }}">
 								{{ message|safe }}
-								<button class="close">&times;</button>
+								<button class="close closeFlash_btn">&times;</button>
 							</li>
 						{% endfor %}
 					</ul>
@@ -58,7 +60,7 @@
 		</div>
 
 		<!-- Optional JavaScript -->
-		<script src="{{ url_for('static', filename='js/buttonClosse_flash.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/close_buttons.js') }}"></script>
 		
 	</body>
 </html>

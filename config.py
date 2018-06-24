@@ -24,7 +24,8 @@ class Config:
 
     # задаёт кол-во элементов на станице
     FLASKY_POSTS_PER_PAGE = 5
-    FLASKY_FOLLOWERS_PER_PAGE = 10
+    APP_FOLLOWERS_PER_PAGE = 10
+    APP_NOTICE_PER_PAGE = 5
 
     # включает запись информации о запросах
     SQLALCHEMY_RECORD_QUERIES = True

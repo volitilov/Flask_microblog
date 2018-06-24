@@ -33,8 +33,7 @@ def profile_page(username):
 	'''Генерирует страницу профиля пользователя.'''
 	return create_response(template='user/profile.html', data={
 		'page_title': 'Страница профиля',
-		'user': User.query.filter_by(name=username).first_or_404(),
-		'post_count': int(current_app.memory.get(key='post_count'))
+		'user': User.query.filter_by(name=username).first_or_404()
 	})
 
 
@@ -108,12 +107,16 @@ def changeLogin_request():
 	form = ChangeLogin_form()
 
 	if form.validate_on_submit():
-		current_user.name = form.name.data
-
-		flash(category='success', message='Ваш login успешно изменён.')
-		db.session.add(current_user)
-		db.session.commit()
-		return redirect(url_for('user.editAccount_page'))
+		name = form.name.data
+		if not User.query.filter_by(name=name).first():
+			current_user.name = name
+			flash(category='success', message='Ваш login успешно изменён.')
+			db.session.add(current_user)
+			db.session.commit()
+			return redirect(url_for('user.editAccount_page'))
+		else:
+			flash(category='warn', message='Логин: {} - уже занят'.format(name))
+			return redirect(url_for('user.editAccount_page'))
 	else:
 		flash(category='error', message='Неверные данные')
 		return redirect(url_for('user.editAccount_page'))
@@ -214,7 +217,7 @@ def followers_page(user_id):
 		return redirect(url_for('main.home_page'))
 	page = request.args.get('page', 1, type=int)
 	pagination = user.followers.paginate(
-		page, per_page=current_app.config['FLASKY_FOLLOWERS_PER_PAGE'],
+		page, per_page=current_app.config['APP_FOLLOWERS_PER_PAGE'],
 		error_out=False)
 	follows = [{'user': item.follower, 'timestamp': item.timestamp} 
 				for item in pagination.items] 
@@ -240,7 +243,7 @@ def followedBy_page(user_id):
 		return redirect(url_for('main.home_page'))
 	page = request.args.get('page', 1, type=int)
 	pagination = user.followed.paginate(
-		page, per_page=current_app.config['FLASKY_FOLLOWERS_PER_PAGE'],
+		page, per_page=current_app.config['APP_FOLLOWERS_PER_PAGE'],
 		error_out=False)
 	follows = [{'user': item.followed, 'timestamp': item.timestamp} 
 				for item in pagination.items]

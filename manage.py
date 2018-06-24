@@ -13,6 +13,7 @@ from app.models.user import User, Follow
 from app.models.role import Role
 from app.models.post import Post
 from app.models.comment import Comment
+from app.models.notice import Notice
 
 from flask_migrate import Migrate, MigrateCommand
 from dotenv import load_dotenv, find_dotenv
@@ -46,7 +47,7 @@ def db():
 def make_shell_context():
     '''Запускает shell со сконфигурированым контекстом'''
     return dict(app=app, db=database, User=User, Post=Post, Role=Role, 
-        Follow=Follow, Comment=Comment)
+        Follow=Follow, Comment=Comment, Notice=Notice)
 
 
 # flask test
@@ -146,6 +147,9 @@ def set_data():
     client.set(key='comment_count', value=Comment.query.count())
     print('Записано в память кол-во комментариев.')
 
+    client.set(key='notice_count', value=Notice.query.count())
+    print('Записано в память кол-во уведомлений.')
+
     print('Работа завершена \n')
 
 
@@ -153,4 +157,5 @@ def set_data():
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 if __name__ == '__main__':
+    set_data()
     app.run()

@@ -10,9 +10,7 @@
         <div class="three-fourths column">
             <ul>
                 {% for comment in data.comments %}
-                    <li>
-                        {% include 'comment/_comment_small.html' %}
-                    </li>
+                    {% include 'comment/_comment_small.html' %}
                 {% endfor %}
             </ul>
         </div>

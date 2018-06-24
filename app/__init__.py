@@ -53,6 +53,9 @@ def create_app(config_name):
     from .comment import comment
     app.register_blueprint(comment)
 
+    from .notice import notice
+    app.register_blueprint(notice)
+
     from .api_1_0 import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api/v1.0')
 

@@ -34,7 +34,7 @@ class Registration_form(FlaskForm):
                         EqualTo('password2', message='Пароли должны совпадать.')])
     password2 = PasswordField(label='Повторить пароль', 
         validators=[DataRequired(message='Это поле обязательно')])
-    recaptcha = RecaptchaField()
+    # recaptcha = RecaptchaField()
 
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():

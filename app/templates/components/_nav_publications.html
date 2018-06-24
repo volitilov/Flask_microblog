@@ -2,28 +2,28 @@
     <nav class="menu my-3">
         <span class="menu-heading">Навигация по публикациям</span>
         <a class="menu-item {% if not data.show_followed %}selected{% endif %}" href="{{ url_for('main.allPosts_request') }}">
-            Все посты &#9207;
+            Все посты
+            <!-- Все посты &#9207; -->
             <span class="Counter">{{ data.post_count }}</span>
         </a>
         <a class="menu-item {% if data.show_followed %}selected{% endif %}" href="{{ url_for('main.followedPosts_request') }}">
-            По подписке &#9207;
+            По подписке
+            <!-- По подписке &#9207; -->
             {% if not current_user.is_anonymous %}
                 <span class="Counter">{{ current_user.followed_posts.count() }}</span>
             {% else %}
                 <span class="Counter">0</span>
             {% endif %}
         </a>
-        <a class="menu-item" href="#">
+        <!-- <a class="menu-item" href="#">
             По категории &#9207;
-        </a>
-        <a class="menu-item" href="#">
+        </a> -->
+        <!-- <a class="menu-item" href="#">
             По рейтенгу
-            <span class="Counter">0</span>
         </a>
         <a class="menu-item" href="#">
             По кол-ву просмотров
-            <span class="Counter">0</span>
-        </a>
+        </a> -->
     </nav>
     {% if current_user.is_authenticated %}
         <span class="tooltipped tooltipped-s" aria-label="Написать и опубликовать свой пост">							

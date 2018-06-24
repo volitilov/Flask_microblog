@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
+{% from 'macros/_pagination.html' import render_pagination %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
 {% block content %}
-    <div class="columns">
+    <section class="columns">
         <aside class="one-fourth column my-3">
             {% include 'components/_nav_user.html' %}
         </aside>
@@ -15,6 +16,7 @@
                     </li>
                 {% endfor %}
             </ul>
+            {{ render_pagination(data.pagination, data.endpoint, username=data.user.name) }}
         </div>
-    </div>
+    </section>
 {% endblock %}

@@ -10,13 +10,12 @@
 			<small>Форма регистрации</small>
 		</div>
 		<div class="Box-body">
-			<form method="POST" action="/register">
+			<form method="POST" action="{{ url_for('auth.registration_page') }}">
 				{{ data.form.csrf_token }}
 				{{ render_field(data.form.username, class="form-control", autofocus=true) }}
 				{{ render_field(data.form.email, class="form-control") }}
 				{{ render_field(data.form.password, class="form-control") }}
 				{{ render_field(data.form.password2, class="form-control") }}
-				{{ render_field(data.form.recaptcha) }}
 				<button class="btn btn-primary" type="submit">Зарегестрироваться</button>
 			</form>
 		</div>

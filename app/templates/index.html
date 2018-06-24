@@ -17,9 +17,7 @@
 						</li>
 					{% endfor %}
 				</ul>
-				<div class="pagination">
-					{{ render_pagination(data.pagination, 'main.home_page') }}
-				</div>
+				{{ render_pagination(data.pagination, 'main.home_page') }}
 			{% else %}
 				<h1>Hello, 
 					{% if current_user.is_authenticated %}

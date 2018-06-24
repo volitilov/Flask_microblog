@@ -44,9 +44,11 @@ class User(UserMixin, db.Model):
     last_visit = db.Column(db.DateTime(), default=datetime.utcnow())
     avatar_hash = db.Column(db.String(32))
     photo_url = db.Column(db.String)
+    notice_list = []
 
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
+    notice = db.relationship('Notice', backref='author', lazy='dynamic')
     followed = db.relationship('Follow', foreign_keys=[Follow.followed_id],
             backref=db.backref('follower', lazy='joined'),
             lazy='dynamic', cascade='all, delete-orphan')

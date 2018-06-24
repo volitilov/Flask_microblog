@@ -9,26 +9,21 @@ from flask import (
 )
 
 # flask extensions
-from flask_login import current_user, login_user
+from flask_login import current_user, login_required
 
 # app modules
 from . import admin
-from ..email import send_email
-from .. import db
+from ..utils import create_response
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 @admin.route('/admin')
-def adminLogin_page():
-    data = {
-        'title_page': 'Страница администратора.'
-    }
-
-    if current_user.is_anonymous:
-        return redirect(url_for('auth.login_page'))
-
-    if current_user.is_admin():
-        return render_template('admin/panell.html', data=data)
-    else:
-        flash('Тебе туда нельзя')
+@login_required
+def admin_page():
+    if not current_user.is_admin():
+        flash(category='warn', message='Тебе туда нельзя')
         return redirect(url_for('main.home_page'))
+    else:
+        return render_template('admin/panell.html', data={
+            'title_page': 'Страница администратора.'
+        })

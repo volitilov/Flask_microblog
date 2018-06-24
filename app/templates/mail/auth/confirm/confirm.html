@@ -2,10 +2,10 @@
     <p>Привет, <i style="color:green;">{{ user.name }}</i>,</p>
     <p>Для того чтобы, можно было полноценно работать с приложением 
         подверти свой почтовый ящик перейдя по ссылке ниже:</p>
-    <a href="{{ url_for('auth.confirm', token=token, _external=True) }}">...потвердить...</a>
+    <a href="{{ url_for('auth.confirm_request', token=token, _external=True) }}">...потвердить...</a>
     <br>
     <p>Если по каким-либо причинам ссылка выше не работает то нажми на эту:</p>
-    <p>{{ url_for('auth.confirm', token=token, _external=True) }}</p>
+    <p>{{ url_for('auth.confirm_request', token=token, _external=True) }}</p>
     <p>Удачи.</p>
     <p><small>Примечание: ответы на этот адрес электронной почты удаляются автоматически.</small></p>
 </section>

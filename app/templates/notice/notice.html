@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% from 'macros/_pagination.html' import render_pagination %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+    <div class="columns notice">
+        <aside class="one-fourth column my-3">
+            {% include 'components/_nav_user.html' %}
+        </aside>
+        <div class="three-fourths column">
+            <ul>
+                {% for notice in data.notice %}
+                    <li class="Box my-3">
+                        <div class="Box-header">
+                            <img width="23" height="23" src="{{ url_for('static', filename='img/favicon.svg') }}">
+                            <form method="POST" action="{{ url_for('notice.deleteNotice_request', id=notice.id) }}">
+                                <button class="close">&times;</button>
+                            </form>
+                            
+                        </div>
+                        <div class="Box-body">
+                            <small>
+                                {{ notice.timestamp.strftime('%d.%m.%Y') }}
+                            </small>
+                            <p>
+                                {% if notice.body_html %}
+                                    {{ notice.body_html|safe }}
+                                {% else %}
+                                    {{ notice.body }}
+                                {% endif %}
+                            </p>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+            {{ render_pagination(data.pagination, data.endpoint) }}
+        </div>
+    </div>
+{% endblock %}

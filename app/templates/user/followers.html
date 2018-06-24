@@ -11,7 +11,7 @@
         <div class="three-fourths column">
             <div class="Box my-3 follow">
                     <div class="Box-header">
-                        <span class="Box-title">{{ data.title }}</span>
+                        <small>{{ data.title }}</small>
                     </div>
                     {% for follow in data.follows %}
                         {% if follow.user != data.user %}

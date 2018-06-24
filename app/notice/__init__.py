@@ -2,7 +2,7 @@ from flask import Blueprint
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-comment = Blueprint('comment', __name__, url_prefix='/comments')
+notice = Blueprint('notice', __name__, url_prefix='/notice')
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

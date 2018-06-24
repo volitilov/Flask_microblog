@@ -3,5 +3,14 @@
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
 {% block content %}
-    <h3>Привет, Бос.</h3>
+    <div class="columns mt-3">
+        <aside class="one-fourth column">
+            
+        </aside>
+        <div class="three-fourths column">
+            <div class="Box">
+                <a class="btn btn-sm" href="{{ url_for('notice.addNotice_page') }}">Создать уведомление</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

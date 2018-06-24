@@ -8,19 +8,11 @@ header {
     .container {
         padding: 10px 0;
     }
-   
     figure {
         margin: 1em 0;
-        .logo {
-            position: absolute;
-            margin-top: 5px;
-        }
         img {
             position: absolute;
             margin-top: 5px;
-            border: 1px solid black;
-            padding: 1px;
-            border-radius: 4px;
         }
     }
     figcaption {
@@ -42,10 +34,23 @@ header {
         padding-top: 23px;
         li {
             display: inline-block;
+            span {
+                vertical-align: middle;
+                display: inline-block;
+                i {
+                    margin-top: 3px;
+                    margin-right: -3px;
+                    font-size: 28px;
+                }
+            }
             a {
                 margin-left: 5px;
                 padding: 5px;
                 color: #24292e;
+                font-weight: bold;
+                &:hover {
+                    text-decoration: none;
+                }
             }
         }
         .dropdown {
@@ -54,7 +59,6 @@ header {
             text-align: right;
         }
         .dropdown-toggle {
-            text-decoration: none;
             font-weight: 600;
             &:focus {
                 outline: 0;

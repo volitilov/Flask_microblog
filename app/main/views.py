@@ -41,7 +41,6 @@ def home_page():
 		show_followed = False
 	if show_followed:
 		query = current_user.followed_posts
-		print(current_user.followed_posts)
 	else:
 		query = Post.query
 	
@@ -51,11 +50,9 @@ def home_page():
 
 	return create_response(template='index.html', data={
 		'page_title': 'Главная страница.',
-		'posts': pagination.items,
 		'pagination': pagination,
 		'posts': pagination.items,
-		'show_followed': show_followed,
-		'post_count': int(current_app.memory.get('post_count'))
+		'show_followed': show_followed
 	})
 
 

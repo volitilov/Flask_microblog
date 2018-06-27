@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+    <div class="columns notice my-3">
+        <aside class="one-fourth column">
+            {% include 'components/_nav_settings.html' %}
+        </aside>
+        <div class="three-fourths column">
+            <div class="Box">
+                <div class="Box-header">
+                    <small>Настройки уведомлений</small>
+                </div>
+                <div class="Box-body">
+                    <p>Уведомлять меня если:</p>
+                    <form method="POST" action="{{ url_for('notice.changeSettings_request') }}">
+                        {{ data.form.csrf_token }}
+                        <div class="form-checkbox">
+                            <label>
+                                {{ data.form.comments_me }}
+                                {{ data.form.comments_me.label }}
+                            </label>
+                            <p class="note">
+                                Если вам кто-то оставил комментарий к вашему посту, то мы уведомим
+                                вас об этом.
+                            </p>
+                        </div>
+                        <div class="form-checkbox">
+                            <label>
+                                {{ data.form.follow_me }}
+                                {{ data.form.follow_me.label }}
+                            </label>
+                            <p class="note">
+                                Если кто-то стал вашим подписчиком, то мы уведомим 
+                                вас об этом.
+                            </p>
+                        </div>
+                        <div class="form-checkbox">
+                            <label>
+                                {{ data.form.unfollow_me }}
+                                {{ data.form.unfollow_me.label }}
+                            </label>
+                            <p class="note">
+                                Если пользователь отписался от вас, то мы уведомим
+                                вас об этом.
+                            </p>
+                        </div>
+                        <div class="form-checkbox">
+                            <label>
+                                {{ data.form.unsubscribe_me }}
+                                {{ data.form.unsubscribe_me.label }}
+                            </label>
+                            <p class="note">
+                                Если пользователь на которого вы подписаны, удалил вас из
+                                подписчиков, то мы увеодомим вас об этом.
+                            </p>
+                        </div>
+                        <div class="form-checkbox">
+                            <label>
+                                {{ data.form.comment_moderated }}
+                                {{ data.form.comment_moderated.label }}
+                            </label>
+                            <p class="note">
+                                Мы уведомим вас об упешной либо неуспешной модерации.
+                            </p>
+                        </div>
+                        <div class="form-checkbox">
+                            <label>
+                                {{ data.form.post_moderated }}
+                                {{ data.form.post_moderated.label }}
+                            </label>
+                            <p class="note">
+                                Мы уведомим вас об упешной либо неуспешной модерации.
+                            </p>
+                        </div>
+                        <button class="btn btn-sm btn-primary" type="submit">Сохранить</button>
+                        <a href="{{ url_for('notice.returnDefaultSettings_request') }}" class="btn btn-sm" role="btn">Вернуть настройки поумолчанию</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

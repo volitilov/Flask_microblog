@@ -46,6 +46,7 @@ class User(UserMixin, db.Model):
     photo_url = db.Column(db.String)
     notice_list = []
 
+    settings = db.relationship('UserSettings', backref='profile', lazy='dynamic')
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
     notice = db.relationship('Notice', backref='author', lazy='dynamic')

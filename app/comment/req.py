@@ -12,6 +12,8 @@ from . import comment
 from .forms import AddComment_form
 from ..models.post import Post
 from ..models.comment import Comment
+from ..models.notice import Notice
+from ..models.user_settings import UserSettings
 from .. import db
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -25,8 +27,17 @@ def addComment_request(post_id):
 
 	if form.validate_on_submit():
 		body = form.body.data
-
+		
 		comment = Comment(body=body, post=post, author=current_user)
+		user_settings = UserSettings.query.filter_by(state='custom', profile=post.author).first()
+		if user_settings.comments_me:
+			notice_title = 'Оставили комментарий к посту'
+			notice_body = '<b>{}</b> - оставил вам комметарий к посту - <b>{}</b><br><br><a href="{}">посмотреть</a>'.format(
+				current_user.name, post.title, url_for('comment.comment_page', id=comment.id)
+			)
+			notice = Notice(title=notice_title, body=notice_body, author=post.author)
+
+			db.session.add(notice)
 		db.session.add(comment)
 		db.session.commit()
 		flash(message='Ваш комментарий опубликован.', category='success')

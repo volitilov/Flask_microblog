@@ -13,28 +13,30 @@
                 {% for notice in data.notice %}
                     <li class="Box my-3">
                         <div class="Box-header">
-                            <img width="23" height="23" src="{{ url_for('static', filename='img/favicon.svg') }}">
+                            <small><i class="material-icons">notifications_none</i></small>
+                            <small>{{ notice.title }}</small>
                             <form method="POST" action="{{ url_for('notice.deleteNotice_request', id=notice.id) }}">
                                 <button class="close">&times;</button>
                             </form>
-                            
                         </div>
                         <div class="Box-body">
                             <small>
-                                {{ notice.timestamp.strftime('%d.%m.%Y') }}
+                                когда: {{ notice.timestamp.strftime('%d.%m.%Y') }}
                             </small>
                             <p>
                                 {% if notice.body_html %}
                                     {{ notice.body_html|safe }}
                                 {% else %}
-                                    {{ notice.body }}
+                                    {{ notice.body|safe }}
                                 {% endif %}
                             </p>
                         </div>
                     </li>
                 {% endfor %}
             </ul>
-            {{ render_pagination(data.pagination, data.endpoint) }}
+            {% if data.notice_count > data.notice_per_page %}
+                {{ render_pagination(data.pagination, data.endpoint) }}
+            {% endif %}
         </div>
     </div>
 {% endblock %}

@@ -10,10 +10,10 @@
         <span class="menu-heading">Персоналные настройки</span>
         <a class="menu-item selected" href="{{ url_for('user.editProfile_page') }}">Настройки профиля</a>
         <a class="menu-item" href="{{ url_for('user.editAccount_page') }}">Настройки аккаунта</a>
-        <a class="menu-item" href="#">Настройки уведомления</a>
-        <a class="menu-item" href="#">Настройки публикаций</a>
+        <a class="menu-item" href="{{ url_for('notice.noticeSettings_page') }}">Настройки уведомлений</a>
+        <!-- <a class="menu-item" href="#">Настройки публикаций</a>
         <a class="menu-item" href="#">Настройки комментарий</a>
         <a class="menu-item" href="#">Настройки безопасности</a>
-        <a class="menu-item" href="#">Настройки сайта</a>
+        <a class="menu-item" href="#">Настройки сайта</a> -->
     </nav>
 </section>

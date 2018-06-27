@@ -20,7 +20,6 @@ from .models.user import User
 
 def create_response(template, data):
 	'''Делает обёртку для объекта ответа.'''
-	data['notice_count'] = int(current_app.memory.get('notice_count'))
 	data['post_count'] = int(current_app.memory.get('post_count'))
 
 	resp = make_response(render_template(template, data=data))
@@ -76,6 +75,7 @@ def add_self_follows():
 			user.follow(user)
 			db.session.add(user)
 			db.session.commit()
+
 
 
 def check_recaptcha(response, recaptcha_private_key):

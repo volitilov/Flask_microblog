@@ -80,11 +80,15 @@ code {
 }
 .Box-header small {
   display: inline-block;
+  vertical-align: middle;
   padding-bottom: 5px;
   font-size: 13px;
   font-weight: 600;
   line-height: 20px;
   color: #586069;
+}
+.Box-header small i {
+  margin-top: 4px;
 }
 .edit-btn {
   float: right;

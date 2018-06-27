@@ -21,14 +21,20 @@
                                     <span class="mb-1">{{ follow.user.name }}</span>
                                 </a>
                                 {% if not current_user.is_anonymous and current_user == data.user %}
-                                    <a class="btn btn-sm btn-danger" role="btn" href="{{ url_for('user.unfollow', user_id=follow.user.id) }}">Отписаться</a>
+                                    {% if data.unfollow_btn %}
+                                        <a class="btn btn-sm btn-danger" role="btn" href="{{ url_for('user.unfollow', user_id=follow.user.id) }}">Отписаться</a>
+                                    {% else %}
+                                        <a class="btn btn-sm btn-danger" role="btn" href="{{ url_for('user.unsubscribe', user_id=follow.user.id) }}">Отписать</a>
+                                    {% endif %}
                                 {% endif %}
                             </div>
                         {% endif %}
                     {% endfor %}
                 
             </div>
-            {{ render_pagination(data.pagination, data.endpoint, user_id=data.user.id) }}
+            {% if data.followers_count > data.followers_per_page %}
+                {{ render_pagination(data.pagination, data.endpoint, user_id=data.user.id) }}
+            {% endif %}
         </div>
     </div>
 {% endblock %}

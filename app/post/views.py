@@ -47,7 +47,9 @@ def posts_page(username):
 		'posts': pagination.items,
 		'pagination': pagination,
 		'endpoint': 'post.posts_page',
-		'user': user
+		'user': user,
+		'posts_count': user.posts.count(),
+		'posts_per_page': count_items
 	})
 
 

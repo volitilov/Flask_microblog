@@ -11,6 +11,7 @@ from . import auth
 from .forms import PasswordResetRequest_form, PasswordReset_form
 from .. import db
 from ..models.user import User
+from ..models.user_settings import UserSettings
 from ..email import send_email
 from ..utils import create_response
 
@@ -56,7 +57,9 @@ def confirm_request(token):
 	if current_user.confirmed:
 		return redirect(url_for('main.home_page'))
 	if current_user.confirm(token):
-		db.session.add(current_user)
+		u_default_settings = UserSettings(state="default", profile=current_user)
+		u_custom_settings = UserSettings(state="custom", profile=current_user)
+		db.session.add_all([current_user, u_default_settings, u_custom_settings])
 		db.session.commit()
 		flash('Вы успешно подтвердили свой аккаунт.')
 	else:

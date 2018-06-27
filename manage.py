@@ -10,6 +10,7 @@ from logging.handlers import RotatingFileHandler
 from app import create_app
 from app import db as database
 from app.models.user import User, Follow
+from app.models.user_settings import UserSettings
 from app.models.role import Role
 from app.models.post import Post
 from app.models.comment import Comment
@@ -47,7 +48,7 @@ def db():
 def make_shell_context():
     '''Запускает shell со сконфигурированым контекстом'''
     return dict(app=app, db=database, User=User, Post=Post, Role=Role, 
-        Follow=Follow, Comment=Comment, Notice=Notice)
+        Follow=Follow, Comment=Comment, Notice=Notice, UserSettings=UserSettings)
 
 
 # flask test

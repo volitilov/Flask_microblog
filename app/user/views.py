@@ -12,16 +12,16 @@ from flask import (
 )
 from werkzeug.utils import secure_filename
 
-# flask extensions
 from flask_login import current_user, login_required, fresh_login_required
 
-# 
 from . import user
 from .forms import (
 	EditProfile_form, ChangeEmail_form, ChangeLogin_form, 
 	ChangePassword_form
 )
 from ..models.user import User
+from ..models.notice import Notice
+from ..models.user_settings import UserSettings
 from ..email import send_email
 from ..utils import create_response
 from .. import db
@@ -38,8 +38,8 @@ def profile_page(username):
 
 
 
-@user.route(rule='/users/settings/profile', methods=['GET', 'POST'])
-@fresh_login_required
+@user.route(rule='/profile/settings', methods=['GET', 'POST'])
+@login_required
 def editProfile_page():
 	'''Генерирует страницу настроек пользователя'''
 	form = EditProfile_form()
@@ -85,8 +85,8 @@ def editProfile_page():
 
 
 
-@user.route(rule='/users/settings/account')
-@fresh_login_required
+@user.route(rule='/account/settings')
+@login_required
 def editAccount_page():
 	changeLogin_form = ChangeLogin_form()
 	changePassword_form = ChangePassword_form()
@@ -102,7 +102,7 @@ def editAccount_page():
 
 
 @user.route(rule='/change_login', methods=['POST'])
-@fresh_login_required
+@login_required
 def changeLogin_request():
 	form = ChangeLogin_form()
 
@@ -125,6 +125,7 @@ def changeLogin_request():
 
 
 @user.route(rule='/change_password', methods=['POST'])
+@login_required
 def changePassword_request():
 	form = ChangePassword_form()
 
@@ -166,7 +167,7 @@ def changeEmail_request():
 
 
 @user.route(rule='/change_email/<token>')
-@fresh_login_required
+@login_required
 def changeEmail(token):
 	'''Обрабатывает запрос на изменения email.'''
 	if current_user.change_email(token):
@@ -180,7 +181,7 @@ def changeEmail(token):
 
 
 @user.route(rule='/follow/<user_id>')
-@fresh_login_required
+@login_required
 def follow(user_id):
 	user = User.query.filter_by(id=user_id).first()
 	if user is None:
@@ -189,36 +190,83 @@ def follow(user_id):
 	if current_user.is_following(user):
 		flash(category='warn', message='Вы уже читаете данного пользователя.')
 		return redirect(url_for('user.profile_page', username=user.name))
+	
 	current_user.follow(user)
+	user_settings = UserSettings.query.filter_by(state='custom', profile=user).first()
+	if user_settings.follow_me:
+		notice_title = 'На вас подписались'
+		notice_body = '<a href="{}">{}</a> - подписался на вас.'.format(
+			url_for('user.profile_page', username=current_user.name), current_user.name
+		)
+		notice = Notice(title=notice_title, body=notice_body, author=user)
+
+		db.session.add(notice)
+		db.session.commit()
 	flash(category='success', message='Вы подписаны на {}'.format(user.name))
 	return redirect(url_for('user.profile_page', username=user.name))
 
 
 
 @user.route(rule='/unfollow/<user_id>')
-@fresh_login_required
+@login_required
 def unfollow(user_id):
+	'''Реализовывает отписку от пользователя'''
 	user = User.query.filter_by(id=user_id).first()
 	if not current_user.is_following(user):
 		flash(category='warn', message='Вы уже отписаны.')
 		return redirect(url_for('user.profile_page', username=user.name))
 	current_user.unfollow(user)
 
+	user_settings = UserSettings.query.filter_by(state='custom', profile=user).first()
+	if user_settings.unfollow_me:
+		notice_title = 'От вас отписались'
+		notice_body = '<a href="{}">{}</a> - отписался от вас.'.format(
+			url_for('user.profile_page', username=current_user.name), current_user.name
+		)
+		notice = Notice(title=notice_title, body=notice_body, author=user)
+
+		db.session.add(notice)
+		db.session.commit()
+
 	flash(category='success', message='Вы отписаны от {}'.format(user.name))
 	return redirect(request.cookies.get('current_page'))
 
 
+@user.route(rule='/unsubscribe/<user_id>')
+@login_required
+def unsubscribe(user_id):
+	'''Реализовывает возможность текущему пользователю отписывать тех
+	кто на него подписан'''
+	user = User.query.filter_by(id=user_id).first()
+	user.unfollow(current_user)
 
-@user.route(rule='/users/followers/<user_id>')
+	user_settings = UserSettings.query.filter_by(state='custom', profile=user).first()
+	if user_settings.unsubscribe_me:
+		notice_title = 'Вас удалили из подписчиков'
+		notice_body = '<a href="{}">{}</a> - удалил вас из подписчиков.'.format(
+			url_for('user.profile_page', username=current_user.name), current_user.name
+		)
+		notice = Notice(title=notice_title, body=notice_body, author=user)
+
+		db.session.add(notice)
+		db.session.commit()
+
+	flash(category='success', message='Вы удалили {} из ваших подписчиков'.format(user.name))
+	return redirect(request.cookies.get('current_page'))
+
+
+
+@user.route(rule='/followers/<user_id>')
 def followers_page(user_id):
 	user = User.query.filter_by(id=user_id).first()
+	followers_per_page = current_app.config['APP_FOLLOWERS_PER_PAGE']
+
 	if user is None:
 		flash(category='error', message='Недействительный пользователь.')
 		return redirect(url_for('main.home_page'))
 	page = request.args.get('page', 1, type=int)
 	pagination = user.followers.paginate(
-		page, per_page=current_app.config['APP_FOLLOWERS_PER_PAGE'],
-		error_out=False)
+		page, per_page=followers_per_page, error_out=False)
 	follows = [{'user': item.follower, 'timestamp': item.timestamp} 
 				for item in pagination.items] 
 
@@ -228,23 +276,27 @@ def followers_page(user_id):
 		'pagination': pagination,
 		'follows': follows,
 		'endpoint': 'user.followers_page',
-		'title': 'Всего подписчиков: {}'.format(user.followers.count() - 1)
+		'title': 'Подписчики',
+		'unfollow_btn': False,
+		'followers_count': user.followers.count() - 1,
+		'followers_per_page': followers_per_page
 	})
 
 
 
-@user.route(rule='/users/followed_by/<user_id>')
+@user.route(rule='/followed_by/<user_id>')
 def followedBy_page(user_id):
 	'''Генерирует страницу пользователей на которых подписан 
 	указанный пользователь'''
 	user = User.query.filter_by(id=user_id).first()
+	followers_per_page = current_app.config['APP_FOLLOWERS_PER_PAGE']
+
 	if user is None:
 		flash(category='error', message='Недействительный пользователь.')
 		return redirect(url_for('main.home_page'))
 	page = request.args.get('page', 1, type=int)
 	pagination = user.followed.paginate(
-		page, per_page=current_app.config['APP_FOLLOWERS_PER_PAGE'],
-		error_out=False)
+		page, per_page=followers_per_page, error_out=False)
 	follows = [{'user': item.followed, 'timestamp': item.timestamp} 
 				for item in pagination.items]
 
@@ -254,7 +306,11 @@ def followedBy_page(user_id):
 		'pagination': pagination,
 		'follows': follows,
 		'endpoint': 'user.followedBy_page',
-		'title': 'Всего подписан на: {}'.format(user.followed.count() - 1)
+		'title': 'Подписан.',
+		'unfollow_url': 'user.unfollow',
+		'unfollow_btn': True,
+		'followers_count': user.followed.count() - 1,
+		'followers_per_page': followers_per_page
 	})
 
 

@@ -33,6 +33,7 @@ def profile_page(username):
 	'''Генерирует страницу профиля пользователя.'''
 	return create_response(template='user/profile.html', data={
 		'page_title': 'Страница профиля',
+		'page': 'profile',
 		'user': User.query.filter_by(name=username).first_or_404()
 	})
 
@@ -80,6 +81,7 @@ def editProfile_page():
 	
 	return create_response(template='user/edit_profile.html', data={
 		'page_title': 'Страница редактирования профиля',
+		'page': 'edit_profile',
 		'form': form
 	})
 
@@ -94,6 +96,7 @@ def editAccount_page():
 
 	return create_response(template='user/edit_account.html', data={
 		'page_title': 'Страница редактирования аккаунта',
+		'page': 'edit_account',
 		'login_form': changeLogin_form,
 		'password_form': changePassword_form,
 		'email_form': changeEmail_form
@@ -272,6 +275,7 @@ def followers_page(user_id):
 
 	return create_response(template='user/followers.html', data={
 		'page_title': 'Страница подписчиков.',
+		'page': 'followers',
 		'user': user,
 		'pagination': pagination,
 		'follows': follows,
@@ -302,6 +306,7 @@ def followedBy_page(user_id):
 
 	return create_response(template='user/followers.html', data={
 		'page_title': 'Страница подписок.',
+		'page': 'followed',
 		'user': user,
 		'pagination': pagination,
 		'follows': follows,

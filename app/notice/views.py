@@ -63,5 +63,6 @@ def noticeSettings_page():
 
     return create_response(template='notice/settings.html', data={
         'page_title': 'Страница настроек уведомлений',
+        'page': 'notice_settings',
         'form': form
     })

@@ -44,6 +44,7 @@ def posts_page(username):
 
 	return create_response(template='post/posts.html', data={
 		'page_title': 'Страница с публикациями пользователя.',
+		'page': 'posts',
 		'posts': pagination.items,
 		'pagination': pagination,
 		'endpoint': 'post.posts_page',

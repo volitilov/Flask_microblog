@@ -39,6 +39,7 @@ def comments_page(username):
 
 	return create_response(template='comment/comments.html', data={
 		'page_title': 'Страница с комментариями пользователя.',
+		'page': 'comments',
 		'comments': sorted_comments.all(),
 		'user': user
 	})

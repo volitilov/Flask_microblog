@@ -4,6 +4,7 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+import requests
 from flask import (
 	render_template, redirect, url_for, flash, request, current_app
 )
@@ -29,6 +30,14 @@ from flask_login import (
 @auth.route(rule='/login', methods=['GET', 'POST'])
 def login_page():
 	form = Login_form()
+	r = requests.get(current_app.config['VK_AUTHORIZATION_URL'], params={
+		'client_id': current_app.config['VK_APP_ID'],
+		'display': 'page',
+		'redirect_uri': 'http://localhost:8000/vk_login',
+		'scope': 'wall, offline, email, groups',
+		'response_type': 'code',
+		'v': current_app.config['VK_VERSION']
+	})
 
 	if form.validate_on_submit():
 		email = form.email.data
@@ -48,7 +57,8 @@ def login_page():
 
 	return create_response(template='auth/login.html', data={
 		'form': form,
-		'page_title': 'Страница авторизации.'
+		'page_title': 'Страница авторизации.',
+		'vkAuthorization_url': r.url
 	})
 
 

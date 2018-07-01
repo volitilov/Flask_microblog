@@ -3,7 +3,7 @@
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 import os
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -38,7 +38,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # путь загрузки файлов
-    UPLOAD_FOLDER = basedir + os.getenv('UPLOAD_FOLDER')
+    UPLOAD_FOLDER = basedir + '/uploads'
     # разрешонные расширения для изображений
     ALLOWED_EXTENSIONS = set(['.png', '.jpg', '.jpeg', '.gif', '.svg'])
 
@@ -52,6 +52,11 @@ class Config:
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
     MAIL_USE_SSL = True
     MAIL_DEFAULT_SENDER = MAIL_USERNAME
+
+    VK_APP_SECRET_KEY = os.getenv('VK_APP_SECRET_KEY')
+    VK_APP_ID = os.getenv('VK_APP_ID')
+    VK_VERSION = '5.52'
+    VK_AUTHORIZATION_URL = 'https://oauth.vk.com/authorize'
 
     @staticmethod
     def init_app(app): pass

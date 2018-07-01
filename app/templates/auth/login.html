@@ -24,6 +24,9 @@
 				</div>
 				<button class="btn btn-primary" type="submit">Войти на сайт</button>
 			</form>
+			<p class="my-3"><b>Другой способ авторизации:</b></p>
+			<hr>
+			<a href="{{ data.vkAuthorization_url }}" target="_blank" class="btn btn-sm">Вконтакте</a>
 		</div>
 		<div class="Box-footer">
 			<a href="{{ url_for('auth.resetPassword_page') }}">Забыли пароль?</a>

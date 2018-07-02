@@ -90,9 +90,9 @@ code {
 .Box-header small i {
   margin-top: 4px;
 }
-.edit-btn {
+.Box-header .btn {
   float: right;
-  margin-top: 3px;
+  margin-top: -4px;
 }
 .paginate-container {
   text-align: left;

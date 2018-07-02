@@ -17,7 +17,9 @@
 						</li>
 					{% endfor %}
 				</ul>
-				{{ render_pagination(data.pagination, 'main.home_page') }}
+				{% if data.posts_count > data.posts_per_page %}
+					{{ render_pagination(data.pagination, data.endpoint) }}
+				{% endif %}
 			{% else %}
 				<div class="blankslate my-3">
 					<h3>Привет, {{ current_user.name }}</h3>

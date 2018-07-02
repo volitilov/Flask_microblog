@@ -53,7 +53,6 @@ def editPost_request(id):
 		db.session.commit()
 
 		flash(message='Пост успешно сохранён.', category='success')
-		flash(message='Пост успешно сохранён.', category='success')
 		return redirect(url_for('post.editPost_page', id=post.id))
 
 

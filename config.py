@@ -23,7 +23,7 @@ class Config:
     WTF_CSRF_ENABLED = True
 
     # задаёт кол-во элементов на станице
-    FLASKY_POSTS_PER_PAGE = 5
+    APP_POSTS_PER_PAGE = 5
     APP_FOLLOWERS_PER_PAGE = 10
     APP_NOTICE_PER_PAGE = 5
 

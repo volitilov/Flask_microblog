@@ -20,6 +20,26 @@ from .. import db
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+@post.route('/followed_posts')
+@login_required
+def followedPosts_page():
+	count_items = current_app.config['APP_POSTS_PER_PAGE']
+	posts = current_user.followed_posts
+	page = request.args.get('page', 1, type=int)
+	pagination = posts.order_by(Post.data_creation.desc()).paginate(
+		page, per_page=count_items, error_out=False)
+
+	return create_response(template='index.html', data={
+		'page_title': 'Публикации по подписке',
+		'pagination': pagination,
+		'posts': pagination.items,
+		'page': 'followed_posts',
+		'endpoint': 'post.followedPosts_page',
+		'posts_count': posts.count(),
+		'posts_per_page': count_items
+	})
+
+
 @post.route(rule='/...add')
 @login_required
 def addPost_page():
@@ -35,7 +55,7 @@ def addPost_page():
 def posts_page(username):
 	'''Генерирует страницу с публикациями пользователя.'''
 	user = User.query.filter_by(name=username).first()
-	count_items = current_app.config['FLASKY_POSTS_PER_PAGE']
+	count_items = current_app.config['APP_POSTS_PER_PAGE']
 
 	page = request.args.get('page', 1, type=int)
 	pagination = user.posts.order_by(Post.data_creation.desc()).paginate(
@@ -58,6 +78,10 @@ def posts_page(username):
 def post_page(id):
 	'''Генерирует страницу запрошенного поста'''
 	post = Post.query.get_or_404(id)
+	post.views += 1
+
+	db.session.add(post)
+	db.session.commit()
 
 	return create_response(template='post/post.html', data={
 		'page_title': post.title,
@@ -79,4 +103,24 @@ def editPost_page(id):
 		'page_title': 'Страница редактирования поста',
 		'form': form,
 		'post': post
+	})
+
+
+@post.route(rule='/by_viewing')
+def byViewingPosts_page():
+	'''Формирует страницу постов отсортированных по кол-ву просмотров.'''
+	posts = Post.query.order_by(Post.views.desc())
+	count_items = current_app.config['APP_POSTS_PER_PAGE']
+
+	page = request.args.get('page', 1, type=int)
+	pagination = posts.paginate(page, per_page=count_items, error_out=False)
+
+	return create_response(template='index.html', data={
+		'page_title': 'Публикации по кол-ву просмотров.',
+		'page': 'post_views',
+		'posts': pagination.items,
+		'pagination': pagination,
+		'endpoint': 'post.byViewingPosts_page',
+		'posts_count': posts.count(),
+		'posts_per_page': count_items
 	})

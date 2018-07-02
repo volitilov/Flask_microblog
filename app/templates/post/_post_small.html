@@ -11,6 +11,10 @@
                 <span>{{ post.author.name }}</span>
             </a>
         {% endif %}
+        <small class="post-views">
+            <span><i class="material-icons">visibility</i></span>
+            <span class="Counter">{{ post.views }}</span>
+        </small>
     </div>
     <div class="Box-body post-body p-3">
         <small class="post-date">написан: {{ post.data_creation.strftime('%d.%m.%Y') }}</small> 

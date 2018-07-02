@@ -25,11 +25,16 @@
 							<span>{{ data.post.author.name }}</span>
 						</a>
 					{% endif %}
+					
 					{% if current_user == data.post.author %}
-						<a class="btn btn-sm btn-outline edit-btn" role="btn" href="{{ url_for('post.editPost_page', id=data.post.id) }}">
+						<a class="btn btn-sm btn-outline mt-1" href="{{ url_for('post.editPost_page', id=data.post.id) }}">
 							Редактировать
 						</a>
 					{% endif %}
+					<small class="post-views mr-3">
+						<span><i class="material-icons">visibility</i></span>
+						<span class="Counter">{{ data.post.views }}</span>
+					</small>
 				</div>
 				<div class="Box-body post-body">
 					<small class="post-date">написан: {{ data.post.data_creation.strftime('%d.%m.%Y') }}</small> 

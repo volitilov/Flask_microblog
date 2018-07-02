@@ -24,8 +24,9 @@ class Post(db.Model):
     data_creation = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     body_html = db.Column(db.Text)
-    comments = db.relationship('Comment', backref='post', lazy='dynamic')
+    views = db.Column(db.Integer, index=True, default=0)
 
+    comments = db.relationship('Comment', backref='post', lazy='dynamic')
 
     def to_json(self):
         json_post = {

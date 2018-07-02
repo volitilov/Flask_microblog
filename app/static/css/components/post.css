@@ -3,3 +3,14 @@
   margin-bottom: 15px;
   display: block;
 }
+.post .post-views {
+  float: right;
+}
+.post .post-views span {
+  vertical-align: middle;
+  display: inline-block;
+}
+.post .post-views span i {
+  margin-top: 5px;
+  font-size: 22px;
+}

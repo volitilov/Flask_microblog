@@ -1,12 +1,12 @@
 <section class="nav-publications nav-left">
     <nav class="menu my-3">
         <span class="menu-heading">Навигация по публикациям</span>
-        <a class="menu-item {% if not data.show_followed %}selected{% endif %}" href="{{ url_for('main.allPosts_request') }}">
+        <a class="menu-item {% if data.page == 'all_posts' %}selected{% endif %}" href="{{ url_for('main.home_page') }}">
             Все посты
             <!-- Все посты &#9207; -->
             <span class="Counter">{{ data.post_count }}</span>
         </a>
-        <a class="menu-item {% if data.show_followed %}selected{% endif %}" href="{{ url_for('main.followedPosts_request') }}">
+        <a class="menu-item {% if data.page == 'followed_posts' %}selected{% endif %}" href="{{ url_for('post.followedPosts_page') }}">
             По подписке
             <!-- По подписке &#9207; -->
             {% if not current_user.is_anonymous %}
@@ -20,10 +20,10 @@
         </a> -->
         <!-- <a class="menu-item" href="#">
             По рейтенгу
-        </a>
-        <a class="menu-item" href="#">
-            По кол-ву просмотров
         </a> -->
+        <a class="menu-item {% if data.page == 'post_views' %}selected{% endif %}" href="{{ url_for('post.byViewingPosts_page') }}">
+            По кол-ву просмотров
+        </a>
     </nav>
     {% if current_user.is_authenticated %}
         <span class="tooltipped tooltipped-s" aria-label="Написать и опубликовать свой пост">							

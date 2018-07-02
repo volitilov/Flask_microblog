@@ -4,7 +4,6 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-import requests
 from flask import redirect, url_for, flash, request, current_app
 
 # app modules
@@ -97,32 +96,3 @@ def resetPassword_request():
 		flash('Письмо для сброса пароля было отправленно вам на почтовый ящик.')
 		return redirect(url_for('auth.login_page'))
 
-
-
-@auth.route(rule='/vk_login')
-def vkLogin_request():
-	'''Реализует авторизацию с помощью vk'''
-	code = request.args.get('code')
-	r = requests.get('https://oauth.vk.com/access_token', params={
-		'client_id': current_app.config['VK_APP_ID'], 
-		'client_secret': current_app.config['VK_APP_SECRET_KEY'],
-		'redirect_uri': 'http://localhost:8000/vk_login',
-		'code': code
-	})
-	if not r.json:
-		return redirect(url_for('auth.login_page'))
-	else:
-		data = r.json()
-		access_token = data['access_token']
-		user_id = data['user_id']
-		email = data['email']
-		vk_user = requests.get('https://api.vk.com/method/users.get', params={
-			'user_id': user_id,
-			'access_token': access_token,
-			'fields': 'photo_200, city, nickname',
-			'v': current_app.config['VK_VERSION']
-		})
-		vk_response = vk_user.json()['response'][0]
-		print(data)
-		
-		return redirect(url_for('main.home_page'))

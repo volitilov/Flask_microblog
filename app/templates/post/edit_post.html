@@ -15,6 +15,9 @@
 		<div class="Box my-3">
 			<div class="Box-header">
 				<small>Редактирование поста.</small>
+				<!-- <a class="btn btn-sm" href="#">
+					предпросмотр
+				</a> -->
 			</div>
 			<div class="Box-body">
 				<form action="{{ url_for('post.editPost_request', id=data.post.id) }}" method="POST">

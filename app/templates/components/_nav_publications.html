@@ -18,9 +18,9 @@
         <!-- <a class="menu-item" href="#">
             По категории &#9207;
         </a> -->
-        <!-- <a class="menu-item" href="#">
+        <a class="menu-item {% if data.page == 'post_ratings' %}selected{% endif %}" href="{{ url_for('post.byRatingPosts_page') }}">
             По рейтенгу
-        </a> -->
+        </a>
         <a class="menu-item {% if data.page == 'post_views' %}selected{% endif %}" href="{{ url_for('post.byViewingPosts_page') }}">
             По кол-ву просмотров
         </a>

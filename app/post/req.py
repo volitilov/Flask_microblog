@@ -82,7 +82,8 @@ def changeRating_request(id):
 	post = Post.query.get_or_404(id)
 	
 	rating = Post_rating(post=post, author=current_user)
-	db.session.add(rating)
+	post.rating = post.ratings.count()
+	db.session.add_all([rating, post])
 	db.session.commit()
 
 	flash(message='Ваше мнение учтенно.', category='success')

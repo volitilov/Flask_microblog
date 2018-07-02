@@ -79,9 +79,17 @@ def posts_page(username):
 def post_page(id):
 	'''Генерирует страницу запрошенного поста'''
 	post = Post.query.get_or_404(id)
+	post.views += 1
+
+	db.session.add(post)
+	db.session.commit()
+
 	rating_bool = False
 	
 	if Post_rating.query.filter_by(post=post).filter_by(author=current_user).first():
+		rating_bool = True
+
+	if post.author == current_user:
 		rating_bool = True
 
 	return create_response(template='post/post.html', data={
@@ -123,6 +131,26 @@ def byViewingPosts_page():
 		'posts': pagination.items,
 		'pagination': pagination,
 		'endpoint': 'post.byViewingPosts_page',
+		'posts_count': posts.count(),
+		'posts_per_page': count_items
+	})
+
+
+@post.route(rule='/by_rating')
+def byRatingPosts_page():
+	'''Формирует страницу постов отсортированных по рейтингу.'''
+	posts = Post.query.order_by(Post.rating.desc())
+	count_items = current_app.config['APP_POSTS_PER_PAGE']
+
+	page = request.args.get('page', 1, type=int)
+	pagination = posts.paginate(page, per_page=count_items, error_out=False)
+
+	return create_response(template='index.html', data={
+		'page_title': 'Публикации по рейтингу.',
+		'page': 'post_ratings',
+		'posts': pagination.items,
+		'pagination': pagination,
+		'endpoint': 'post.byRatingPosts_page',
 		'posts_count': posts.count(),
 		'posts_per_page': count_items
 	})

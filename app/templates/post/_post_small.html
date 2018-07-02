@@ -15,6 +15,10 @@
             <span><i class="material-icons">visibility</i></span>
             <span class="Counter">{{ post.views }}</span>
         </small>
+        <small class="post-rating">
+            <span><i class="material-icons">add</i></span>
+            <span class="Counter">{{ post.ratings.count() }}</span>
+        </small>
     </div>
     <div class="Box-body post-body p-3">
         <small class="post-date">написан: {{ post.data_creation.strftime('%d.%m.%Y') }}</small> 

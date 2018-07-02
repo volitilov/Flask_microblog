@@ -15,6 +15,7 @@ from .forms import AddPost_form
 from ..models.post import Post
 from ..models.user import User
 from ..models.comment import Comment
+from ..models.post_rating import Post_rating
 from ..utils import create_response
 from .. import db
 
@@ -78,15 +79,16 @@ def posts_page(username):
 def post_page(id):
 	'''Генерирует страницу запрошенного поста'''
 	post = Post.query.get_or_404(id)
-	post.views += 1
-
-	db.session.add(post)
-	db.session.commit()
+	rating_bool = False
+	
+	if Post_rating.query.filter_by(post=post).filter_by(author=current_user).first():
+		rating_bool = True
 
 	return create_response(template='post/post.html', data={
 		'page_title': post.title,
 		'post': post,
-		'comments': post.comments
+		'comments': post.comments,
+		'rating_bool': rating_bool
 	})
 
 

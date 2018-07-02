@@ -12,6 +12,7 @@ from . import post
 from .forms import AddPost_form
 from ..models.user import User
 from ..models.post import Post
+from ..models.post_rating import Post_rating
 from .. import db
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -72,3 +73,17 @@ def deletePost_request(id):
 
 	flash(message='Пост успешно удалён', category='success')
 	return redirect(url_for('main.home_page'))
+
+
+
+@post.route(rule='/<int:id>/...change_rating')
+@login_required
+def changeRating_request(id):
+	post = Post.query.get_or_404(id)
+	
+	rating = Post_rating(post=post, author=current_user)
+	db.session.add(rating)
+	db.session.commit()
+
+	flash(message='Ваше мнение учтенно.', category='success')
+	return redirect(url_for('post.post_page', id=id))

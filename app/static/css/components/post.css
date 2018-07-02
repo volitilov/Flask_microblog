@@ -3,14 +3,31 @@
   margin-bottom: 15px;
   display: block;
 }
-.post .post-views {
+.post .post-views,
+.post .post-rating {
   float: right;
 }
-.post .post-views span {
+.post .post-views span,
+.post .post-rating span {
   vertical-align: middle;
   display: inline-block;
 }
-.post .post-views span i {
+.post .post-views span i,
+.post .post-rating span i {
+  margin-left: 12px;
   margin-top: 5px;
   font-size: 22px;
+  color: #c3c6ca;
+}
+.post .post-views span a,
+.post .post-rating span a {
+  display: inline-block;
+}
+.post .post-views span a i,
+.post .post-rating span a i {
+  color: #28a745;
+}
+.post .post-views span .disabled i,
+.post .post-rating span .disabled i {
+  color: #c3c6ca;
 }

@@ -27,6 +27,7 @@ class Post(db.Model):
     views = db.Column(db.Integer, index=True, default=0)
 
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
+    ratings = db.relationship('Post_rating', backref='post', lazy='dynamic')
 
     def to_json(self):
         json_post = {

@@ -15,6 +15,7 @@ from app.models.role import Role
 from app.models.post import Post
 from app.models.comment import Comment
 from app.models.notice import Notice
+from app.models.post_rating import Post_rating
 
 from flask_migrate import Migrate, MigrateCommand
 from dotenv import load_dotenv, find_dotenv
@@ -48,7 +49,8 @@ def db():
 def make_shell_context():
     '''Запускает shell со сконфигурированым контекстом'''
     return dict(app=app, db=database, User=User, Post=Post, Role=Role, 
-        Follow=Follow, Comment=Comment, Notice=Notice, UserSettings=UserSettings)
+        Follow=Follow, Comment=Comment, Notice=Notice, UserSettings=UserSettings,
+        Post_rating=Post_rating)
 
 
 # flask test

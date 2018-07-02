@@ -35,6 +35,18 @@
 						<span><i class="material-icons">visibility</i></span>
 						<span class="Counter">{{ data.post.views }}</span>
 					</small>
+					<small class="post-rating">
+						<span>
+							<a {% if not data.rating_bool %} 
+									href="{{ url_for('post.changeRating_request', id=data.post.id) }}"
+								{% else %} 
+									class="disabled"
+								{% endif %}>
+								<i class="material-icons">add</i>
+							</a>
+						</span>
+						<span class="Counter">{{ data.post.ratings.count() }}</span>
+					</small>
 				</div>
 				<div class="Box-body post-body">
 					<small class="post-date">написан: {{ data.post.data_creation.strftime('%d.%m.%Y') }}</small> 

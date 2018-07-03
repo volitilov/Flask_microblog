@@ -13,6 +13,7 @@ from app.models.user import User, Follow
 from app.models.user_settings import UserSettings
 from app.models.role import Role
 from app.models.post import Post
+from app.models.tag import Tag
 from app.models.comment import Comment
 from app.models.notice import Notice
 from app.models.post_rating import Post_rating
@@ -50,7 +51,7 @@ def make_shell_context():
     '''Запускает shell со сконфигурированым контекстом'''
     return dict(app=app, db=database, User=User, Post=Post, Role=Role, 
         Follow=Follow, Comment=Comment, Notice=Notice, UserSettings=UserSettings,
-        Post_rating=Post_rating)
+        Post_rating=Post_rating, Tag=Tag)
 
 
 # flask test

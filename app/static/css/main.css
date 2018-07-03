@@ -101,3 +101,7 @@ code {
   font-size: 13px;
   padding-top: 8px;
 }
+.tag:hover {
+  color: #313233;
+  border-color: #6a737d;
+}

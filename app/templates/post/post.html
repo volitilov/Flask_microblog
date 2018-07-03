@@ -49,8 +49,13 @@
 					</small>
 				</div>
 				<div class="Box-body post-body">
-					<small class="post-date">написан: {{ data.post.data_creation.strftime('%d.%m.%Y') }}</small> 
+					<small class="post-date">написан: {{ data.post.data_creation.strftime('%d.%m.%Y') }}</small>
 					<h3>{{ data.post.title }}</h3>
+					{% if data.post.tags %}
+						{% for tag in data.post.tags %}
+							<a href="#" class="tag Label Label--outline my-1">{{ tag.name }} </a>
+						{% endfor %}
+					{% endif %}
 					<p>
 						{% if data.post.body_html %}
 							{{ data.post.body_html|safe }}

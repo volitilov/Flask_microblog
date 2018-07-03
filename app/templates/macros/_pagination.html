@@ -1,10 +1,11 @@
 {% macro render_pagination(pagination, endpoint) %}
-    <section class="paginate-container mt-0">
+    <section class="paginate-container mt-0" aria-label="Pagination">
         <div class="pagination">
             <a {% if not pagination.has_prev %} class="previous_page disabled" {% endif %} 
                 href="{% if pagination.has_prev %} {{ url_for(endpoint,
                 page=pagination.page-1, **kwargs) }} {% else %} # {% endif %}">
-                &laquo;
+                <!-- &laquo; -->
+                Previous
             </a>
     
             {% for p in pagination.iter_pages() %}
@@ -22,7 +23,8 @@
             <a {% if not pagination.has_next %} class="next_page disabled" {% endif %} 
                 href="{% if pagination.has_next %} {{ url_for(endpoint,
                     page=pagination.page+1, **kwargs) }} {% else %} # {% endif %}">
-                        &raquo;
+                        <!-- &raquo; -->
+                        Next
             </a>
         </div>
     </section>

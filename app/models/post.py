@@ -11,6 +11,7 @@ from markdown import markdown
 import bleach
 
 from app.exceptions import ValidationError
+from .tag import add_tag
 from .. import db
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -29,6 +30,7 @@ class Post(db.Model):
 
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
     ratings = db.relationship('Post_rating', backref='post', lazy='dynamic')
+    tags = db.relationship('Tag', secondary=add_tag, backref=db.backref('posts', lazy='dynamic'))
 
     def to_json(self):
         json_post = {

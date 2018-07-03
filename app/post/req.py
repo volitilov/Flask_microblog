@@ -12,6 +12,7 @@ from . import post
 from .forms import AddPost_form
 from ..models.user import User
 from ..models.post import Post
+from ..models.tag import Tag
 from ..models.post_rating import Post_rating
 from .. import db
 
@@ -26,8 +27,19 @@ def addPost_request():
 	if form.validate_on_submit():
 		title = form.title.data
 		text = form.text.data
-		
+
 		post = Post(title=title, text=text, author=current_user)
+		
+		tags = form.tags.data.split(',')
+		for tag in tags:
+			tag_name = tag.strip(' ')
+			tag = Tag.query.filter_by(name=tag_name).first()
+			if not tag:
+				tag = Tag(name=tag_name)
+
+			post.tags.append(tag)
+			db.session.add(tag)
+
 		db.session.add(post)
 		db.session.commit()
 
@@ -37,6 +49,10 @@ def addPost_request():
 
 		flash(message='Пост успешно добавлен', category='success')
 		return redirect(url_for(endpoint='main.home_page'))
+	
+	else:
+		flash(category='error', message='Неправильно заполнена форма')
+		return redirect(url_for('post.addPost_page'))
 
 
 
@@ -80,6 +96,7 @@ def deletePost_request(id):
 @login_required
 def changeRating_request(id):
 	post = Post.query.get_or_404(id)
+	post.views -= 1
 	
 	rating = Post_rating(post=post, author=current_user)
 	post.rating = post.ratings.count()

@@ -1,4 +1,4 @@
-li {
+ul {
   list-style: none;
 }
 body {
@@ -12,16 +12,6 @@ body {
   border: none;
   font-size: 25px;
   cursor: pointer;
-}
-.counter {
-  display: inline-block;
-  padding: 2px 5px;
-  font-size: 11px;
-  font-weight: bold;
-  line-height: 1;
-  color: #666;
-  background-color: #eee;
-  border-radius: 20px;
 }
 .nav-left .tooltipped-s::before {
   margin-left: 8em;
@@ -37,33 +27,6 @@ body {
 .nav-left .Counter {
   margin-top: 3px;
 }
-.user-avatar img {
-  border-radius: 50%;
-}
-.user-avatar span {
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 5px;
-}
-.user-avatar span:nth-child(2) {
-  margin-top: -3px;
-}
-.user-avatar:hover {
-  text-decoration: none;
-}
-blockquote {
-  padding: 0 15px;
-  color: #777;
-  border-left: 4px solid #ddd;
-}
-table th,
-table td {
-  border: 1px solid #e1e4e8;
-  padding: 7px;
-}
-code {
-  border-radius: 3px;
-}
 .nav .nav-user-avatar {
   margin-bottom: 15px;
   padding: 5px;
@@ -72,6 +35,16 @@ code {
   display: block;
   width: 100%;
   border-radius: 4px;
+}
+.paginate-container {
+  text-align: left;
+}
+.Subhead-heading {
+  font-size: 13px;
+  padding-top: 8px;
+}
+.tags li {
+  display: inline-block;
 }
 .Box-header {
   padding-top: 10px;
@@ -86,22 +59,4 @@ code {
   font-weight: 600;
   line-height: 20px;
   color: #586069;
-}
-.Box-header small i {
-  margin-top: 4px;
-}
-.Box-header .btn {
-  float: right;
-  margin-top: -4px;
-}
-.paginate-container {
-  text-align: left;
-}
-.Subhead-heading {
-  font-size: 13px;
-  padding-top: 8px;
-}
-.tag:hover {
-  color: #313233;
-  border-color: #6a737d;
 }

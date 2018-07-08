@@ -8,8 +8,10 @@
     </div>
     <nav class="menu">
         <span class="menu-heading">Информация о пользователе</span>
-        <a class="menu-item {% if data.page == 'profile' %}selected{% endif %}" href="{{ url_for('user.profile_page', username=data.user.name) }}">Профиль</a>
-        <a class="menu-item {% if data.page == 'posts' %}selected{% endif %}" href="{{ url_for('post.posts_page', username=data.user.name) }}">
+        <a class="menu-item {% if data.page == 'profile' %}selected{% endif %}" href="{{ url_for('user.profile_page', username=data.user.name) }}">
+            Профиль
+        </a>
+        <a class="menu-item {% if data.page == 'user_posts' %}selected{% endif %}" href="{{ url_for('post.userPosts_page', username=data.user.name) }}">
             Публикации
             <span class="Counter">{{ data.user.posts.count() }}</span>
         </a>

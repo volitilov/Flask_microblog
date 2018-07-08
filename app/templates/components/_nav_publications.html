@@ -1,7 +1,7 @@
 <section class="nav-publications nav-left">
     <nav class="menu my-3">
         <span class="menu-heading">Навигация по публикациям</span>
-        <a class="menu-item {% if data.page == 'all_posts' %}selected{% endif %}" href="{{ url_for('main.home_page') }}">
+        <a class="menu-item {% if data.page == 'all_posts' %}selected{% endif %}" href="{{ url_for('post.posts_page') }}">
             Все посты
             <!-- Все посты &#9207; -->
             <span class="Counter">{{ data.post_count }}</span>

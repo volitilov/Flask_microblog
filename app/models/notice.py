@@ -6,7 +6,7 @@
 
 from datetime import datetime
 
-from markdown import markdown
+from markdown2 import markdown
 import bleach
 
 from .. import db
@@ -31,9 +31,15 @@ class Notice(db.Model):
         allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
             'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 
             'h3', 'p', 'br']
-        target.body_html = bleach.linkify(bleach.clean(
-            markdown(value, output_format='html'),
-            tags=allowed_tags, strip=True))
+        # target.body_html = bleach.linkify(bleach.clean(
+        #     markdown(value, output_format='html'),
+        #     tags=allowed_tags, strip=True))
+
+        target.body_html = markdown(value, extras=[
+            'fenced-code-blocks', 'code-friendly',
+            'cuddled-lists', 'footnotes', 'header-ids', 'pyshell',
+            'numbering', 'metadata', 'smarty-pants', 'spoiler', 'xml', 
+            'tables', 'wiki-tables'])
 
     def __str__(self):
         return '<Notice - {}>'.format(self.name)

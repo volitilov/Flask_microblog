@@ -14,6 +14,7 @@ from flask_pagedown.fields import PageDownField
 class AddPost_form(FlaskForm):
 	'''Форма добавления поста.'''
 	title = StringField(label='Загаловок поста', validators=[DataRequired()])
+	contents = PageDownField(label='Оглавление поста', validators=[DataRequired()])
 	text = PageDownField(label='Текст поста', validators=[DataRequired()])
 	tags = StringField(label='Теги', 
 		validators=[

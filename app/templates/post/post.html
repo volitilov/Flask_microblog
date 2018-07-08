@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% from 'macros/_formhelpers.html' import render_field %}
-{% block scripts %}
-	{{ pagedown.include_pagedown() }}
+{% block style %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/post.css') }}" />
 {% endblock %}
+{% block scripts %}{% endblock %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
@@ -27,7 +28,7 @@
 					{% endif %}
 					
 					{% if current_user == data.post.author %}
-						<a class="btn btn-sm btn-outline mt-1" href="{{ url_for('post.editPost_page', id=data.post.id) }}">
+						<a class="btn btn-sm btn-outline" href="{{ url_for('post.editPost_page', id=data.post.id) }}">
 							Редактировать
 						</a>
 					{% endif %}
@@ -51,18 +52,20 @@
 				<div class="Box-body post-body">
 					<small class="post-date">написан: {{ data.post.data_creation.strftime('%d.%m.%Y') }}</small>
 					<h3>{{ data.post.title }}</h3>
-					{% if data.post.tags %}
-						{% for tag in data.post.tags %}
-							<a href="#" class="tag Label Label--outline my-1">{{ tag.name }} </a>
+					<hr>
+					{% if data.tags %}
+						{% for i in data.tags %}
+							<a href="{{ url_for('post.tagPosts_page', id=i.tag.id) }}" class="Label Label--gray-darker mt-1 mr-1">{{ i.tag.name }} </a>
 						{% endfor %}
 					{% endif %}
-					<p>
-						{% if data.post.body_html %}
-							{{ data.post.body_html|safe }}
-						{% else %}
-							{{ data.post.text }}
+					<hr>
+					<div class="body">
+						{% if data.post.t_contents_html %}
+							{{ data.post.t_contents_html|safe }}
 						{% endif %}
-					</p>
+						<hr>
+						{{ data.post.body_html|safe }}
+					</div>
 				</div>
 			</article>
 			{% if not current_user.is_anonymous %}

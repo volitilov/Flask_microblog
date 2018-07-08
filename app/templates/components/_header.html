@@ -2,27 +2,36 @@
 	<section class="container">
 		<div class="columns">
 			<div class="one-half column">
-				<figure>
-					<img width="40" height="40" src="{{ url_for('static', filename='img/favicon.svg') }}">
-					<figcaption>
-						<h3>fh</h3>
-						<p>Freelance web house.</p>
-					</figcaption>
-				</figure>
+				<a href="/">
+					<figure>
+						<img width="40" height="40" src="{{ url_for('static', filename='img/favicon.svg') }}">
+						<figcaption>
+							<h3>fh</h3>
+							<p>Freelance web house.</p>
+						</figcaption>
+					</figure>
+				</a>
 			</div>
 			<div class="one-half column">
 				<nav>
 					<li>
 						<span class="tooltipped tooltipped-n" aria-label="Перейти на главную страницу">
-							<a href="{{ url_for('main.home_page') }}">Публикации</a>
+							<a href="{{ url_for('main.home_page') }}">Главная</a>
+						</span>
+					</li>
+					<li>
+						<span class="tooltipped tooltipped-n" aria-label="Перейти на страницу с публикациями">
+							<a href="{{ url_for('post.posts_page') }}">Публикации</a>
 						</span>
 					</li>
 					{% if current_user.is_authenticated %}
 						<li>
-							<a href="{{ url_for('notice.notice_page') }}">
-								<span><i class="material-icons">notifications_none</i></span>
-								<span class="Counter">{{ current_user.notice.count() }}</span>
-							</a>
+							<span class="tooltipped tooltipped-n" aria-label="Перейти на страницу с уведомлениями">
+								<a href="{{ url_for('notice.notice_page') }}">
+									<span><i class="material-icons">notifications_none</i></span>
+									<span class="Counter">{{ current_user.notice.count() }}</span>
+								</a>
+							</span>
 						</li>
 						<li class="dropdown">
 							<a class="dropdown-toggle" href="#">

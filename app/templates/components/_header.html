@@ -4,7 +4,7 @@
 			<div class="one-half column">
 				<a href="/">
 					<figure>
-						<img width="40" height="40" src="{{ url_for('static', filename='img/favicon.svg') }}">
+						<img src="{{ url_for('static', filename='img/favicon.svg') }}">
 						<figcaption>
 							<h3>fh</h3>
 							<p>Freelance web house.</p>
@@ -15,18 +15,18 @@
 			<div class="one-half column">
 				<nav>
 					<li>
-						<span class="tooltipped tooltipped-n" aria-label="Перейти на главную страницу">
+						<span class="tooltipped tooltipped-s" aria-label="Перейти на главную страницу">
 							<a href="{{ url_for('main.home_page') }}">Главная</a>
 						</span>
 					</li>
 					<li>
-						<span class="tooltipped tooltipped-n" aria-label="Перейти на страницу с публикациями">
+						<span class="tooltipped tooltipped-s" aria-label="Перейти на страницу с публикациями">
 							<a href="{{ url_for('post.posts_page') }}">Публикации</a>
 						</span>
 					</li>
 					{% if current_user.is_authenticated %}
 						<li>
-							<span class="tooltipped tooltipped-n" aria-label="Перейти на страницу с уведомлениями">
+							<span class="tooltipped tooltipped-s" aria-label="Перейти на страницу с уведомлениями">
 								<a href="{{ url_for('notice.notice_page') }}">
 									<span><i class="material-icons">notifications_none</i></span>
 									<span class="Counter">{{ current_user.notice.count() }}</span>

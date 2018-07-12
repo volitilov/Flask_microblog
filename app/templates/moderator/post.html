@@ -33,8 +33,8 @@
                     <a class="btn btn-sm btn-primary mx-2" href="{{ url_for('moderator.confirmPost_request', id=data.post.id) }}">
                         Подтвердить
                     </a>
-                    <a class="btn btn-sm btn-outline" href="{{ url_for('post.editPost_page', id=data.post.id) }}">
-                        Написать автору
+                    <a class="btn btn-sm btn-outline" href="{{ url_for('moderator.returnPost_page', id=data.post.id) }}">
+                        Вернуть
                     </a>
 				</div>
 				<div class="Box-body post-body">

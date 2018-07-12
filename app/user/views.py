@@ -33,7 +33,7 @@ from .. import db
 def profile_page(username):
 	'''Генерирует страницу профиля пользователя.'''
 	user = User.query.filter_by(name=username).first_or_404()
-	posts = user.posts.filter(Post.moderation==True)
+	posts = user.posts.filter(Post.state=='public')
 	return create_response(template='user/profile.html', data={
 		'page_title': 'Страница профиля',
 		'page': 'profile',
@@ -266,7 +266,7 @@ def unsubscribe(user_id):
 @user.route(rule='/followers/<user_id>')
 def followers_page(user_id):
 	user = User.query.filter_by(id=user_id).first()
-	posts = user.posts.filter(Post.moderation==True)
+	posts = user.posts.filter(Post.state=='public')
 	followers_per_page = current_app.config['APP_FOLLOWERS_PER_PAGE']
 
 	if user is None:
@@ -299,7 +299,7 @@ def followedBy_page(user_id):
 	'''Генерирует страницу пользователей на которых подписан 
 	указанный пользователь'''
 	user = User.query.filter_by(id=user_id).first()
-	posts = user.posts.filter(Post.moderation==True)
+	posts = user.posts.filter(Post.state=='public')
 	followers_per_page = current_app.config['APP_FOLLOWERS_PER_PAGE']
 
 	if user is None:

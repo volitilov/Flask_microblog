@@ -13,8 +13,8 @@ from ..models.post import Post
 
 def get_posts():
     return {
-        'all_posts': Post.query.filter_by(moderation=True),
-        'followed_posts': current_user.followed_posts.filter(Post.moderation==True)
+        'all_posts': Post.query.filter_by(state='public'),
+        'followed_posts': current_user.followed_posts.filter(Post.state=='public')
     }
 
 

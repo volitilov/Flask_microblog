@@ -90,7 +90,10 @@ def userPosts_page(username):
 	'''Генерирует страницу с публикациями пользователя.'''
 	user = User.query.filter_by(name=username).first()
 	count_items = current_app.config['APP_POSTS_PER_PAGE']
-	posts = user.posts.filter(Post.moderation==True)
+	if current_user.name == username:
+		posts = user.posts.filter(Post.state!='moderation')
+	else:
+		posts = user.posts.filter(Post.state=='public')
 
 	page = request.args.get('page', 1, type=int)
 	pagination = posts.order_by(Post.data_creation.desc()).paginate(

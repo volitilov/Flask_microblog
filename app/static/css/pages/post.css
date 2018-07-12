@@ -106,6 +106,9 @@
 .post .user-avatar:hover {
   text-decoration: none;
 }
+.post .Box-header .dev {
+  color: red;
+}
 .post .Box-header .btn {
   float: right;
   margin-top: -2px;

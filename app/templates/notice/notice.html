@@ -24,11 +24,12 @@
                                 когда: {{ notice.timestamp.strftime('%d.%m.%Y') }}
                             </small>
                             <p>
-                                {% if notice.body_html %}
+                                {{ notice.body|safe }}
+                                <!-- {% if notice.body_html %}
                                     {{ notice.body_html|safe }}
                                 {% else %}
                                     {{ notice.body|safe }}
-                                {% endif %}
+                                {% endif %} -->
                             </p>
                         </div>
                     </li>

@@ -54,10 +54,6 @@ def addPost_request():
 		db.session.add_all(rel_tags)
 		db.session.commit()
 
-		res = int(client.get(key='post_count'))
-		res += 1
-		client.set(key='post_count', value=res)
-
 		flash(message='Пост отправлен на модерацию')
 		return redirect(url_for(endpoint='main.home_page'))
 	
@@ -79,7 +75,7 @@ def editPost_request(id):
 		post.title = form.title.data
 		post.text = form.text.data
 		post.table_of_contents = form.contents.data
-		post.moderation = False
+		post.state = 'moderation'
 
 		all_tags = []
 		rel_tags = []

@@ -31,7 +31,7 @@ class Post(db.Model):
     t_contents_html = db.Column(db.Text)
     views = db.Column(db.Integer, index=True, default=0)
     rating = db.Column(db.Integer, index=True, default=0)
-    moderation = db.Column(db.Boolean, default=False)
+    state = db.Column(db.String, default='moderation')
 
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
     ratings = db.relationship('Post_rating', backref='post', lazy='dynamic')

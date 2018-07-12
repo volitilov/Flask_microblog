@@ -41,7 +41,7 @@ def login_page():
 			next = request.cookies.get('next')
 			if next is None:
 				next = url_for('main.home_page')
-			flash(message='Вы успешно авторизовались')
+			flash(category='success', message='Вы успешно авторизовались')
 			return redirect(next)
 
 		flash(message='Неправильное имя пользователя или пароль.', category='error')

@@ -1,0 +1,20 @@
+<section class="nav nav-left">
+    <nav class="menu">
+        <span class="menu-heading">Контент для модерации</span>
+        <a class="menu-item {% if data.page == 'dashboard' %}selected{% endif %}" href="{{ url_for('moderator.dashboard_page') }}">
+            Dashboard
+        </a>
+        <a class="menu-item" href="#">
+            Уведомления
+            <span class="Counter">0</span>
+        </a>
+        <a class="menu-item {% if data.page == 'posts' %}selected{% endif %}" href="{{ url_for('moderator.posts_page') }}">
+            Публикации
+            <span class="Counter">{{ data.posts.count() }}</span>
+        </a>
+        <a class="menu-item" href="#">
+            Комментарии
+            <span class="Counter">0</span>
+        </a>
+    </nav>
+</section>

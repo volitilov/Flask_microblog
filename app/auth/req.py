@@ -43,7 +43,7 @@ def before_request():
 @login_required
 def logout_request():
 	logout_user()
-	flash('Вы успешно вышли')
+	flash(category='success', message='Вы успешно вышли')
 	return redirect(url_for('main.home_page'))
 
 

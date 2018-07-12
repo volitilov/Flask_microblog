@@ -13,7 +13,7 @@
         </a>
         <a class="menu-item {% if data.page == 'user_posts' %}selected{% endif %}" href="{{ url_for('post.userPosts_page', username=data.user.name) }}">
             Публикации
-            <span class="Counter">{{ data.user.posts.count() }}</span>
+            <span class="Counter">{{ data.posts_count }}</span>
         </a>
         <a class="menu-item {% if data.page == 'comments' %}selected{% endif %}" href="{{ url_for('comment.comments_page', username=data.user.name) }}">
             Комментарии

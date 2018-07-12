@@ -44,6 +44,9 @@ def create_app(config_name):
     from .admin import admin
     app.register_blueprint(admin)
 
+    from .moderator import moderator
+    app.register_blueprint(moderator)
+
     from .user import user
     app.register_blueprint(user)
 

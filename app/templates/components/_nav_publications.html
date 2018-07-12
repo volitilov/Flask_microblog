@@ -4,13 +4,13 @@
         <a class="menu-item {% if data.page == 'all_posts' %}selected{% endif %}" href="{{ url_for('post.posts_page') }}">
             Все посты
             <!-- Все посты &#9207; -->
-            <span class="Counter">{{ data.post_count }}</span>
+            <span class="Counter">{{ data.all_posts_count }}</span>
         </a>
         <a class="menu-item {% if data.page == 'followed_posts' %}selected{% endif %}" href="{{ url_for('post.followedPosts_page') }}">
             По подписке
             <!-- По подписке &#9207; -->
             {% if not current_user.is_anonymous %}
-                <span class="Counter">{{ current_user.followed_posts.count() }}</span>
+                <span class="Counter">{{ data.followed_posts_count }}</span>
             {% else %}
                 <span class="Counter">0</span>
             {% endif %}

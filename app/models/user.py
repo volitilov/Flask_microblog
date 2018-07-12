@@ -70,6 +70,11 @@ class User(UserMixin, db.Model):
                     self.role = Role(name='Admin')
                 else:
                     self.role = Role.query.filter_by(name='Admin').first()
+            elif self.email == current_app.config['APP_MODERATOR']:
+                if Role.query.filter_by(name='Moderator').first() is None:
+                    self.role = Role(name='Moderator')
+                else:
+                    self.role = Role.query.filter_by(name='Admin').first()
             else:
                 if Role.query.filter_by(name='User').first() is None:
                     self.role = Role(name='User')
@@ -198,6 +203,13 @@ class User(UserMixin, db.Model):
     def is_admin(self):
         '''Проверяет является ли текущий пользователь администратором.'''
         if self.email == current_app.config['APP_ADMIN']:
+            return True
+        return False
+    
+
+    def is_moderator(self):
+        '''Проверяет является ли текущий пользователь модератором.'''
+        if self.email == current_app.config['APP_MODERATOR']:
             return True
         return False
 

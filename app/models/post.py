@@ -31,10 +31,10 @@ class Post(db.Model):
     t_contents_html = db.Column(db.Text)
     views = db.Column(db.Integer, index=True, default=0)
     rating = db.Column(db.Integer, index=True, default=0)
+    moderation = db.Column(db.Boolean, default=False)
 
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
     ratings = db.relationship('Post_rating', backref='post', lazy='dynamic')
-    # tags = db.relationship('Tag', secondary=add_tag, backref=db.backref('posts', lazy='dynamic'))
     tags = db.relationship('Rel_tag', foreign_keys=[Rel_tag.tag_id],
             backref=db.backref('post', lazy='joined'),
             lazy='dynamic', cascade='all, delete-orphan')

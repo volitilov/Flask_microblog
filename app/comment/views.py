@@ -35,12 +35,14 @@ def addComment_page(post_id):
 def comments_page(username):
 	'''Генерирует страницу с комментариями пользователя.'''
 	user = User.query.filter_by(name=username).first()
+	posts = user.posts.filter(Post.moderation==True)
 	sorted_comments = user.comments.order_by(Comment.timestamp.desc())
 
 	return create_response(template='comment/comments.html', data={
 		'page_title': 'Страница с комментариями пользователя.',
 		'page': 'comments',
 		'comments': sorted_comments.all(),
+		'posts_count': posts.count(),
 		'user': user
 	})
 

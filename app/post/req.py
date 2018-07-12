@@ -42,17 +42,23 @@ def addPost_request():
 			if not tag:
 				tag = Tag(name=tag_name)
 			
-			all_tags.append(tag)
-			rel_tags.append(Rel_tag(post=post, tag=tag))
+			rel_tag = Rel_tag.query.filter_by(post=post, tag=tag).first()
+			if not rel_tag:
+				rel_tag = Rel_tag(post=post, tag=tag)
 
-		db.session.add_all([post, all_tags, rel_tags])
+			all_tags.append(tag)
+			rel_tags.append(rel_tag)
+
+		db.session.add(post)
+		db.session.add_all(all_tags)
+		db.session.add_all(rel_tags)
 		db.session.commit()
 
 		res = int(client.get(key='post_count'))
 		res += 1
 		client.set(key='post_count', value=res)
 
-		flash(message='Пост успешно добавлен', category='success')
+		flash(message='Пост отправлен на модерацию')
 		return redirect(url_for(endpoint='main.home_page'))
 	
 	else:
@@ -71,7 +77,9 @@ def editPost_request(id):
 	if form.validate_on_submit():
 		post.tags.delete()
 		post.title = form.title.data
+		post.text = form.text.data
 		post.table_of_contents = form.contents.data
+		post.moderation = False
 
 		all_tags = []
 		rel_tags = []
@@ -94,7 +102,7 @@ def editPost_request(id):
 		db.session.add_all(rel_tags)
 		db.session.commit()
 
-		flash(message='Пост успешно сохранён.', category='success')
+		flash(message='Пост отправлен на модерацию.')
 		return redirect(url_for('post.editPost_page', id=post.id))
 	
 	else:
@@ -125,6 +133,12 @@ def deletePost_request(id):
 @login_required
 def changeRating_request(id):
 	post = Post.query.get_or_404(id)
+	
+	if Post_rating.query.filter_by(post=post).filter_by(author=current_user).first() \
+		or post.author == current_user:
+		flash(category='warn', message='Ваше мнение уже учтенно.')
+		return redirect(url_for('post.post_page', id=id))
+		
 	post.views -= 1
 	
 	rating = Post_rating(post=post, author=current_user)

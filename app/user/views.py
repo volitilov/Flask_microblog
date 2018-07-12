@@ -20,6 +20,7 @@ from .forms import (
 	ChangePassword_form
 )
 from ..models.user import User
+from ..models.post import Post
 from ..models.notice import Notice
 from ..models.user_settings import UserSettings
 from ..email import send_email
@@ -31,10 +32,13 @@ from .. import db
 @user.route(rule='/users/<username>')
 def profile_page(username):
 	'''Генерирует страницу профиля пользователя.'''
+	user = User.query.filter_by(name=username).first_or_404()
+	posts = user.posts.filter(Post.moderation==True)
 	return create_response(template='user/profile.html', data={
 		'page_title': 'Страница профиля',
 		'page': 'profile',
-		'user': User.query.filter_by(name=username).first_or_404()
+		'user': user,
+		'posts_count': posts.count()
 	})
 
 
@@ -262,6 +266,7 @@ def unsubscribe(user_id):
 @user.route(rule='/followers/<user_id>')
 def followers_page(user_id):
 	user = User.query.filter_by(id=user_id).first()
+	posts = user.posts.filter(Post.moderation==True)
 	followers_per_page = current_app.config['APP_FOLLOWERS_PER_PAGE']
 
 	if user is None:
@@ -283,6 +288,7 @@ def followers_page(user_id):
 		'title': 'Подписчики',
 		'unfollow_btn': False,
 		'followers_count': user.followers.count() - 1,
+		'posts_count': posts.count(),
 		'followers_per_page': followers_per_page
 	})
 
@@ -293,6 +299,7 @@ def followedBy_page(user_id):
 	'''Генерирует страницу пользователей на которых подписан 
 	указанный пользователь'''
 	user = User.query.filter_by(id=user_id).first()
+	posts = user.posts.filter(Post.moderation==True)
 	followers_per_page = current_app.config['APP_FOLLOWERS_PER_PAGE']
 
 	if user is None:
@@ -315,6 +322,7 @@ def followedBy_page(user_id):
 		'unfollow_url': 'user.unfollow',
 		'unfollow_btn': True,
 		'followers_count': user.followed.count() - 1,
+		'posts_count': posts.count(),
 		'followers_per_page': followers_per_page
 	})
 

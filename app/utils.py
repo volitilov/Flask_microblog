@@ -6,7 +6,9 @@
 
 from random import randint
 
-from flask import make_response, render_template, request, current_app
+from flask import (
+	make_response, render_template, request, current_app, url_for
+)
 from sqlalchemy.exc import IntegrityError
 import forgery_py as forgery
 
@@ -20,8 +22,6 @@ from .models.user import User
 
 def create_response(template, data):
 	'''Делает обёртку для объекта ответа.'''
-	data['post_count'] = int(current_app.memory.get('post_count'))
-
 	resp = make_response(render_template(template, data=data))
 	resp.delete_cookie('next')
 	resp.set_cookie(key='current_page', value=request.full_path)

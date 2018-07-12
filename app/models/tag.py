@@ -16,11 +16,6 @@ class Rel_tag(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('tags.id'), primary_key=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow())
 
-# add_tag = db.Table('add_tag',
-#     db.Column('tag_id', db.Integer, db.ForeignKey('tags.id')),
-#     db.Column('post_id', db.Integer, db.ForeignKey('posts.id'))
-# )
-
 
 class Tag(db.Model):
     '''Инициализирует теги.'''

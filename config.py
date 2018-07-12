@@ -45,6 +45,7 @@ class Config:
     APP_MAIL_SENDER = 'Admin volitilov@gmail.com'
     APP_MAIL_SUBJECT_PREFIX = '[ voliTilov ] '
     APP_ADMIN = os.getenv('APP_ADMIN')
+    APP_MODERATOR = os.getenv('APP_MODERATOR')
 
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 465

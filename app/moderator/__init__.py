@@ -2,8 +2,8 @@ from flask import Blueprint
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-admin = Blueprint('admin', __name__, url_prefix='/admin')
+moderator = Blueprint('moderator', __name__, url_prefix='/moderator')
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from . import views
+from . import views, req

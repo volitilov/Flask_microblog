@@ -32,7 +32,7 @@
                     {% endfor %}
                 
             </div>
-            {% if data.followers_count > data.followers_per_page %}
+            {% if data.follows_count > data.count_items %}
                 {{ render_pagination(data.pagination, data.endpoint, user_id=data.user.id) }}
             {% endif %}
         </div>

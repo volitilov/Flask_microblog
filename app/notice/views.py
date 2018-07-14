@@ -4,13 +4,15 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import request, current_app
+from flask import request, current_app, flash, redirect, url_for
 
 from flask_login import login_required, current_user
 
 from . import notice
 from .forms import AddNotice_form, SettingsNotice_form
 from ..models.notice import Notice
+from ..models.post import Post
+from ..models.comment import Comment
 from ..models.user_settings import UserSettings
 from ..utils import create_response
 
@@ -26,9 +28,16 @@ def addNotice_page():
     })
 
 
-@notice.route('/')
+@notice.route('/<username>')
 @login_required
-def notice_page():
+def notice_page(username):
+    if current_user.name != username:
+        flash(category='warn', 
+            message='У вас есть доступ, только к своим уведомлениям')
+        return redirect(url_for('notice.notice_page', username=current_user.name))
+
+    posts = current_user.posts.filter(Post.state!='moderator')
+    comments = current_user.comments.filter(Comment.state!='moderation')
     notice = current_user.notice
     count_items = current_app.config['APP_NOTICE_PER_PAGE']
 
@@ -39,6 +48,8 @@ def notice_page():
     return create_response(template='notice/notice.html', data={
         'page_title': 'Страница уведомлений',
         'notice': pagination.items,
+        'posts': posts,
+        'comments': comments,
         'pagination': pagination,
         'endpoint': 'notice.notice_page',
         'user': current_user,

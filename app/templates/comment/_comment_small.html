@@ -4,6 +4,7 @@
             <span><img width="33px" src="{{ comment.author.gravatar(size=50) }}" alt="Аватар"></span>
             <span>{{ comment.author.name }}</span>
         </a>
+        {% if comment.state == 'develop' %} <small class="dev anim-pulse">требуется доработать</small> {% endif %}
     </div>
     <div class="Box-body">
         <small>

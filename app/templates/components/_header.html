@@ -27,7 +27,7 @@
 					{% if current_user.is_authenticated %}
 						<li>
 							<span class="tooltipped tooltipped-s" aria-label="Перейти на страницу с уведомлениями">
-								<a href="{{ url_for('notice.notice_page') }}">
+								<a href="{{ url_for('notice.notice_page', username=current_user.name) }}">
 									<span><i class="material-icons">notifications_none</i></span>
 									<span class="Counter">{{ current_user.notice.count() }}</span>
 								</a>

@@ -20,7 +20,7 @@
                     </li>
                 {% endfor %}
             </ul>
-            {% if data.posts_count > data.posts_per_page %}
+            {% if data.posts.count() > data.posts_per_page %}
                 {{ render_pagination(data.pagination, data.endpoint, username=data.user.name) }}
             {% endif %}
         </div>

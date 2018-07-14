@@ -26,6 +26,7 @@
 							<span>{{ data.post.author.name }}</span>
 						</a>
 					{% endif %}
+					{% if data.post.state == 'develop' %} <small class="dev anim-pulse">требуется доработать</small> {% endif %}
 					
 					{% if current_user == data.post.author %}
 						<a class="btn btn-sm btn-outline" href="{{ url_for('post.editPost_page', id=data.post.id) }}">

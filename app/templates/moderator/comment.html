@@ -1,19 +1,20 @@
 {% extends 'base.html' %}
+{% from 'macros/_formhelpers.html' import render_field %}
 {% block style %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/components/comment.css') }}">
 {% endblock %}
-{% block sripts %}{% endblock %}
+{% block scripts %}{% endblock %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
 {% block content %}
-    <div class="columns mt-3">
+	<section class="columns mt-3">
         <aside class="one-fourth column">
-            {% include 'components/_nav_user.html' %}
+           {% include 'moderator/_nav_panell.html' %}
         </aside>
         <div class="three-fourths column">
-            <div class="Box comment">
-                <div class="Box-header">
+			<article class="Box comment">
+				<div class="Box-header">
                     {% if data.comment.author.photo_url %}
                         <a class="user-avatar" href="{{ url_for('user.profile_page', username=data.comment.author.name) }}">
                             <span><img width="33px" src="{{ url_for('uploads', filename=data.comment.author.photo_url) }}" alt="Аватар"></span>
@@ -25,14 +26,18 @@
                             <span>{{ data.comment.author.name }}</span>
                         </a>
                     {% endif %}
-                    {% if data.comment.state == 'develop' %} <small class="dev anim-pulse">требуется доработать</small> {% endif %}
-                    {% if current_user == data.comment.author %}
-						<a class="btn btn-sm btn-outline edit-btn" role="btn" href="{{ url_for('comment.editComment_page', comment_id=data.comment.id) }}">
-							Редактировать
-						</a>
-					{% endif %}
-                </div>
-                <div class="Box-body">
+                    
+                    <a class="btn btn-sm btn-primary" href="{{ url_for('moderator.confirmComment_request', id=data.comment.id) }}">
+                        Подтвердить
+                    </a>
+                    <a class="btn btn-sm btn-danger mx-2" href="{{ url_for('moderator.deleteComment_request', id=data.comment.id) }}">
+                        Удалить
+                    </a>
+                    <a class="btn btn-sm btn-outline" href="{{ url_for('moderator.returnComment_page', id=data.comment.id) }}">
+                        Вернуть
+                    </a>
+				</div>
+				<div class="Box-body">
                     <small>
                         {{ data.comment.timestamp.strftime('%d.%m.%Y') }}
                         к посту: 
@@ -42,11 +47,11 @@
                             <a href="{{ url_for('post.post_page', id=data.comment.post.id) }}">{{ data.comment.post.title }}</a>
                         {% endif %}
                     </small>
-                    <p>
+                    <div class="content">
                         {{ data.comment.body_html|safe }}
-                    </p>
+                    </div>
                 </div>
-            </div>
+			</article>
         </div>
-    </div>
+    </section>
 {% endblock %}

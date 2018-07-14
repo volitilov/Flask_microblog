@@ -22,6 +22,7 @@ from .forms import (
 from ..models.user import User
 from ..models.post import Post
 from ..models.notice import Notice
+from ..models.comment import Comment
 from ..models.user_settings import UserSettings
 from ..email import send_email
 from ..utils import create_response
@@ -33,12 +34,20 @@ from .. import db
 def profile_page(username):
 	'''Генерирует страницу профиля пользователя.'''
 	user = User.query.filter_by(name=username).first_or_404()
-	posts = user.posts.filter(Post.state=='public')
+	
+	if current_user.name == username:
+		posts = user.posts.filter(Post.state!='moderator')
+		comments = user.comments.filter(Comment.state!='moderation')
+	else:
+		posts = user.posts.filter_by(state='public')
+		comments = user.comments.filter_by(state='public')
+	
 	return create_response(template='user/profile.html', data={
 		'page_title': 'Страница профиля',
 		'page': 'profile',
 		'user': user,
-		'posts_count': posts.count()
+		'posts': posts,
+		'comments': comments
 	})
 
 
@@ -263,18 +272,26 @@ def unsubscribe(user_id):
 
 
 
-@user.route(rule='/followers/<user_id>')
-def followers_page(user_id):
-	user = User.query.filter_by(id=user_id).first()
-	posts = user.posts.filter(Post.state=='public')
-	followers_per_page = current_app.config['APP_FOLLOWERS_PER_PAGE']
+@user.route(rule='/<username>/followers/')
+def followers_page(username):
+	user = User.query.filter_by(name=username).first()
 
 	if user is None:
-		flash(category='error', message='Недействительный пользователь.')
+		abort(404)
 		return redirect(url_for('main.home_page'))
+	
+	count_items = current_app.config['APP_FOLLOWERS_PER_PAGE']
+
+	if current_user == user:
+		posts = user.posts.filter(Post.state!='moderator')
+		comments = user.comments.filter(Comment.state!='moderation')
+	else:
+		posts = user.posts.filter_by(state='public')
+		comments = user.comments.filter_by(state='public')
+	
 	page = request.args.get('page', 1, type=int)
 	pagination = user.followers.paginate(
-		page, per_page=followers_per_page, error_out=False)
+		page, per_page=count_items, error_out=False)
 	follows = [{'user': item.follower, 'timestamp': item.timestamp} 
 				for item in pagination.items] 
 
@@ -282,32 +299,41 @@ def followers_page(user_id):
 		'page_title': 'Страница подписчиков.',
 		'page': 'followers',
 		'user': user,
+		'posts': posts,
+		'comments': comments,
 		'pagination': pagination,
 		'follows': follows,
+		'follows_count': len(follows),
 		'endpoint': 'user.followers_page',
 		'title': 'Подписчики',
 		'unfollow_btn': False,
-		'followers_count': user.followers.count() - 1,
-		'posts_count': posts.count(),
-		'followers_per_page': followers_per_page
+		'count_items': count_items
 	})
 
 
 
-@user.route(rule='/followed_by/<user_id>')
-def followedBy_page(user_id):
+@user.route(rule='/<username>/followed_by/')
+def followedBy_page(username):
 	'''Генерирует страницу пользователей на которых подписан 
 	указанный пользователь'''
-	user = User.query.filter_by(id=user_id).first()
-	posts = user.posts.filter(Post.state=='public')
-	followers_per_page = current_app.config['APP_FOLLOWERS_PER_PAGE']
+	user = User.query.filter_by(name=username).first()
 
 	if user is None:
-		flash(category='error', message='Недействительный пользователь.')
+		abort(404)
 		return redirect(url_for('main.home_page'))
+	
+	count_items = current_app.config['APP_FOLLOWERS_PER_PAGE']
+
+	if current_user == user:
+		posts = user.posts.filter(Post.state!='moderator')
+		comments = user.comments.filter(Comment.state!='moderation')
+	else:
+		posts = user.posts.filter_by(state='public')
+		comments = user.comments.filter_by(state='public')
+
 	page = request.args.get('page', 1, type=int)
 	pagination = user.followed.paginate(
-		page, per_page=followers_per_page, error_out=False)
+		page, per_page=count_items, error_out=False)
 	follows = [{'user': item.followed, 'timestamp': item.timestamp} 
 				for item in pagination.items]
 
@@ -315,15 +341,16 @@ def followedBy_page(user_id):
 		'page_title': 'Страница подписок.',
 		'page': 'followed',
 		'user': user,
+		'posts': posts,
+		'comments': comments,
 		'pagination': pagination,
 		'follows': follows,
+		'follows_count': len(follows),
 		'endpoint': 'user.followedBy_page',
 		'title': 'Подписан.',
 		'unfollow_url': 'user.unfollow',
 		'unfollow_btn': True,
-		'followers_count': user.followed.count() - 1,
-		'posts_count': posts.count(),
-		'followers_per_page': followers_per_page
+		'count_items': count_items
 	})
 
 

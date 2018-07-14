@@ -13,17 +13,17 @@
         </a>
         <a class="menu-item {% if data.page == 'user_posts' %}selected{% endif %}" href="{{ url_for('post.userPosts_page', username=data.user.name) }}">
             Публикации
-            <span class="Counter">{{ data.posts_count }}</span>
+            <span class="Counter">{{ data.posts.count() }}</span>
         </a>
         <a class="menu-item {% if data.page == 'comments' %}selected{% endif %}" href="{{ url_for('comment.comments_page', username=data.user.name) }}">
             Комментарии
-            <span class="Counter">{{ data.user.comments.count() }}</span>
+            <span class="Counter">{{ data.comments.count() }}</span>
         </a>
-        <a class="menu-item {% if data.page == 'followers' %}selected{% endif %}" href="{{ url_for('user.followers_page', user_id=data.user.id) }}">
+        <a class="menu-item {% if data.page == 'followers' %}selected{% endif %}" href="{{ url_for('user.followers_page', username=data.user.name) }}">
             Подписчики 
             <span class="Counter">{{ data.user.followers.count() - 1 }}</span>
         </a>
-        <a class="menu-item {% if data.page == 'followed' %}selected{% endif %}" href="{{ url_for('user.followedBy_page', user_id=data.user.id) }}">
+        <a class="menu-item {% if data.page == 'followed' %}selected{% endif %}" href="{{ url_for('user.followedBy_page', username=data.user.name) }}">
             Подписан 
             <span class="Counter">{{ data.user.followed.count() - 1 }}</span>
         </a>

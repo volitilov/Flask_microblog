@@ -92,8 +92,10 @@ def userPosts_page(username):
 	count_items = current_app.config['APP_POSTS_PER_PAGE']
 	if current_user.name == username:
 		posts = user.posts.filter(Post.state!='moderation')
+		comments = user.comments.filter(Comment.state!='moderator')
 	else:
-		posts = user.posts.filter(Post.state=='public')
+		posts = user.posts.filter_by(state='public')
+		comments = user.comments.filter_by(state='public')
 
 	page = request.args.get('page', 1, type=int)
 	pagination = posts.order_by(Post.data_creation.desc()).paginate(
@@ -106,7 +108,8 @@ def userPosts_page(username):
 		'pagination': pagination,
 		'endpoint': 'post.userPosts_page',
 		'user': user,
-		'posts_count': posts.count(),
+		'posts': posts,
+		'comments': comments,
 		'posts_per_page': count_items
 	})
 
@@ -154,7 +157,7 @@ def post_page(id):
 	'''Генерирует страницу запрошенного поста'''
 	data = get_posts()
 	post = Post.query.get_or_404(id)
-	tags = post.tags.all()
+	tags = post.tags
 	post.views += 1
 
 	db.session.add(post)
@@ -171,15 +174,28 @@ def post_page(id):
 		if post.author == current_user:
 			rating_bool = True
 
-	return create_response(template='post/post.html', data={
-		'page_title': page_titles['post_page'] + post.title,
-		'post': post,
-		'comments': post.comments,
-		'rating_bool': rating_bool,
-		'tags': tags,
-		'all_posts_count': data['all_posts'].count(),
-		'followed_posts_count': data['followed_posts'].count()
-	})
+	if post.state == 'public' or \
+		post.state == 'develop' and post.author == current_user:
+			return create_response(template='post/post.html', data={
+				'page_title': page_titles['post_page'] + post.title,
+				'post': post,
+				'comments': post.comments.filter(Comment.state=='public'),
+				'rating_bool': rating_bool,
+				'tags': tags,
+				'all_posts_count': data['all_posts'].count(),
+				'followed_posts_count': data['followed_posts'].count()
+			})
+	else:
+		if post.state == 'moderation':
+			state_body = 'Находится на модерации'
+		if post.state == 'develop':
+			state_body = 'Находится на доработке'
+		if post.state != 'public':
+			return create_response(template='state.html', data={
+				'page_title': 'Стадия контента',
+				'state_title': 'Пост',
+				'state_body': state_body
+			})
 
 
 @post.route(rule='/<int:id>/...edit')

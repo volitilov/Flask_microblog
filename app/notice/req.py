@@ -53,12 +53,16 @@ def addNotice_request():
 @notice.route('/<int:id>/...del', methods=['POST'])
 @login_required
 def deleteNotice_request(id):
-    notice = Notice.query.get(id)
-    client = current_app.memory
+    notice = Notice.query.get_or_404(id)
+   
+    if current_user == notice.author:
+        db.session.delete(notice)
+        db.session.commit()
+    else:
+        flash(category='warn', 
+            message='Вы не можите удалить уведомление, так как не являетесь его владельцом')
 
-    db.session.delete(notice)
-    db.session.commit()
-    return redirect(url_for('notice.notice_page'))
+    return redirect(url_for('notice.notice_page', username=current_user.name))
 
 
 

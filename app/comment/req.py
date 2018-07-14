@@ -27,20 +27,12 @@ def addComment_request(post_id):
 
 	if form.validate_on_submit():
 		body = form.body.data
-		
-		comment = Comment(body=body, post=post, author=current_user)
-		user_settings = UserSettings.query.filter_by(state='custom', profile=post.author).first()
-		if user_settings.comments_me:
-			notice_title = 'Оставили комментарий к посту'
-			notice_body = '<b>{}</b> - оставил вам комметарий к посту - <b>{}</b><br><br><a href="{}">посмотреть</a>'.format(
-				current_user.name, post.title, url_for('comment.comment_page', id=comment.id)
-			)
-			notice = Notice(title=notice_title, body=notice_body, author=post.author)
 
-			db.session.add(notice)
+		comment = Comment(body=body, post=post, author=current_user)
+		
 		db.session.add(comment)
 		db.session.commit()
-		flash(message='Ваш комментарий опубликован.', category='success')
+		flash(message='Ваш комментарий отправлен на модерацию.')
 		return redirect(url_for('post.post_page', id=post_id))
 
 
@@ -51,13 +43,18 @@ def editComment_request(comment_id):
 	comment = Comment.query.get_or_404(comment_id)
 	form = AddComment_form()
 
-	if form.validate_on_submit():
-		comment.body = form.body.data
+	if current_user == comment.author:
+		if form.validate_on_submit():
+			comment.body = form.body.data
+			comment.state = 'moderation'
 
-		db.session.add(comment)
-		db.session.commit()
-		flash(message='Ваш комментарий успешно отредактирован.', category='success')
-		return redirect(url_for('post.post_page', id=comment.post.id))
+			db.session.add(comment)
+			db.session.commit()
+			flash(message='Ваш комментарий отправлен на модерацию')
+	else:
+		flash(category='warn', message='Вы не являетесь автором комментария')
+	
+	return redirect(url_for('comment.comment_page', id=comment.id))
 
 
 
@@ -65,7 +62,12 @@ def editComment_request(comment_id):
 @login_required
 def delComment_request(comment_id):
 	comment = Comment.query.get_or_404(comment_id)
-	db.session.delete(comment)
-	db.session.commit()
-	flash(message='Ваш комментарий успешно удалён.', category='success')
+
+	if current_user == comment.author:
+		db.session.delete(comment)
+		db.session.commit()
+		flash(message='Ваш комментарий успешно удалён.', category='success')
+	else:
+		flash(category='warn', 
+			message='У вас не достаточно прав для удаления данного контента')
 	return redirect(url_for('comment.comments_page', username=comment.author.name))

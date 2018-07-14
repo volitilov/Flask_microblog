@@ -1,0 +1,26 @@
+.comment .user-avatar {
+  color: #24292e;
+}
+.comment .user-avatar img {
+  border-radius: 50%;
+  width: 25px;
+}
+.comment .user-avatar span {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 5px;
+  font-size: 12px;
+}
+.comment .user-avatar span:nth-child(2) {
+  margin-top: -5px;
+}
+.comment .user-avatar:hover {
+  text-decoration: none;
+}
+.comment .Box-header .dev {
+  color: red;
+}
+.comment .Box-header .btn {
+  float: right;
+  margin-top: -2px;
+}

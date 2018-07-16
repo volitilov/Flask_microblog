@@ -9,27 +9,26 @@ from flask import redirect, request, url_for, flash
 from flask_login import current_user, login_required
 
 from . import comment
+from .utils import create_response
 from .forms import AddComment_form
+from .data import page_titles, get_data
 from ..models.post import Post
 from ..models.user import User
 from ..models.comment import Comment
-from ..utils import create_response
 from .. import db
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@comment.route(rule='/...add-comment-to-post-<int:post_id>')
+@comment.route(rule='/...add-comment-to-post-<int:id>')
 @login_required
-def addComment_page(post_id):
-	form = AddComment_form()
-	post = Post.query.get_or_404(post_id)
-
+def addComment_page(id):
+	'''Генерирует страницу для добавления комментария'''
 	return create_response(template='comment/add_comment.html', data={
-		'page_title': 'Страница добавления комментария',
-		'post': post,
-		'all_posts_count': Post.query.filter_by(state='public').count(),
-        'followed_posts_count': current_user.followed_posts.filter(Post.state=='public').count(),
-		'form': form
+		'page_title': page_titles['addComment_page'],
+		'post': Post.query.get_or_404(id),
+		'posts': Post.query.filter_by(state='public'),
+        'followed_posts': current_user.followed_posts.filter(Post.state=='public'),
+		'form': AddComment_form()
 	})
 
 
@@ -37,19 +36,15 @@ def addComment_page(post_id):
 def comments_page(username):
 	'''Генерирует страницу с комментариями пользователя.'''
 	user = User.query.filter_by(name=username).first()
-	if current_user == user:
-		posts = user.posts.filter(Post.state!='moderator')
-		comments = user.comments.filter(Comment.state!='moderation')
-	else:
-		posts = user.posts.filter_by(state='public')
-		comments = user.comments.filter_by(state='public')
-	sorted_comments = comments.order_by(Comment.timestamp.desc())
+	data = get_data(current_user, user)
+
+	comments = data['comments'].order_by(Comment.timestamp.desc())
 
 	return create_response(template='comment/comments.html', data={
-		'page_title': 'Страница с комментариями пользователя.',
+		'page_title': page_titles['comments_page'],
 		'page': 'comments',
-		'comments': sorted_comments,
-		'posts': posts,
+		'comments': comments,
+		'posts': data['posts'],
 		'user': user
 	})
 
@@ -58,12 +53,16 @@ def comments_page(username):
 def comment_page(id):
 	'''Генерирует страница для запрошенного комментария.'''
 	comment = Comment.query.get_or_404(id)
+	user = comment.author
+	data = get_data(current_user, user)
 
 	if comment.state == 'public' or \
-		comment.state == 'develop' and comment.author == current_user:
+		comment.state == 'develop' and user == current_user:
 			return create_response(template='comment/comment.html', data={
-				'page_title': 'Страница комментария',
+				'page_title': page_titles['comment_page'],
 				'comment': comment,
+				'posts': data['posts'],
+				'comments': data['comments'],
 				'user': comment.author
 			})
 	else:
@@ -83,20 +82,24 @@ def comment_page(id):
 @comment.route(rule='/<int:comment_id>...edit')
 @login_required
 def editComment_page(comment_id):
+	'''Генерирует страницу редактирования комментария'''
 	comment = Comment.query.get_or_404(comment_id)
 	form = AddComment_form()
+	user = comment.author
+	data = get_data(current_user, user)
 
-	if current_user != comment.author:
+	if current_user != user:
 		flash(category='warn', 
 			message='У вас не достаточно прав для редактирования комментария')
 		return redirect(url_for('comment.comment_page', id=comment.id))
 	else:
 		form.body.data = comment.body
-
 		return create_response(template='comment/edit_comment.html', data={
-			'page_title': 'Страница редпктирования коментария',
+			'page_title': page_titles['editComment_page'],
 			'form': form,
 			'comment': comment,
-			'user': comment.author
+			'user': user,
+			'posts': data['posts'],
+			'comments': data['comments']
 		})
 

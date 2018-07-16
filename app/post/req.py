@@ -112,15 +112,13 @@ def editPost_request(id):
 def deletePost_request(id):
 	post = Post.query.get(id)
 
-	db.session.delete(post)
-	db.session.commit()
-	
-	client = current_app.memory
-	res = int(client.get(key='post_count'))
-	res -= 1
-	client.set(key='post_count', value=res)
+	if current_user == post.author:
+		db.session.delete(post)
+		db.session.commit()
+		flash(message='Пост успешно удалён', category='success')
+	else:
+		flash(category='warn', message='У вас недостаточно прав на удаление')
 
-	flash(message='Пост успешно удалён', category='success')
 	return redirect(url_for('post.posts_page'))
 
 

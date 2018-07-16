@@ -46,7 +46,7 @@ def deletePost_request(id):
 	post = Post.query.get_or_404(id)
 
 	title = 'Модерация публикаций'
-	body = '''Пост: <b>{}</b> <br> не прошёл модерацию'''.format(post.title)
+	body = '''Пост: <b>{}</b> <br> не прошёл модерацию и был удалён'''.format(post.title)
 	notice = Notice(title=title, body=body, author=post.author)
 
 	db.session.add(notice)

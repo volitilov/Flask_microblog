@@ -30,21 +30,20 @@ def posts_page():
 	'''Генерирует страницу со всеми публикациями.'''
 	data = get_posts()
 	count_items = current_app.config['APP_POSTS_PER_PAGE']
-	all_posts = data['all_posts'].order_by(Post.data_creation.desc())
+	posts = data['all_posts'].order_by(Post.data_creation.desc())
 	page = request.args.get('page', 1, type=int)
-	pagination = all_posts.paginate(
+	pagination = posts.paginate(
 		page, per_page=count_items, error_out=False)
 
 	return create_response(template='post/posts.html', data={
 		'page_title': page_titles['posts_page'],
 		'pagination': pagination,
-		'posts': pagination.items,
+		'posts': posts,
+		'page_posts': pagination.items,
 		'endpoint': 'post.posts_page',
 		'page': 'all_posts',
-		'posts_count': all_posts.count(),
-		'all_posts_count': all_posts.count(),
-		'followed_posts_count': data['followed_posts'].count(),
-		'posts_per_page': count_items
+		'followed_posts': data['followed_posts'],
+		'count_items': count_items
 	})
 
 
@@ -55,6 +54,7 @@ def followedPosts_page():
 	текущий пользователь'''
 	data = get_posts()
 	count_items = current_app.config['APP_POSTS_PER_PAGE']
+
 	page = request.args.get('page', 1, type=int)
 	pagination = data['followed_posts'].order_by(Post.data_creation.desc()).paginate(
 		page, per_page=count_items, error_out=False)
@@ -62,13 +62,12 @@ def followedPosts_page():
 	return create_response(template='post/posts.html', data={
 		'page_title': page_titles['followedPosts_page'],
 		'pagination': pagination,
-		'posts': pagination.items,
+		'page_posts': pagination.items,
+		'posts': data['all_posts'],
 		'page': 'followed_posts',
 		'endpoint': 'post.followedPosts_page',
-		'posts_count': data['followed_posts'].count(),
-		'all_posts_count': data['all_posts'].count(),
-		'followed_posts_count': data['followed_posts'].count(),
-		'posts_per_page': count_items
+		'followed_posts': data['followed_posts'],
+		'count_items': count_items
 	})
 
 
@@ -80,8 +79,8 @@ def addPost_page():
 	return create_response(template='post/add_post.html', data={
 		'page_title': page_titles['addPost_page'],
 		'form': AddPost_form(),
-		'all_posts_count': data['all_posts'].count(),
-		'followed_posts_count': data['followed_posts'].count()
+		'posts': data['all_posts'],
+		'followed_posts': data['followed_posts']
 	})
 
 
@@ -158,10 +157,10 @@ def post_page(id):
 	data = get_posts()
 	post = Post.query.get_or_404(id)
 	tags = post.tags
-	post.views += 1
-
-	db.session.add(post)
-	db.session.commit()
+	if current_user != post.author:
+		post.views += 1
+		db.session.add(post)
+		db.session.commit()
 
 	rating_bool = False
 	
@@ -182,8 +181,8 @@ def post_page(id):
 				'comments': post.comments.filter(Comment.state=='public'),
 				'rating_bool': rating_bool,
 				'tags': tags,
-				'all_posts_count': data['all_posts'].count(),
-				'followed_posts_count': data['followed_posts'].count()
+				'posts': data['all_posts'],
+				'followed_posts': data['followed_posts']
 			})
 	else:
 		if post.state == 'moderation':
@@ -218,8 +217,8 @@ def editPost_page(id):
 		'page_title': page_titles['editPost_page'],
 		'form': form,
 		'post': post,
-		'all_posts_count': data['all_posts'].count(),
-		'followed_posts_count': data['followed_posts'].count()
+		'posts': data['all_posts'],
+		'followed_posts': data['followed_posts']
 	})
 
 
@@ -236,13 +235,12 @@ def byViewingPosts_page():
 	return create_response(template='post/posts.html', data={
 		'page_title': page_titles['byViewingPosts_page'],
 		'page': 'post_views',
-		'posts': pagination.items,
+		'page_posts': pagination.items,
+		'posts': data['all_posts'],
 		'pagination': pagination,
 		'endpoint': 'post.byViewingPosts_page',
-		'posts_count': data['all_posts'].count(),
-		'all_posts_count': data['all_posts'].count(),
-		'followed_posts_count': data['followed_posts'].count(),
-		'posts_per_page': count_items
+		'followed_posts': data['followed_posts'],
+		'count_items': count_items
 	})
 
 
@@ -259,11 +257,10 @@ def byRatingPosts_page():
 	return create_response(template='post/posts.html', data={
 		'page_title': page_titles['byRatingPosts_page'],
 		'page': 'post_ratings',
-		'posts': pagination.items,
+		'page_posts': pagination.items,
+		'posts': data['all_posts'],
 		'pagination': pagination,
 		'endpoint': 'post.byRatingPosts_page',
-		'posts_count': data['all_posts'].count(),
-		'all_posts_count': data['all_posts'].count(),
-		'followed_posts_count': data['followed_posts'].count(),
-		'posts_per_page': count_items
+		'followed_posts': data['followed_posts'],
+		'count_items': count_items
 	})

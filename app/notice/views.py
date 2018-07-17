@@ -9,18 +9,17 @@ from flask import request, current_app, flash, redirect, url_for
 from flask_login import login_required, current_user
 
 from . import notice
-from .forms import AddNotice_form, SettingsNotice_form
+from .forms import AddNotice_form
 from ..models.notice import Notice
 from ..models.post import Post
 from ..models.comment import Comment
-from ..models.user_settings import UserSettings
 from ..utils import create_response
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@notice.route('/add')
+@notice.route('/<username>/notice/add')
 @login_required
-def addNotice_page():
+def addNotice_page(username):
     form = AddNotice_form()
     return create_response(template='notice/add.html', data={
         'page_title': 'Страница создания уведомления',
@@ -28,7 +27,7 @@ def addNotice_page():
     })
 
 
-@notice.route('/<username>')
+@notice.route('/<username>/notice')
 @login_required
 def notice_page(username):
     if current_user.name != username:
@@ -57,23 +56,3 @@ def notice_page(username):
         'notice_per_page': count_items
     })
 
-
-
-@notice.route('/settings')
-@login_required
-def noticeSettings_page():
-    form = SettingsNotice_form()
-    user_settings = UserSettings.query.filter_by(state='custom', profile=current_user).first()
-
-    form.comments_me.data = user_settings.comments_me
-    form.follow_me.data = user_settings.follow_me
-    form.unfollow_me.data = user_settings.unfollow_me
-    form.unsubscribe_me.data = user_settings.unsubscribe_me
-    form.comment_moderated.data = user_settings.comment_moderated
-    form.post_moderated.data = user_settings.post_moderated
-
-    return create_response(template='notice/settings.html', data={
-        'page_title': 'Страница настроек уведомлений',
-        'page': 'notice_settings',
-        'form': form
-    })

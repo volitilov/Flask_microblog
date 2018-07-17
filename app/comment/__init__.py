@@ -2,7 +2,7 @@ from flask import Blueprint
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-comment = Blueprint('comment', __name__, url_prefix='/comments')
+comment = Blueprint('comment', __name__)
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

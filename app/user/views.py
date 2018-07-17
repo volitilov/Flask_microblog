@@ -17,7 +17,7 @@ from flask_login import current_user, login_required, fresh_login_required
 from . import user
 from .forms import (
 	EditProfile_form, ChangeEmail_form, ChangeLogin_form, 
-	ChangePassword_form
+	ChangePassword_form, EditNotice_form, AddNotice_form
 )
 from ..models.user import User
 from ..models.post import Post
@@ -30,7 +30,7 @@ from .. import db
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@user.route(rule='/users/<username>')
+@user.route(rule='/<username>')
 def profile_page(username):
 	'''Генерирует страницу профиля пользователя.'''
 	user = User.query.filter_by(name=username).first_or_404()
@@ -52,14 +52,14 @@ def profile_page(username):
 
 
 
-@user.route(rule='/profile/settings', methods=['GET', 'POST'])
+@user.route(rule='/<username>/settings/profile', methods=['GET', 'POST'])
 @login_required
-def editProfile_page():
+def editProfile_page(username):
 	'''Генерирует страницу настроек пользователя'''
 	form = EditProfile_form()
 	upload_folder = current_app.config['UPLOAD_FOLDER']
 	allowed_extensions = current_app.config['ALLOWED_EXTENSIONS']
-	bro = User.query.filter_by(name=current_user.name).first()
+	user = User.query.filter_by(name=username).first()
 
 	first_name = form.first_name.data
 	last_name = form.last_name.data
@@ -75,18 +75,18 @@ def editProfile_page():
 				photo_base_url = os.path.join(upload_folder, 'photos', filename)
 				photo.save(photo_base_url)
 
-				bro.photo_url = 'photos/' + filename
+				user.photo_url = 'photos/' + filename
 			else:
 				flash(category='warn', 
 					message='Поддерживаются только следующие форматы: png, jpg, jpeg, gif, svg')
 				return redirect(url_for('user.editProfile_page'))
 
-		bro.first_name = first_name
-		bro.last_name = last_name
-		bro.about_me = about
-		bro.location = location
+		user.first_name = first_name
+		user.last_name = last_name
+		user.about_me = about
+		user.location = location
 
-		db.session.add(bro)
+		db.session.add(user)
 		db.session.commit()
 		
 		flash(message='Новые данные сохранены.', category='success')
@@ -100,9 +100,9 @@ def editProfile_page():
 
 
 
-@user.route(rule='/account/settings')
+@user.route(rule='/<username>/settings/account')
 @login_required
-def editAccount_page():
+def editAccount_page(username):
 	changeLogin_form = ChangeLogin_form()
 	changePassword_form = ChangePassword_form()
 	changeEmail_form = ChangeEmail_form()
@@ -366,3 +366,110 @@ def deleteAccount_request():
 	db.session.delete(user)
 	db.session.commit()
 	return redirect(url_for('main.home_page'))
+
+
+@user.route('/<username>/settings/notice')
+@login_required
+def editNotice_page(username):
+	form = EditNotice_form()
+	user_settings = UserSettings.query.filter_by(state='custom', profile=current_user).first()
+
+	form.comments_me.data = user_settings.comments_me
+	form.follow_me.data = user_settings.follow_me
+	form.unfollow_me.data = user_settings.unfollow_me
+	form.unsubscribe_me.data = user_settings.unsubscribe_me
+	form.comment_moderated.data = user_settings.comment_moderated
+	form.post_moderated.data = user_settings.post_moderated
+
+	return create_response(template='user/edit_notice.html', data={
+		'page_title': 'Страница настроек уведомлений',
+		'page': 'edit_notice',
+		'form': form
+	})
+
+
+@user.route('/<username>/admin/')
+@login_required
+def adminDashboard_page(username):
+	comments = []
+	for i in current_user.posts:
+		com = i.comments.filter_by(state='moderation')
+		comments.extend(com)
+
+	user = User.query.filter_by(name=username).first()
+
+	return create_response(template='user/admin/dashboard.html', data={
+		'title_page': 'Страница администрирования',
+		'page': 'dashboard',
+		'comments': comments,
+		'user': user
+	})
+
+
+@user.route('/<username>/admin/comments/')
+@login_required
+def adminComments_page(username):
+	comments = []
+	for i in current_user.posts:
+		com = i.comments.filter_by(state='moderation')
+		comments.extend(com)
+	
+	posts = Post.query.filter_by(state='moderation')
+	
+	return create_response(template='user/admin/comments.html', data={
+		'title_page': 'Страница модерации комментариев',
+		'page': 'comments',
+		'comments': comments,
+		'posts': posts
+	})
+
+
+@user.route('/<username>/admin/coments/<int:id>')
+@login_required
+def adminComment_page(username, id):
+	posts = Post.query.filter_by(state='moderation')
+	comment = Comment.query.get_or_404(id)
+	comments = []
+	for i in current_user.posts:
+		com = i.comments.filter_by(state='moderation')
+		comments.extend(com)
+	
+	if comment.state == 'public':
+		state_body = 'Опубликован'
+	if comment.state == 'develop':
+		state_body = 'Находится на доработке'
+	if comment.state != 'moderation':
+		return create_response(template='state.html', data={
+			'title_page': 'Стадия контента',
+			'state_title': 'Комментарий',
+			'posts': Post.query.filter_by(state='public'),
+			'followed_posts': current_user.followed_posts.filter(Post.state=='public'),
+			'state_body': state_body
+		})
+	else:
+		return create_response(template='user/admin/comment.html', data={
+			'title_page': 'Страница модерации комментария',
+			'comment': comment,
+			'comments': comments,
+			'posts': posts
+		})
+
+
+@user.route('/<username>/admin/comments/<int:id>/...return')
+@login_required
+def adminReturnComment_page(username, id):
+	form = AddNotice_form()
+	comment = Comment.query.get_or_404(id)
+	posts = Post.query.filter_by(state='moderation')
+	comments = []
+	for i in current_user.posts:
+		com = i.comments.filter_by(state='moderation')
+		comments.extend(com)
+
+	return create_response(template='user/admin/noticeComment_form.html', data={
+		'title_page': 'Страница формы уведомления',
+		'form': form,
+		'comment': comment,
+		'posts': posts,
+		'comments': comments
+	})

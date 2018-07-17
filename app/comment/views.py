@@ -19,9 +19,9 @@ from .. import db
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@comment.route(rule='/...add-comment-to-post-<int:id>')
+@comment.route(rule='/<username>/comments/...add-comment-to-post-<int:id>')
 @login_required
-def addComment_page(id):
+def addComment_page(username, id):
 	'''Генерирует страницу для добавления комментария'''
 	return create_response(template='comment/add_comment.html', data={
 		'page_title': page_titles['addComment_page'],
@@ -49,8 +49,8 @@ def comments_page(username):
 	})
 
 
-@comment.route(rule='/<int:id>')
-def comment_page(id):
+@comment.route(rule='/<username>/comments/<int:id>')
+def comment_page(username, id):
 	'''Генерирует страница для запрошенного комментария.'''
 	comment = Comment.query.get_or_404(id)
 	user = comment.author
@@ -74,24 +74,29 @@ def comment_page(id):
 			return create_response(template='state.html', data={
 				'page_title': 'Стадия контента',
 				'state_title': 'Комментарий',
+				'posts': data['posts'],
+				'followed_posts': current_user.followed_posts.filter(Post.state=='public'),
 				'state_body': state_body
 			})
 
 
 
-@comment.route(rule='/<int:comment_id>...edit')
+@comment.route(rule='/<username>/comments/<int:comment_id>...edit')
 @login_required
-def editComment_page(comment_id):
+def editComment_page(username, comment_id):
 	'''Генерирует страницу редактирования комментария'''
 	comment = Comment.query.get_or_404(comment_id)
 	form = AddComment_form()
 	user = comment.author
 	data = get_data(current_user, user)
 
-	if current_user != user:
+	if current_user != user or comment.state == 'moderation':
 		flash(category='warn', 
-			message='У вас не достаточно прав для редактирования комментария')
-		return redirect(url_for('comment.comment_page', id=comment.id))
+			message='На данный момент у вас не достаточно прав для редактирования комментария')
+		return redirect(url_for(
+			endpoint='comment.comment_page', 
+			username=current_user.name, 
+			id=comment.id))
 	else:
 		form.body.data = comment.body
 		return create_response(template='comment/edit_comment.html', data={

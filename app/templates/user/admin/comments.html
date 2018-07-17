@@ -9,7 +9,7 @@
 {% block content %}
     <div class="columns">
         <aside class="one-fourth column mt-3">
-            {% include 'moderator/_nav_panell.html' %}
+            {% include 'user/admin/_nav_panell.html' %}
         </aside>
         <div class="three-fourths column">
             <ul>
@@ -23,20 +23,21 @@
                         </div>
                         <div class="Box-body">
                             <small>
-                                {{ comment.timestamp.strftime('%d.%m.%Y') }}
-                                к посту: 
-                                {% if not comment.post.id %}
-                                    пост удалён
-                                {% else %}
-                                    <a href="{{ url_for('post.post_page', id=comment.post.id) }}">{{ comment.post.title }}</a>
-                                {% endif %}
+                                когда: {{ comment.timestamp.strftime('%d.%m.%Y') }}
                             </small>
+                            <hr>
+                            пост: 
+                            {% if not comment.post.id %}
+                                <b>удалён</b>
+                            {% else %}
+                                <a href="{{ url_for('post.post_page', id=comment.post.id) }}">{{ comment.post.title }}</a>
+                            {% endif %}
                             <p>
                                 {% if comment.body_html %}
                                     {{ comment.body_html|safe|truncate(400) }}
                                     <span class="hidden-text-expander">
                                         <a role="btn" class="ellipsis-expander" 
-                                            href="{{ url_for('moderator.comment_page', id=comment.id) }}">&hellip;</a>
+                                            href="{{ url_for('user.adminComment_page', username=current_user.name, id=comment.id) }}">&hellip;</a>
                                     </span>
                                 {% else %}
                                     {{ comment.text|truncate(400) }}

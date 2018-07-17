@@ -39,6 +39,12 @@ body {
 .paginate-container {
   text-align: left;
 }
+.Subhead {
+  border: none;
+}
+.Subhead .Subhead-actions {
+  margin-top: 7px;
+}
 .Subhead-heading {
   font-size: 13px;
   padding-top: 8px;

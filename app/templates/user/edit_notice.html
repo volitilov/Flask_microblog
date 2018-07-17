@@ -14,7 +14,7 @@
                 </div>
                 <div class="Box-body">
                     <p>Уведомлять меня если:</p>
-                    <form method="POST" action="{{ url_for('notice.changeSettings_request') }}">
+                    <form method="POST" action="{{ url_for('user.editNotice_request') }}">
                         {{ data.form.csrf_token }}
                         <div class="form-checkbox">
                             <label>
@@ -74,8 +74,9 @@
                                 Мы уведомим вас об упешной либо неуспешной модерации.
                             </p>
                         </div>
+                        <hr>
                         <button class="btn btn-sm btn-primary" type="submit">Сохранить</button>
-                        <a href="{{ url_for('notice.returnDefaultSettings_request') }}" class="btn btn-sm" role="btn">Вернуть настройки поумолчанию</a>
+                        <a href="{{ url_for('user.returnDefaultNoticeSettings_request') }}" class="btn btn-sm" role="btn">Вернуть настройки поумолчанию</a>
                     </form>
                 </div>
             </div>

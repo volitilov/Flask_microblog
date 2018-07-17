@@ -1,0 +1,17 @@
+<section class="nav nav-left">
+    <nav class="menu">
+        <span class="menu-heading">Контент для модерации</span>
+        <a class="menu-item {% if data.page == 'dashboard' %}selected{% endif %}" 
+            href="{{ url_for('user.adminDashboard_page', username=current_user.name) }}">
+            Dashboard
+        </a>
+        <!-- <a class="menu-item" href="#">
+            Уведомления
+            <span class="Counter">0</span>
+        </a> -->
+        <a class="menu-item {% if data.page == 'comments' %}selected{% endif %}" href="{{ url_for('user.adminComments_page', username=current_user.name) }}">
+            Комментарии
+            <span class="Counter">{{ data.comments|length }}</span>
+        </a>
+    </nav>
+</section>

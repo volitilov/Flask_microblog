@@ -8,7 +8,7 @@ from flask import redirect, url_for, flash, current_app
 from flask_login import current_user, login_required
 
 from . import notice
-from .forms import AddNotice_form, SettingsNotice_form
+from .forms import AddNotice_form
 from ..models.notice import Notice
 from ..models.user import User
 from ..models.user_settings import UserSettings
@@ -64,45 +64,3 @@ def deleteNotice_request(id):
 
     return redirect(url_for('notice.notice_page', username=current_user.name))
 
-
-
-@notice.route('/...change_settings', methods=['POST'])
-@login_required
-def changeSettings_request():
-    form = SettingsNotice_form()
-    user_settings = UserSettings.query.filter_by(state='custom', profile=current_user).first()
-
-    user_settings.comments_me = form.comments_me.data
-    user_settings.follow_me = form.follow_me.data
-    user_settings.unfollow_me = form.unfollow_me.data
-    user_settings.unsubscribe_me = form.unsubscribe_me.data
-    user_settings.comment_moderated = form.comment_moderated.data
-    user_settings.post_moderated = form.post_moderated.data
-
-    db.session.add(user_settings)
-    db.session.commit()
-
-    flash(category='success', message='Ваши настройки успешно сохранены.')
-    return redirect(url_for('notice.noticeSettings_page'))
-
-
-
-@notice.route('/...returnDefault_settings')
-@login_required
-def returnDefaultSettings_request():
-    form = SettingsNotice_form()
-    default = UserSettings.query.filter_by(state='default', profile=current_user).first()
-    custom = UserSettings.query.filter_by(state='custom', profile=current_user).first()
-
-    custom.comments_me = default.comments_me
-    custom.follow_me = default.follow_me
-    custom.unfollow_me = default.unfollow_me
-    custom.unsubscribe_me = default.unsubscribe_me
-    custom.comment_moderated = default.comment_moderated
-    custom.post_moderated = default.post_moderated
-
-    db.session.add(custom)
-    db.session.commit()
-
-    flash(category='success', message='Настройки успешно востановлены.')
-    return redirect(url_for('notice.noticeSettings_page'))

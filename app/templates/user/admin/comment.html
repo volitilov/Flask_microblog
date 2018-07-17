@@ -10,7 +10,7 @@
 {% block content %}
 	<section class="columns mt-3">
         <aside class="one-fourth column">
-           {% include 'moderator/_nav_panell.html' %}
+            {% include 'user/admin/_nav_panell.html' %}
         </aside>
         <div class="three-fourths column">
 			<article class="Box comment">
@@ -27,26 +27,30 @@
                         </a>
                     {% endif %}
                     
-                    <a class="btn btn-sm btn-primary" href="{{ url_for('moderator.confirmComment_request', id=data.comment.id) }}">
+                    <a class="btn btn-sm btn-primary" 
+                        href="{{ url_for('user.adminConfirmComment_request', id=data.comment.id) }}">
                         Подтвердить
                     </a>
-                    <a class="btn btn-sm btn-danger mx-2" href="{{ url_for('moderator.deleteComment_request', id=data.comment.id) }}">
+                    <a class="btn btn-sm btn-danger mx-2" 
+                        href="{{ url_for('user.adminDeleteComment_request', id=data.comment.id) }}">
                         Удалить
                     </a>
-                    <a class="btn btn-sm btn-outline" href="{{ url_for('moderator.returnComment_page', id=data.comment.id) }}">
+                    <a class="btn btn-sm btn-outline" 
+                        href="{{ url_for('user.adminReturnComment_page', username=current_user.name, id=data.comment.id) }}">
                         Вернуть
                     </a>
 				</div>
 				<div class="Box-body">
                     <small>
-                        {{ data.comment.timestamp.strftime('%d.%m.%Y') }}
-                        к посту: 
-                        {% if not data.comment.post.id %}
-                            удалён
-                        {% else %}
-                            <a href="{{ url_for('post.post_page', id=data.comment.post.id) }}">{{ data.comment.post.title }}</a>
-                        {% endif %}
+                        когда: {{ data.comment.timestamp.strftime('%d.%m.%Y') }}
                     </small>
+                    <hr>
+                    пост: 
+                    {% if not data.comment.post.id %}
+                        удалён
+                    {% else %}
+                        <a href="{{ url_for('post.post_page', id=data.comment.post.id) }}">{{ data.comment.post.title }}</a>
+                    {% endif %}
                     <div class="content">
                         {{ data.comment.body_html|safe }}
                     </div>

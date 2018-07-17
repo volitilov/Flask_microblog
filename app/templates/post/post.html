@@ -2,6 +2,7 @@
 {% from 'macros/_formhelpers.html' import render_field %}
 {% block style %}
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/post.css') }}" />
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/components/comment.css') }}">
 {% endblock %}
 {% block scripts %}{% endblock %}
 
@@ -76,7 +77,8 @@
 							<h3>комментарии:</h3>
 						</div>
 						<div class="Subhead-actions">
-							<a href="{{ url_for('comment.addComment_page', id=data.post.id) }}" class="btn btn-sm btn-primary">Комментировать</a>
+							<a href="{{ url_for('comment.addComment_page', username=current_user.name, id=data.post.id) }}" 
+								class="btn btn-sm btn-primary">Комментировать</a>
 						</div>
 					</div>
 				{% else %}
@@ -85,7 +87,8 @@
 							<p>Войдите чтобы оставить комментарий</p>
 						</div>
 						<div class="Subhead-actions">
-							<a href="{{ url_for('comment.addComment_page', id=data.post.id) }}" class="btn btn-sm btn-primary">Комментировать</a>
+							<a href="{{ url_for('comment.addComment_page', username=current_user.name, id=data.post.id) }}" 
+								class="btn btn-sm btn-primary">Комментировать</a>
 						</div>
 					</div>
 				{% endif %}

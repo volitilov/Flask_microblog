@@ -8,9 +8,9 @@
     </div>
     <nav class="menu">
         <span class="menu-heading">Персоналные настройки</span>
-        <a class="menu-item {% if data.page == 'edit_profile' %}selected{% endif %}" href="{{ url_for('user.editProfile_page') }}">Настройки профиля</a>
-        <a class="menu-item {% if data.page == 'edit_account' %}selected{% endif %}" href="{{ url_for('user.editAccount_page') }}">Настройки аккаунта</a>
-        <a class="menu-item {% if data.page == 'notice_settings' %}selected{% endif %}" href="{{ url_for('notice.noticeSettings_page') }}">Настройки уведомлений</a>
+        <a class="menu-item {% if data.page == 'edit_profile' %}selected{% endif %}" href="{{ url_for('user.editProfile_page', username=current_user.name) }}">Настройки профиля</a>
+        <a class="menu-item {% if data.page == 'edit_account' %}selected{% endif %}" href="{{ url_for('user.editAccount_page', username=current_user.name) }}">Настройки аккаунта</a>
+        <a class="menu-item {% if data.page == 'edit_notice' %}selected{% endif %}" href="{{ url_for('user.editNotice_page', username=current_user.name) }}">Настройки уведомлений</a>
         <!-- <a class="menu-item" href="#">Настройки публикаций</a>
         <a class="menu-item" href="#">Настройки комментарий</a>
         <a class="menu-item" href="#">Настройки безопасности</a>

@@ -1,0 +1,55 @@
+.profile .about h1,
+.profile .about h2,
+.profile .about h3,
+.profile .about h4,
+.profile .about h5,
+.profile .about h6,
+.profile .about blockquote {
+  margin: 10px 0;
+}
+.profile .about ol {
+  list-style-type: decimal;
+}
+.profile .about ul {
+  list-style-type: disc;
+}
+.profile .about ul,
+.profile .about ol {
+  padding-left: 20px;
+}
+.profile .about ul ul,
+.profile .about ol ol {
+  list-style-type: circle;
+}
+.profile .about p,
+.profile .about table {
+  margin-top: 15px;
+}
+.profile .about table {
+  margin-bottom: 15px;
+}
+.profile .about img,
+.profile .about video,
+.profile .about pre,
+.profile .about iframe {
+  max-width: 100%;
+  border: 1px solid #d1d5da;
+  border-radius: 3px;
+  padding: 5px;
+}
+.profile .about table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+.profile .about blockquote {
+  padding: 0 15px;
+  color: #777;
+  border-left: 4px solid #ddd;
+}
+.profile .about table th,
+.profile .about table td {
+  border: 1px solid #e1e4e8;
+  padding: 7px;
+}
+.profile .about code {
+  border-radius: 3px;
+}

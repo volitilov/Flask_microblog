@@ -13,52 +13,24 @@
                     <small>Настройки аккаунта</small>
                 </div>
                 <div class="Box-row">
-                    <h4>Изменить пароль</h4>
-                    <form method="POST" action="/change_password">
-                        {{ data.password_form.csrf_token }}
-                        <dl class="form-group">
-                            <dt>{{ data.password_form.old_password.label }}</dt>
-                            <dd>{{ data.password_form.old_password(class="form-control") }}</dd>
-                        </dl>
-                        <dl class="form-group">
-                            <dt>{{ data.password_form.password.label }}</dt>
-                            <dd>{{ data.password_form.password(class="form-control") }}</dd>
-                        </dl>
-                        <dl class="form-group">
-                            <dt>{{ data.password_form.password2.label }}</dt>
-                            <dd>{{ data.password_form.password2(class="form-control") }}</dd>
-                        </dl>
-                        <button class="btn btn-sm" type="submit">Изменить пароль</button>
-                    </form>
+                    <a href="{{ url_for('user.changePassword_page', username=current_user.name) }}"><h5>Изменить пароль</h5></a>
                 </div>
                 <div class="Box-row">
-                    <h4>Изменить login</h4>
-                    <form method="POST" action="/change_login">
-                        {{ data.login_form.csrf_token }}
-                        <dl class="form-group">
-                            <dd>{{ data.login_form.name(value=current_user.name, class="form-control") }}</dd>
-                        </dl>
-                        <button class="btn btn-sm" type="submit">Изменить логин</button>
-                    </form>
+                    <a href="{{ url_for('user.changeLogin_page', username=current_user.name) }}"><h5>Изменить login</h5></a>
                 </div>
                 <div class="Box-row">
-                    <h4>Изменить email</h4>
-                    <form method="POST" action="/change_email">
-                        {{ data.email_form.csrf_token }}
-                        <dl class="form-group">
-                            <dd>{{ data.email_form.email(value=current_user.email, class="form-control")|safe }}</dd>
-                        </dl>
-                        <button class="btn btn-sm" type="submit">Изменить email</button>
-                    </form>
+                    <a href="{{ url_for('user.changeEmail_page', username=current_user.name) }}"><h5>Изменить email</h5></a>
                 </div>
                 <div class="Box-row">
-                    <h4>Удалить аккаунт</h4>
                     <form method="POST" action="/delete_account">
-                        {{ data.password_form.csrf_token }}
+                        
+                        <p class="note">
+                            После удаления вся ваша активность, кроме публикаций, на данном 
+                            ресурсе будет удалена и у вас не будет <br> возможности востановить свой аккаунт. 
+                        </p>
                         <button class="btn btn-sm btn-danger" type="submit">Удалить аккаунт</button>
                     </form>
                 </div>
-                
             </div>
         </div>
     </section>

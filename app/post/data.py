@@ -12,9 +12,14 @@ from ..models.post import Post
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 def get_posts():
+    if current_user.is_anonymous:
+        followed_posts = None
+    else:
+        followed_posts = current_user.followed_posts.filter(Post.state=='public')
+
     return {
         'all_posts': Post.query.filter_by(state='public'),
-        'followed_posts': current_user.followed_posts.filter(Post.state=='public')
+        'followed_posts': followed_posts
     }
 
 

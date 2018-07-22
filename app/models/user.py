@@ -4,6 +4,9 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+from markdown2 import markdown
+import bleach
+
 from datetime import datetime
 from hashlib import md5
 
@@ -32,18 +35,19 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, index=True)
-    first_name = db.Column(db.String(64))
-    last_name = db.Column(db.String(64))
-    about_me = db.Column(db.Text())
-    location = db.Column(db.String(64))
+    first_name = db.Column(db.String(64), nullable=True)
+    last_name = db.Column(db.String(64), nullable=True)
+    about_me = db.Column(db.Text, nullable=True)
+    about_me_html = db.Column(db.Text, nullable=True)
+    location = db.Column(db.String(64), nullable=True)
     email = db.Column(db.String(64), unique=True, index=True, nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
-    date_registration = db.Column(db.DateTime(), default=datetime.utcnow()) 
-    last_visit = db.Column(db.DateTime(), default=datetime.utcnow())
+    date_registration = db.Column(db.DateTime, default=datetime.utcnow()) 
+    last_visit = db.Column(db.DateTime, default=datetime.utcnow())
     avatar_hash = db.Column(db.String(32))
-    photo_url = db.Column(db.String)
+    photo_url = db.Column(db.String, nullable=True)
 
     settings = db.relationship('UserSettings', backref='profile', lazy='dynamic')
     posts = db.relationship('Post', backref='author', lazy='dynamic')
@@ -276,6 +280,29 @@ class User(UserMixin, db.Model):
         return json_user
 
 
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        '''Функция создаёт HTML-версию данных пользователя "обо мне" и 
+        сохраняет его в поле body_html, обеспечивая тем самым автоматическое 
+        преобразование разметки Markdown в html'''
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'i', 'li', 'ol', 
+            'strong', 'ul', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'img', 'br', 
+            'table', 'tbody', 'thead', 'td', 'th', 'tr']
+
+        allowed_attrs = ['href', 'rel', 'alt', 'title', 'style', 'width', 'height', 
+            'src', 'target', 'id']
+        allowed_style = ['color', 'width', 'height']
+        allowed_protocols=['http', 'https']
+        
+        target.about_me_html = bleach.linkify(bleach.clean(
+            markdown(value, extras=[
+                    'break-on-newline', 'cuddled-lists', 'footnotes', 'nofollow', 
+                    'numbering', 'tables', 'wiki-tables']),
+                attributes=allowed_attrs, tags=allowed_tags, 
+                styles=allowed_style, protocols=allowed_protocols, 
+                strip=True))
+
+
     def __str__(self):
         return '<User - {}>'.format(self.name)
 
@@ -288,3 +315,7 @@ def load_user(user_id):
     идентификатор существует, возвращает объект, представляющий пользователя, 
     в противном случае возвращается None''' 
     return User.query.get(int(user_id))
+
+
+
+db.event.listen(User.about_me, 'set', User.on_changed_body)

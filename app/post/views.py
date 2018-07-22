@@ -25,7 +25,7 @@ from .. import db
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@post.route('/')
+@post.route('/posts/')
 def posts_page():
 	'''Генерирует страницу со всеми публикациями.'''
 	data = get_posts()
@@ -38,7 +38,7 @@ def posts_page():
 	return create_response(template='post/posts.html', data={
 		'page_title': page_titles['posts_page'],
 		'pagination': pagination,
-		'posts': posts,
+		'all_posts': posts,
 		'page_posts': pagination.items,
 		'endpoint': 'post.posts_page',
 		'page': 'all_posts',
@@ -47,7 +47,7 @@ def posts_page():
 	})
 
 
-@post.route('/followed_posts')
+@post.route('/posts/followed_posts/')
 @login_required
 def followedPosts_page():
 	'''Создаёт страницу с побликациями пользователей на которых подписан
@@ -63,7 +63,7 @@ def followedPosts_page():
 		'page_title': page_titles['followedPosts_page'],
 		'pagination': pagination,
 		'page_posts': pagination.items,
-		'posts': data['all_posts'],
+		'all_posts': data['all_posts'],
 		'page': 'followed_posts',
 		'endpoint': 'post.followedPosts_page',
 		'followed_posts': data['followed_posts'],
@@ -71,7 +71,7 @@ def followedPosts_page():
 	})
 
 
-@post.route(rule='/...add')
+@post.route(rule='/posts/...add')
 @login_required
 def addPost_page():
 	'''Генерирует страницу с формай создания постов.'''
@@ -79,22 +79,23 @@ def addPost_page():
 	return create_response(template='post/add_post.html', data={
 		'page_title': page_titles['addPost_page'],
 		'form': AddPost_form(),
-		'posts': data['all_posts'],
+		'all_posts': data['all_posts'],
 		'followed_posts': data['followed_posts']
 	})
 
 
-@post.route(rule='/<username>/posts/')
+@post.route(rule='/posts/<username>/posts/')
 def userPosts_page(username):
 	'''Генерирует страницу с публикациями пользователя.'''
 	user = User.query.filter_by(name=username).first()
 	count_items = current_app.config['APP_POSTS_PER_PAGE']
-	if current_user.name == username:
-		posts = user.posts.filter(Post.state!='moderation')
-		comments = user.comments.filter(Comment.state!='moderator')
-	else:
-		posts = user.posts.filter_by(state='public')
-		comments = user.comments.filter_by(state='public')
+	posts = user.posts.filter_by(state='public')
+	comments = user.comments.filter_by(state='public')
+
+	if not current_user.is_anonymous:
+		if current_user.name == username:
+			posts = user.posts.filter(Post.state!='moderation')
+			comments = user.comments.filter(Comment.state!='moderator')
 
 	page = request.args.get('page', 1, type=int)
 	pagination = posts.order_by(Post.data_creation.desc()).paginate(
@@ -113,7 +114,7 @@ def userPosts_page(username):
 	})
 
 
-@post.route(rule='/tag/<int:id>/')
+@post.route(rule='/posts/tag/<int:id>/')
 def tagPosts_page(id):
 	'''Генерирует страницу с публикациями по запрошенному тегу.'''
 	data = get_posts()
@@ -140,18 +141,16 @@ def tagPosts_page(id):
 
 	return create_response(template='post/posts.html', data={
 		'page_title': page_titles['tagPosts_page'],
-		'posts': tag_posts,
+		'page_posts': tag_posts,
 		'pagination': pagination,
 		'endpoint': 'post.tagPosts_page',
-		'posts_count': posts.count(),
-		'posts_per_page': count_items,
-		'all_posts_count': data['all_posts'].count(),
-		'followed_posts_count': data['followed_posts'].count(),
-		'tag': tag
+		'count_items': count_items,
+		'all_posts': data['all_posts'],
+		'followed_posts': followed_posts_count
 	})
 
 
-@post.route(rule='/<int:id>')
+@post.route(rule='/posts/<int:id>')
 def post_page(id):
 	'''Генерирует страницу запрошенного поста'''
 	data = get_posts()
@@ -181,7 +180,7 @@ def post_page(id):
 				'comments': post.comments.filter(Comment.state=='public'),
 				'rating_bool': rating_bool,
 				'tags': tags,
-				'posts': data['all_posts'],
+				'all_posts': data['all_posts'],
 				'followed_posts': data['followed_posts']
 			})
 	else:
@@ -197,7 +196,7 @@ def post_page(id):
 			})
 
 
-@post.route(rule='/<int:id>/...edit')
+@post.route(rule='/posts/<int:id>/...edit')
 @login_required
 def editPost_page(id):
 	'''Генерирует страницу редактирования поста.'''
@@ -217,12 +216,12 @@ def editPost_page(id):
 		'page_title': page_titles['editPost_page'],
 		'form': form,
 		'post': post,
-		'posts': data['all_posts'],
+		'all_posts': data['all_posts'],
 		'followed_posts': data['followed_posts']
 	})
 
 
-@post.route(rule='/by_viewing')
+@post.route(rule='/posts/by_viewing/')
 def byViewingPosts_page():
 	'''Формирует страницу постов отсортированных по кол-ву просмотров.'''
 	data = get_posts()
@@ -236,7 +235,7 @@ def byViewingPosts_page():
 		'page_title': page_titles['byViewingPosts_page'],
 		'page': 'post_views',
 		'page_posts': pagination.items,
-		'posts': data['all_posts'],
+		'all_posts': data['all_posts'],
 		'pagination': pagination,
 		'endpoint': 'post.byViewingPosts_page',
 		'followed_posts': data['followed_posts'],
@@ -244,7 +243,7 @@ def byViewingPosts_page():
 	})
 
 
-@post.route(rule='/by_rating')
+@post.route(rule='/posts/by_rating/')
 def byRatingPosts_page():
 	'''Формирует страницу постов отсортированных по рейтингу.'''
 	data = get_posts()
@@ -258,7 +257,7 @@ def byRatingPosts_page():
 		'page_title': page_titles['byRatingPosts_page'],
 		'page': 'post_ratings',
 		'page_posts': pagination.items,
-		'posts': data['all_posts'],
+		'all_posts': data['all_posts'],
 		'pagination': pagination,
 		'endpoint': 'post.byRatingPosts_page',
 		'followed_posts': data['followed_posts'],

@@ -2,13 +2,11 @@
     <nav class="menu my-3">
         <span class="menu-heading">Навигация по публикациям</span>
         <a class="menu-item {% if data.page == 'all_posts' %}selected{% endif %}" href="{{ url_for('post.posts_page') }}">
-            Все посты
-            <!-- Все посты &#9207; -->
-            <span class="Counter">{{ data.posts.count() }}</span>
+            Все посты <!-- &#9207; -->
+            <span class="Counter">{{ data.all_posts.count() }}</span>
         </a>
         <a class="menu-item {% if data.page == 'followed_posts' %}selected{% endif %}" href="{{ url_for('post.followedPosts_page') }}">
-            По подписке
-            <!-- По подписке &#9207; -->
+            По подписке <!-- &#9207; -->
             {% if not current_user.is_anonymous %}
                 <span class="Counter">{{ data.followed_posts.count() }}</span>
             {% else %}
@@ -25,9 +23,7 @@
             По кол-ву просмотров
         </a>
     </nav>
-    {% if current_user.is_authenticated %}
-        <span class="tooltipped tooltipped-s" aria-label="Написать и опубликовать свой пост">							
-            <a class="btn btn-block btn-primary" role="btn" href="{{ url_for('post.addPost_page') }}">Добавить пост</a>
-        </span>
-    {% endif %}
+    <span class="tooltipped tooltipped-s" aria-label="Написать и опубликовать свой пост">							
+        <a class="btn btn-block btn-primary" role="btn" href="{{ url_for('post.addPost_page') }}">Добавить пост</a>
+    </span>
 </section>

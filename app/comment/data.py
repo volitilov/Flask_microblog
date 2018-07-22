@@ -10,16 +10,17 @@ from ..models.comment import Comment
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 def get_data(current_user, user):
-    if current_user == user:
-        return {
-            'posts': user.posts.filter(Post.state!='moderation'),
-            'comments': user.comments.filter(Comment.state!='moderation')
-        }
-    else:
-        return {
-            'posts': user.posts.filter_by(state='public'),
-            'comments': user.comments.filter_by(state='public')
-        }
+    posts = user.posts.filter_by(state='public')
+    comments = user.comments.filter_by(state='public')
+    if not current_user.is_anonymous:
+        if current_user == user:
+            posts = user.posts.filter(Post.state!='moderation')
+            comments = user.comments.filter(Comment.state!='moderation')
+            
+    return {
+        'posts': posts,
+        'comments': comments
+    }
 
 
 

@@ -42,6 +42,8 @@ class Config:
     # разрешонные расширения для изображений
     ALLOWED_EXTENSIONS = set(['.png', '.jpg', '.jpeg', '.gif', '.svg'])
 
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024
+
     APP_MAIL_SENDER = 'Admin volitilov@gmail.com'
     APP_MAIL_SUBJECT_PREFIX = '[ voliTilov ] '
     APP_ADMIN = os.getenv('APP_ADMIN')

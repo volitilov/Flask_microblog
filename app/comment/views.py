@@ -19,9 +19,9 @@ from .. import db
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@comment.route(rule='/<username>/comments/...add-comment-to-post-<int:id>')
+@comment.route(rule='/comments/...add-comment-to-post-<int:id>')
 @login_required
-def addComment_page(username, id):
+def addComment_page(id):
 	'''Генерирует страницу для добавления комментария'''
 	return create_response(template='comment/add_comment.html', data={
 		'page_title': page_titles['addComment_page'],
@@ -49,8 +49,8 @@ def comments_page(username):
 	})
 
 
-@comment.route(rule='/<username>/comments/<int:id>')
-def comment_page(username, id):
+@comment.route(rule='/comments/<int:id>')
+def comment_page(id):
 	'''Генерирует страница для запрошенного комментария.'''
 	comment = Comment.query.get_or_404(id)
 	user = comment.author

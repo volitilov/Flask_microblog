@@ -31,7 +31,11 @@ app = create_app(os.getenv('APP_ENV'))
 migrate = Migrate(app, database)
 
 if not app.debug:
-    handler = RotatingFileHandler('tmp/loggs/warning.log', maxBytes=10000)
+    if not os.path.exists('tmp/loggs'):
+        os.mkdir('tmp/loggs')
+    handler = RotatingFileHandler('tmp/loggs/app.log', maxBytes=10240, backupCount=3)
+    handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
     handler.setLevel(logging.WARNING)
     app.logger.addHandler(handler)
 

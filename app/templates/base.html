@@ -22,9 +22,6 @@
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/edit_account.css') }}" />
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/login.css') }}" />
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/notice.css') }}" />
-		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_atelier-forest-light.css') }}" /> -->
-		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_atelier-seaside-dark.css') }}" /> -->
-		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_atom-one-dark.css') }}" /> -->
 		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_atom-one-light.css') }}" /> -->
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_monokai-sublime.css') }}" />
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -37,7 +34,6 @@
 			{% endif %}
 		</title>
 		{% block style %}{% endblock %}
-		{% block scripts %}{% endblock %}
 	</head>
 	<body class="anim-fade-in">
 		<div class="anim-grow-x bg-green"></div>
@@ -63,6 +59,6 @@
 
 		<!-- Optional JavaScript -->
 		<script src="{{ url_for('static', filename='js/close_buttons.js') }}"></script>
-		
+		{% block scripts %}{% endblock %}
 	</body>
 </html>

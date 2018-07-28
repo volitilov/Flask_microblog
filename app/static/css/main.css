@@ -69,3 +69,6 @@ body {
 .anim-grow-x {
   padding: 2px;
 }
+.flask-moment {
+  display: inline-block;
+}

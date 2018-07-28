@@ -17,7 +17,7 @@
                     <small>Настройки профиля</small>
                 </div>
                 <div class="Box-body">
-                    <form method="POST" enctype=multipart/form-data>
+                    <form method="POST" enctype="multipart/form-data" novalidate>
                         {{ data.form.csrf_token }}
                         {{ render_field(data.form.photo) }}            
                         {{ render_field(data.form.first_name, value=current_user.first_name, class="form-control") }}

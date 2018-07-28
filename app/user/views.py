@@ -124,15 +124,11 @@ def changeLogin_page(username):
 
     if form.validate_on_submit():
         name = form.name.data
-        if not User.query.filter_by(name=name).first():
-            current_user.name = name
-            flash(category='success', message='Ваш login успешно изменён.')
-            db.session.add(current_user)
-            db.session.commit()
-            return redirect(url_for('user.editAccount_page', username=current_user.name))
-        else:
-            flash(category='warn', message='Логин: {} - уже занят'.format(name))
-            return redirect(url_for('user.editAccount_page', username=current_user.name))
+        current_user.name = name
+        db.session.add(current_user)
+        db.session.commit()
+        flash(category='success', message='Ваш login успешно изменён.')
+        return redirect(url_for('user.editAccount_page', username=current_user.name))
     
     return create_response(template='user/change_login.html', data={
         'page_title': 'Страница изменения логина',

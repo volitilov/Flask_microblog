@@ -14,7 +14,7 @@
                     <small>Изменение логина</small>
                 </div>
                 <div class="Box-row">
-                    <form method="POST">
+                    <form method="POST" novalidate>
                         {{ data.form.csrf_token }}
                         <p class="note">
                             Email-адрес не должен быть меньше 5, больше 64 символов

@@ -14,7 +14,7 @@
                 </div>
                 <div class="Box-body">
                     <p>Уведомлять меня если:</p>
-                    <form method="POST" action="{{ url_for('user.editNotice_request') }}">
+                    <form method="POST" action="{{ url_for('user.editNotice_request') }}" novalidate>
                         {{ data.form.csrf_token }}
                         <div class="form-checkbox">
                             <label>

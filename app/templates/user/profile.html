@@ -2,6 +2,11 @@
 {% block style %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/profile.css') }}">
 {% endblock %}
+{% block scripts %}
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
+    {{ moment.lang('ru') }}
+{% endblock %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
@@ -23,6 +28,11 @@
                     <p>
                         <span class="text-gray">Зарегестрирован на сайте:</span>
                         <small>{{ data.user.date_registration.strftime('%d.%m.%Y в %H:%M:%S') }}</small>
+                        <br>
+                        {% if data.user.last_visit %}
+                            <span class="text-gray">Последнее посещение:</span>
+                            <small>{{ moment(data.user.last_visit).fromNow() }}</small>
+                        {% endif %}
                     </p>
                     <hr>
                     <p><b>Обо мне:</b></p>

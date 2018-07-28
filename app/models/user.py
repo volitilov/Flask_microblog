@@ -6,13 +6,14 @@
 
 from markdown2 import markdown
 import bleach
+import jwt
+from time import time
 
 from datetime import datetime
 from hashlib import md5
 
 from flask import current_app, url_for
 
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
@@ -89,27 +90,35 @@ class User(UserMixin, db.Model):
     def generate_confirmation_token(self, expiration=3600):
         '''Генерирует маркер со сроком хранения (по умолчанию на один час)
         для потверждения акаунта'''
-        s = Serializer(current_app.config['SECRET_KEY'], expiration)
-        return s.dumps({ 'confirm': self.id }).decode('utf-8')
+        return jwt.encode(
+            payload={ 'confirm': self.id, 'exp': time()+expiration }, 
+            key=current_app.config['SECRET_KEY'])
 
 
     def generate_resetPassword_token(self, expiration=3600):
         '''Генерирует маркер со сроком хранения (по умолчанию на один час)
-            для сброса пароля'''
-        s = Serializer(current_app.config['SECRET_KEY'], expiration)
-        return s.dumps({ 'reset': self.id }).decode('utf-8')
+        для сброса пароля'''
+        return jwt.encode(
+            payload={ 'reset': self.id, 'exp': time()+expiration },
+            key=current_app.config['SECRET_KEY'])
     
 
     def generate_changeEmail_token(self, new_email, expiration=3600):
         '''Генерирует маркер со сроком хранения (по умолчанию на один час)
             для изминения email'''
-        s = Serializer(current_app.config['SECRET_KEY'], expiration)
-        return s.dumps({ 'change_email': self.id, 'new_email': new_email }).decode('utf-8')
+        return jwt.encode(
+            payload={ 
+                'reset': self.id, 
+                'change_email': self.id, 
+                'new_email': new_email,
+                'exp': time()+expiration },
+            key=current_app.config['SECRET_KEY'])
 
 
     def generate_auth_token(self, expiration):
-        s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
-        return s.dumps({'id': self.id}).decode('utf-8')
+        return jwt.encode(
+            payload={ 'reset': self.id, 'exp': time()+expiration },
+            key=current_app.config['SECRET_KEY'])
     
 
     @property
@@ -133,9 +142,8 @@ class User(UserMixin, db.Model):
     @staticmethod
     def reset_password(token, new_password):
         '''Проверяет если токен верен, записывает новый пароль'''
-        s = Serializer(current_app.config['SECRET_KEY'])
         try:
-            data = s.loads(token.encode('utf-8'))
+            data = jwt.decode(jwt=token, key=current_app.config['SECRET_KEY'])
         except:
             return False
         user = User.query.get(data.get('reset'))
@@ -149,9 +157,8 @@ class User(UserMixin, db.Model):
 
     @staticmethod
     def verify_auth_token(token):
-        s = Serializer(current_app.config['SECRET_KEY'])
         try:
-            data = s.loads(token)
+            data = jwt.decode(jwt=token, key=current_app.config['SECRET_KEY'])
         except:
             return None
         return User.query.get(data['id'])
@@ -171,9 +178,8 @@ class User(UserMixin, db.Model):
         пользователя, хранящимся в переменной "current_user".
         Это гарантирует, что даже если злоумышленик узнает, как генерируются 
         маркеры, он не сможет подтвердить чужую учетную запись.'''
-        s = Serializer(current_app.config['SECRET_KEY'])
         try:
-            data = s.loads(token)
+            data = jwt.decode(jwt=token, key=current_app.config['SECRET_KEY'])
         except:
             return False
         if data.get('confirm') != self.id:
@@ -186,9 +192,8 @@ class User(UserMixin, db.Model):
     def change_email(self, token):
         '''Проверяет токен и если всё впорядке, то изменяет email текущего
 	    пользователя.'''
-        s = Serializer(current_app.config['SECRET_KEY'])
         try:
-            data = s.loads(token.encode('utf-8'))
+            data = jwt.decode(jwt=token, key=current_app.config['SECRET_KEY'])
         except:
             return False
         if data.get('change_email') != self.id:
@@ -303,7 +308,7 @@ class User(UserMixin, db.Model):
                 strip=True))
 
 
-    def __str__(self):
+    def __repr__(self):
         return '<User - {}>'.format(self.name)
 
 

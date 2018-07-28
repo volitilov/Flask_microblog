@@ -14,11 +14,11 @@
                     <small>Изменение логина</small>
                 </div>
                 <div class="Box-row">
-                    <form method="POST">
+                    <form method="POST" novalidate>
                         {{ data.form.csrf_token }}
                         <p class="note">Login не должен быть меньше 5, больше 20 символов,
                             также имена пользователей должны иметь только числа,<br> 
-                            точки или символы подчеркивания
+                            точки или символы подчеркивания, но не должны начинаться с точки или цифр.
                         </p>
                         {{ render_field(data.form.name, value=current_user.name, class="form-control") }}
                         <br><hr>

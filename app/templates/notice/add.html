@@ -14,7 +14,7 @@
 				<small>Форма добавления уведомления</small>
 			</div>
 			<div class="Box-body">
-                <form action="{{ url_for('notice.addNotice_request') }}" method="POST">
+                <form action="{{ url_for('notice.addNotice_request') }}" method="POST" novalidate>
                     {{ data.form.csrf_token }}
                     {{ render_field(data.form.body, rows=10, cols=60, class="form-control") }}
 					<button class="btn btn-sm btn-primary" type="submit">Отправить</button>

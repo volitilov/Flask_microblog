@@ -9,7 +9,7 @@
 			<small>Форма входа</small>
 		</div>
 		<div class="Box-body">
-			<form method="POST" action="{{ url_for('auth.login_page') }}">
+			<form method="POST" action="{{ url_for('auth.login_page') }}" novalidate>
 				{{ data.form.csrf_token }}
 				{{ render_field(data.form.email, class="form-control", autofocus=true) }}
 				{{ render_field(data.form.password, class="form-control") }}

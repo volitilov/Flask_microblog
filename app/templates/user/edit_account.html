@@ -22,7 +22,7 @@
                     <a href="{{ url_for('user.changeEmail_page', username=current_user.name) }}"><h5>Изменить email</h5></a>
                 </div>
                 <div class="Box-row">
-                    <form method="POST" action="/delete_account">
+                    <form method="POST" action="/delete_account" novalidate>
                         
                         <p class="note">
                             После удаления вся ваша активность, кроме публикаций, на данном 

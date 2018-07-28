@@ -42,7 +42,7 @@ class Registration_form(FlaskForm):
 
     password = PasswordField(label='Пароль', validators=[
         DataRequired(message='Это поле обязательно'),
-        Length(min=3, max=64, message='Пароль не должен быть меньше 8 и больше 64 символов'),
+        Length(min=8, max=64, message='Пароль не должен быть меньше 8 и больше 64 символов'),
         EqualTo(fieldname='password2', message='Пароли должны совпадать.')])
     
     password2 = PasswordField(label='Повторить пароль', validators=[

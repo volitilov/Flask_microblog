@@ -14,7 +14,7 @@
 				<small>Редактирование коментария.</small>
 			</div>
 			<div class="Box-body">
-				<form action="{{ url_for('comment.editComment_request', username=current_user.name, comment_id=data.comment.id) }}" method="POST">
+				<form action="{{ url_for('comment.editComment_request', username=current_user.name, comment_id=data.comment.id) }}" method="POST" novalidate>
 					{{ data.form.csrf_token }}
 					{{ render_field(data.form.body, rows=10, class="form-control") }}
 					<button class="btn btn-sm btn-primary" type="submit">Сохранить</button>

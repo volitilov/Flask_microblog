@@ -74,4 +74,5 @@ class Comment(db.Model):
         return json_comment
 
 
+
 db.event.listen(Comment.body, 'set', Comment.on_changed_body)

@@ -12,7 +12,7 @@ from pymemcache.client import base
 # extension
 from flaskext.lesscss import lesscss
 from .extensions import (
-    db, mail, login_manager, pagedown
+    db, mail, login_manager, pagedown, moment
 )
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -27,6 +27,7 @@ def create_app(config_name):
     mail.init_app(app)
     login_manager.init_app(app)
     pagedown.init_app(app)
+    moment.init_app(app)
     lesscss(app)
 
     app.add_url_rule('/uploads/<filename>', 'uploads', build_only=True)
@@ -44,6 +45,9 @@ def create_app(config_name):
     from .admin import admin
     app.register_blueprint(admin)
 
+    from .moderator import moderator
+    app.register_blueprint(moderator)
+
     from .user import user
     app.register_blueprint(user)
 
@@ -52,6 +56,9 @@ def create_app(config_name):
 
     from .comment import comment
     app.register_blueprint(comment)
+
+    from .notice import notice
+    app.register_blueprint(notice)
 
     from .api_1_0 import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api/v1.0')

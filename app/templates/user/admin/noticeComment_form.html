@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% from 'macros/_formhelpers.html' import render_field %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+<section class="columns mt-3">
+	<aside class="one-fourth column">
+		{% include 'user/admin/_nav_panell.html' %}
+	</aside>
+	<div class="three-fourths column">
+		<div class="Box">
+			<div class="Box-header">
+				<small>Форма добавления уведомления</small>
+			</div>
+			<div class="Box-body">
+				<p>Комментарий: <a href="{{ url_for('user.adminComment_page', username=current_user.name, id=data.comment.id) }}">комментарий</a></p>
+				<p>Автор: <a href="{{ url_for('user.profile_page', username=data.comment.author.name) }}">{{ data.comment.author.name }}</a></p>
+				<hr>
+                <form action="{{ url_for('user.sendNoticeComment_request', id=data.comment.id) }}" method="POST" novalidate>
+                    {{ data.form.csrf_token }}
+                    {{ render_field(data.form.body, rows=10, cols=60, class="form-control") }}
+					<button class="btn btn-sm btn-primary" type="submit">Отправить</button>
+					<a href="javascript:history.go(-1)" class="btn btn-sm" role="button">Отмена</a>
+                </form>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}

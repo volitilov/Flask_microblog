@@ -1,0 +1,8 @@
+.notice .Box-header form {
+  display: inline;
+}
+.notice .Box-header .close {
+  float: right;
+  margin-top: -3px;
+  margin-right: -8px;
+}

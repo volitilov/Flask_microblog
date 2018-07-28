@@ -4,43 +4,47 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import (
-	redirect, request, url_for, flash, session
-)
+from flask import redirect, request, url_for, flash
 
 from flask_login import current_user, login_required
 
 from . import comment
+from .utils import create_response
 from .forms import AddComment_form
+from .data import page_titles, get_data
 from ..models.post import Post
 from ..models.user import User
 from ..models.comment import Comment
-from ..utils import create_response
 from .. import db
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@comment.route(rule='/comments/add/<int:post_id>')
-def addComment_page(post_id):
-	form = AddComment_form()
-	post = Post.query.get_or_404(post_id)
-
+@comment.route(rule='/comments/...add-comment-to-post-<int:id>')
+@login_required
+def addComment_page(id):
+	'''Генерирует страницу для добавления комментария'''
 	return create_response(template='comment/add_comment.html', data={
-		'page_title': 'Страница добавления комментария',
-		'post': post,
-		'form': form
+		'page_title': page_titles['addComment_page'],
+		'post': Post.query.get_or_404(id),
+		'posts': Post.query.filter_by(state='public'),
+        'followed_posts': current_user.followed_posts.filter(Post.state=='public'),
+		'form': AddComment_form()
 	})
 
 
-@comment.route(rule='/users/<username>/comments/')
+@comment.route(rule='/<username>/comments/')
 def comments_page(username):
 	'''Генерирует страницу с комментариями пользователя.'''
 	user = User.query.filter_by(name=username).first()
-	sorted_comments = user.comments.order_by(Comment.timestamp.desc())
+	data = get_data(current_user, user)
+
+	comments = data['comments'].order_by(Comment.timestamp.desc())
 
 	return create_response(template='comment/comments.html', data={
-		'page_title': 'Страница с комментариями пользователя.',
-		'comments': sorted_comments.all(),
+		'page_title': page_titles['comments_page'],
+		'page': 'comments',
+		'comments': comments,
+		'posts': data['posts'],
 		'user': user
 	})
 
@@ -49,68 +53,58 @@ def comments_page(username):
 def comment_page(id):
 	'''Генерирует страница для запрошенного комментария.'''
 	comment = Comment.query.get_or_404(id)
+	user = comment.author
+	data = get_data(current_user, user)
 
-	return create_response(template='comment/comment.html', data={
-		'page_title': 'Страница комментария',
-		'comment': comment,
-		'user': comment.author
-	})
+	if comment.state == 'public' or \
+		comment.state == 'develop' and user == current_user:
+			return create_response(template='comment/comment.html', data={
+				'page_title': page_titles['comment_page'],
+				'comment': comment,
+				'posts': data['posts'],
+				'comments': data['comments'],
+				'user': comment.author
+			})
+	else:
+		if comment.state == 'moderation':
+			state_body = 'Находится на модерации'
+		if comment.state == 'develop':
+			state_body = 'Находится на доработке'
+		if comment.state != 'public':
+			return create_response(template='state.html', data={
+				'page_title': 'Стадия контента',
+				'state_title': 'Комментарий',
+				'posts': data['posts'],
+				'followed_posts': current_user.followed_posts.filter(Post.state=='public'),
+				'state_body': state_body
+			})
 
 
-@comment.route(rule='/req/comments/add/<int:post_id>', methods=['POST'])
+
+@comment.route(rule='/<username>/comments/<int:comment_id>...edit')
 @login_required
-def addComment_request(post_id):
-	form = AddComment_form()
-	post = Post.query.get_or_404(post_id)
-
-	if form.validate_on_submit():
-		body = form.body.data
-
-		comment = Comment(body=body, post=post, author=current_user)
-		db.session.add(comment)
-		db.session.commit()
-		flash(message='Ваш комментарий опубликован.', category='success')
-		return redirect(url_for('post.post_page', id=post_id))
-
-
-@comment.route(rule='/comments/edit/<int:comment_id>')
-@login_required
-def editComment_page(comment_id):
+def editComment_page(username, comment_id):
+	'''Генерирует страницу редактирования комментария'''
 	comment = Comment.query.get_or_404(comment_id)
 	form = AddComment_form()
+	user = comment.author
+	data = get_data(current_user, user)
 
-	form.body.data = comment.body
+	if current_user != user or comment.state == 'moderation':
+		flash(category='warn', 
+			message='На данный момент у вас не достаточно прав для редактирования комментария')
+		return redirect(url_for(
+			endpoint='comment.comment_page', 
+			username=current_user.name, 
+			id=comment.id))
+	else:
+		form.body.data = comment.body
+		return create_response(template='comment/edit_comment.html', data={
+			'page_title': page_titles['editComment_page'],
+			'form': form,
+			'comment': comment,
+			'user': user,
+			'posts': data['posts'],
+			'comments': data['comments']
+		})
 
-	return create_response(template='comment/edit_comment.html', data={
-		'page_title': 'Страница редпктирования коментария',
-		'form': form,
-		'comment': comment,
-		'user': comment.author
-	})
-
-
-
-@comment.route(rule='/req/comments/edit/<int:comment_id>', methods=['POST'])
-@login_required
-def editComment_request(comment_id):
-	comment = Comment.query.get_or_404(comment_id)
-	form = AddComment_form()
-
-	if form.validate_on_submit():
-		comment.body = form.body.data
-
-		db.session.add(comment)
-		db.session.commit()
-		flash(message='Ваш комментарий успешно отредактирован.', category='success')
-		return redirect(url_for('post.post_page', id=comment.post.id))
-
-
-
-@comment.route(rule='/req/comments/delete/<int:comment_id>')
-@login_required
-def delComment_request(comment_id):
-	comment = Comment.query.get_or_404(comment_id)
-	db.session.delete(comment)
-	db.session.commit()
-	flash(message='Ваш комментарий успешно удалён.', category='success')
-	return redirect(url_for('comment.comments_page', username=comment.author.name))

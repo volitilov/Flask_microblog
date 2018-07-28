@@ -1,9 +1,10 @@
-<li class="Box my-3">
+<li class="Box my-3 comment">
     <div class="Box-header">
         <a class="user-avatar" href="{{ url_for('user.profile_page', username=comment.author.name) }}">
             <span><img width="33px" src="{{ comment.author.gravatar(size=50) }}" alt="Аватар"></span>
             <span>{{ comment.author.name }}</span>
         </a>
+        {% if comment.state == 'develop' %} <small class="dev anim-pulse">требуется доработать</small> {% endif %}
     </div>
     <div class="Box-body">
         <small>

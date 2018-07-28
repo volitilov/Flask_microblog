@@ -11,20 +11,30 @@
                 <span>{{ post.author.name }}</span>
             </a>
         {% endif %}
+        {% if post.state == 'develop' %} <small class="dev anim-pulse">требуется доработать</small> {% endif %}
+        <small class="post-views">
+            <span><i class="material-icons">visibility</i></span>
+            <span class="Counter">{{ post.views }}</span>
+        </small>
+        <small class="post-rating">
+            <span><i class="material-icons">add</i></span>
+            <span class="Counter">{{ post.rating }}</span>
+        </small>
     </div>
     <div class="Box-body post-body p-3">
         <small class="post-date">написан: {{ post.data_creation.strftime('%d.%m.%Y') }}</small> 
         <h3><a href="{{ url_for('post.post_page', id=post.id) }}">{{ post.title }}</a></h3>
-        <p>
-            {% if post.body_html %}
-                {{ post.body_html|safe|truncate(500) }}
-                <span class="hidden-text-expander">
-                    <a role="btn" class="ellipsis-expander" 
-                        href="{{ url_for('post.post_page', id=post.id) }}">&hellip;</a>
-                </span>
-            {% else %}
-                {{ post.text|truncate(500) }}
+        <hr>
+        <div class="body">
+            {% if post.t_contents_html %}
+                <h5>Оглавление:</h5>
+                {{ post.t_contents_html|safe }}
             {% endif %}
-        </p>
+            <hr>
+            <span class="hidden-text-expander">
+                <a role="btn" class="ellipsis-expander" 
+                    href="{{ url_for('post.post_page', id=post.id) }}">&hellip;</a>
+            </span>
+        </div>
     </div>
 </article>

@@ -1,21 +1,17 @@
-li {
+ul {
   list-style: none;
 }
 body {
-  background-color: #fafafa;
+  background-color: #f8f8f8;
 }
 .main {
   padding-bottom: 50px;
 }
-.counter {
-  display: inline-block;
-  padding: 2px 5px;
-  font-size: 11px;
-  font-weight: bold;
-  line-height: 1;
-  color: #666;
-  background-color: #eee;
-  border-radius: 20px;
+.close {
+  background-color: transparent;
+  border: none;
+  font-size: 25px;
+  cursor: pointer;
 }
 .nav-left .tooltipped-s::before {
   margin-left: 8em;
@@ -31,58 +27,30 @@ body {
 .nav-left .Counter {
   margin-top: 3px;
 }
-.logo {
-  display: block;
-  border: 4px solid black;
-  border-radius: 6px;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-}
-.logo p {
-  padding: 0;
-  margin: 0;
-  margin-top: -5px;
-  margin-left: 8px;
-  font-size: 26px;
-  font-weight: bold;
-  color: #000;
-}
-.user-avatar img {
-  border-radius: 50%;
-}
-.user-avatar span {
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 5px;
-}
-.user-avatar span:nth-child(2) {
-  margin-top: -3px;
-}
-.user-avatar:hover {
-  text-decoration: none;
-}
-blockquote {
-  padding: 0 15px;
-  color: #777;
-  border-left: 4px solid #ddd;
-}
-table th,
-table td {
-  border: 1px solid #e1e4e8;
-  padding: 7px;
-}
-code {
-  border-radius: 3px;
-}
 .nav .nav-user-avatar {
   margin-bottom: 15px;
-  padding: 5px;
+  padding: 3px;
 }
 .nav .nav-user-avatar img {
   display: block;
   width: 100%;
   border-radius: 4px;
+}
+.paginate-container {
+  text-align: left;
+}
+.Subhead {
+  border: none;
+}
+.Subhead .Subhead-actions {
+  margin-top: 7px;
+}
+.Subhead-heading {
+  font-size: 13px;
+  padding-top: 8px;
+}
+.tags li {
+  display: inline-block;
 }
 .Box-header {
   padding-top: 10px;
@@ -91,16 +59,16 @@ code {
 }
 .Box-header small {
   display: inline-block;
+  vertical-align: middle;
   padding-bottom: 5px;
   font-size: 13px;
   font-weight: 600;
   line-height: 20px;
   color: #586069;
 }
-.edit-btn {
-  float: right;
-  margin-top: 3px;
+.anim-grow-x {
+  padding: 2px;
 }
-.paginate-container {
-  text-align: left;
+.flask-moment {
+  display: inline-block;
 }

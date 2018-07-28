@@ -2,7 +2,7 @@
 
 Чтобы сбросить пароль, нажмите на следующую ссылку:
 
-{{ url_for('auth.passwordReset', token=token, _external=True) }}
+{{ url_for('auth.passwordReset_page', token=token, _external=True) }}
 
 Если вы не запросили сброс пароля, просто проигнорируйте это сообщение. 
 

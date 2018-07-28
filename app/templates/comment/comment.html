@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/comment.css') }}">
+{% endblock %}
+{% block sripts %}{% endblock %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
@@ -8,7 +12,7 @@
             {% include 'components/_nav_user.html' %}
         </aside>
         <div class="three-fourths column">
-            <div class="Box">
+            <div class="Box comment">
                 <div class="Box-header">
                     {% if data.comment.author.photo_url %}
                         <a class="user-avatar" href="{{ url_for('user.profile_page', username=data.comment.author.name) }}">
@@ -21,8 +25,11 @@
                             <span>{{ data.comment.author.name }}</span>
                         </a>
                     {% endif %}
+                    {% if data.comment.state == 'develop' %} <small class="dev anim-pulse">требуется доработать</small> {% endif %}
                     {% if current_user == data.comment.author %}
-						<a class="btn btn-sm btn-outline edit-btn" role="btn" href="{{ url_for('comment.editComment_page', comment_id=data.comment.id) }}">
+                        <a class="btn btn-sm btn-outline edit-btn" 
+                            role="btn" 
+                            href="{{ url_for('comment.editComment_page', username=current_user.name, comment_id=data.comment.id) }}">
 							Редактировать
 						</a>
 					{% endif %}

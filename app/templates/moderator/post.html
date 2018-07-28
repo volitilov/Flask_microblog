@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% from 'macros/_formhelpers.html' import render_field %}
+{% block style %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/post.css') }}" />
+{% endblock %}
+{% block scripts %}{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+	<section class="columns mt-3">
+        <aside class="one-fourth column">
+           {% include 'moderator/_nav_panell.html' %}
+        </aside>
+        <div class="three-fourths column">
+			<article class="Box post">
+				<div class="Box-header">
+					{% if data.post.author.photo_url %}
+						<a class="user-avatar" href="{{ url_for('user.profile_page', username=data.post.author.name) }}">
+							<span><img width="33px" src="{{ url_for('uploads', filename=data.post.author.photo_url) }}" alt="Аватар"></span>
+							<span>{{ data.post.author.name }}</span>
+						</a>
+					{% else %}
+						<a class="user-avatar" href="{{ url_for('user.profile_page', username=data.post.author.name) }}">
+							<span><img width="33px" src="{{ data.post.author.gravatar(size=50) }}" alt="Аватар"></span>
+							<span>{{ data.post.author.name }}</span>
+						</a>
+					{% endif %}
+                    
+                    <a class="btn btn-sm btn-danger" href="{{ url_for('moderator.deletePost_request', id=data.post.id) }}">
+                        Удалить
+                    </a>
+                    <a class="btn btn-sm btn-primary mx-2" href="{{ url_for('moderator.confirmPost_request', id=data.post.id) }}">
+                        Подтвердить
+                    </a>
+                    <a class="btn btn-sm btn-outline" href="{{ url_for('moderator.returnPost_page', id=data.post.id) }}">
+                        Вернуть
+                    </a>
+				</div>
+				<div class="Box-body post-body">
+					<small class="post-date">написан: {{ data.post.data_creation.strftime('%d.%m.%Y') }}</small>
+					<h3>{{ data.post.title }}</h3>
+					<hr>
+					{% if data.tags %}
+						{% for i in data.tags %}
+							<a href="{{ url_for('post.tagPosts_page', id=i.tag.id) }}" class="Label Label--gray-darker mt-1 mr-1">{{ i.tag.name }} </a>
+						{% endfor %}
+					{% endif %}
+					<hr>
+					<div class="body">
+						{% if data.post.t_contents_html %}
+							{{ data.post.t_contents_html|safe }}
+						{% endif %}
+						<hr>
+						{{ data.post.body_html|safe }}
+					</div>
+				</div>
+			</article>
+        </div>
+    </section>
+{% endblock %}

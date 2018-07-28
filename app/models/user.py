@@ -4,12 +4,16 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+from markdown2 import markdown
+import bleach
+import jwt
+from time import time
+
 from datetime import datetime
 from hashlib import md5
 
 from flask import current_app, url_for
 
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
@@ -32,21 +36,25 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, index=True)
-    first_name = db.Column(db.String(64))
-    last_name = db.Column(db.String(64))
-    about_me = db.Column(db.Text())
-    location = db.Column(db.String(64))
+    first_name = db.Column(db.String(64), nullable=True)
+    last_name = db.Column(db.String(64), nullable=True)
+    about_me = db.Column(db.Text, nullable=True)
+    about_me_html = db.Column(db.Text, nullable=True)
+    location = db.Column(db.String(64), nullable=True)
     email = db.Column(db.String(64), unique=True, index=True, nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
-    date_registration = db.Column(db.DateTime(), default=datetime.utcnow()) 
-    last_visit = db.Column(db.DateTime(), default=datetime.utcnow())
+    date_registration = db.Column(db.DateTime, default=datetime.utcnow()) 
+    last_visit = db.Column(db.DateTime, default=datetime.utcnow())
     avatar_hash = db.Column(db.String(32))
-    photo_url = db.Column(db.String)
+    photo_url = db.Column(db.String, nullable=True)
 
+    settings = db.relationship('UserSettings', backref='profile', lazy='dynamic')
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
+    ratings = db.relationship('Post_rating', backref='author', lazy='dynamic')
+    notice = db.relationship('Notice', backref='author', lazy='dynamic')
     followed = db.relationship('Follow', foreign_keys=[Follow.followed_id],
             backref=db.backref('follower', lazy='joined'),
             lazy='dynamic', cascade='all, delete-orphan')
@@ -67,6 +75,11 @@ class User(UserMixin, db.Model):
                     self.role = Role(name='Admin')
                 else:
                     self.role = Role.query.filter_by(name='Admin').first()
+            elif self.email == current_app.config['APP_MODERATOR']:
+                if Role.query.filter_by(name='Moderator').first() is None:
+                    self.role = Role(name='Moderator')
+                else:
+                    self.role = Role.query.filter_by(name='Admin').first()
             else:
                 if Role.query.filter_by(name='User').first() is None:
                     self.role = Role(name='User')
@@ -77,27 +90,35 @@ class User(UserMixin, db.Model):
     def generate_confirmation_token(self, expiration=3600):
         '''Генерирует маркер со сроком хранения (по умолчанию на один час)
         для потверждения акаунта'''
-        s = Serializer(current_app.config['SECRET_KEY'], expiration)
-        return s.dumps({ 'confirm': self.id }).decode('utf-8')
+        return jwt.encode(
+            payload={ 'confirm': self.id, 'exp': time()+expiration }, 
+            key=current_app.config['SECRET_KEY'])
 
 
     def generate_resetPassword_token(self, expiration=3600):
         '''Генерирует маркер со сроком хранения (по умолчанию на один час)
-            для сброса пароля'''
-        s = Serializer(current_app.config['SECRET_KEY'], expiration)
-        return s.dumps({ 'reset': self.id }).decode('utf-8')
+        для сброса пароля'''
+        return jwt.encode(
+            payload={ 'reset': self.id, 'exp': time()+expiration },
+            key=current_app.config['SECRET_KEY'])
     
 
     def generate_changeEmail_token(self, new_email, expiration=3600):
         '''Генерирует маркер со сроком хранения (по умолчанию на один час)
             для изминения email'''
-        s = Serializer(current_app.config['SECRET_KEY'], expiration)
-        return s.dumps({ 'change_email': self.id, 'new_email': new_email }).decode('utf-8')
+        return jwt.encode(
+            payload={ 
+                'reset': self.id, 
+                'change_email': self.id, 
+                'new_email': new_email,
+                'exp': time()+expiration },
+            key=current_app.config['SECRET_KEY'])
 
 
     def generate_auth_token(self, expiration):
-        s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
-        return s.dumps({'id': self.id}).decode('utf-8')
+        return jwt.encode(
+            payload={ 'reset': self.id, 'exp': time()+expiration },
+            key=current_app.config['SECRET_KEY'])
     
 
     @property
@@ -121,9 +142,8 @@ class User(UserMixin, db.Model):
     @staticmethod
     def reset_password(token, new_password):
         '''Проверяет если токен верен, записывает новый пароль'''
-        s = Serializer(current_app.config['SECRET_KEY'])
         try:
-            data = s.loads(token.encode('utf-8'))
+            data = jwt.decode(jwt=token, key=current_app.config['SECRET_KEY'])
         except:
             return False
         user = User.query.get(data.get('reset'))
@@ -137,9 +157,8 @@ class User(UserMixin, db.Model):
 
     @staticmethod
     def verify_auth_token(token):
-        s = Serializer(current_app.config['SECRET_KEY'])
         try:
-            data = s.loads(token)
+            data = jwt.decode(jwt=token, key=current_app.config['SECRET_KEY'])
         except:
             return None
         return User.query.get(data['id'])
@@ -159,9 +178,8 @@ class User(UserMixin, db.Model):
         пользователя, хранящимся в переменной "current_user".
         Это гарантирует, что даже если злоумышленик узнает, как генерируются 
         маркеры, он не сможет подтвердить чужую учетную запись.'''
-        s = Serializer(current_app.config['SECRET_KEY'])
         try:
-            data = s.loads(token)
+            data = jwt.decode(jwt=token, key=current_app.config['SECRET_KEY'])
         except:
             return False
         if data.get('confirm') != self.id:
@@ -174,9 +192,8 @@ class User(UserMixin, db.Model):
     def change_email(self, token):
         '''Проверяет токен и если всё впорядке, то изменяет email текущего
 	    пользователя.'''
-        s = Serializer(current_app.config['SECRET_KEY'])
         try:
-            data = s.loads(token.encode('utf-8'))
+            data = jwt.decode(jwt=token, key=current_app.config['SECRET_KEY'])
         except:
             return False
         if data.get('change_email') != self.id:
@@ -195,6 +212,13 @@ class User(UserMixin, db.Model):
     def is_admin(self):
         '''Проверяет является ли текущий пользователь администратором.'''
         if self.email == current_app.config['APP_ADMIN']:
+            return True
+        return False
+    
+
+    def is_moderator(self):
+        '''Проверяет является ли текущий пользователь модератором.'''
+        if self.email == current_app.config['APP_MODERATOR']:
             return True
         return False
 
@@ -261,7 +285,30 @@ class User(UserMixin, db.Model):
         return json_user
 
 
-    def __str__(self):
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        '''Функция создаёт HTML-версию данных пользователя "обо мне" и 
+        сохраняет его в поле body_html, обеспечивая тем самым автоматическое 
+        преобразование разметки Markdown в html'''
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'i', 'li', 'ol', 
+            'strong', 'ul', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'img', 'br', 
+            'table', 'tbody', 'thead', 'td', 'th', 'tr']
+
+        allowed_attrs = ['href', 'rel', 'alt', 'title', 'style', 'width', 'height', 
+            'src', 'target', 'id']
+        allowed_style = ['color', 'width', 'height']
+        allowed_protocols=['http', 'https']
+        
+        target.about_me_html = bleach.linkify(bleach.clean(
+            markdown(value, extras=[
+                    'break-on-newline', 'cuddled-lists', 'footnotes', 'nofollow', 
+                    'numbering', 'tables', 'wiki-tables']),
+                attributes=allowed_attrs, tags=allowed_tags, 
+                styles=allowed_style, protocols=allowed_protocols, 
+                strip=True))
+
+
+    def __repr__(self):
         return '<User - {}>'.format(self.name)
 
 
@@ -273,3 +320,7 @@ def load_user(user_id):
     идентификатор существует, возвращает объект, представляющий пользователя, 
     в противном случае возвращается None''' 
     return User.query.get(int(user_id))
+
+
+
+db.event.listen(User.about_me, 'set', User.on_changed_body)

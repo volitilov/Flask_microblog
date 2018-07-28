@@ -1,4 +1,12 @@
 {% extends 'base.html' %}
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/profile.css') }}">
+{% endblock %}
+{% block scripts %}
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
+    {{ moment.lang('ru') }}
+{% endblock %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
@@ -8,7 +16,7 @@
             {% include 'components/_nav_user.html' %}
         </aside>
         <div class="three-fourths column">
-            <article class="Box">
+            <article class="Box profile">
                 <div class="Box-header">
                     <small>Профиль пользователя</small>
                 </div>
@@ -20,14 +28,21 @@
                     <p>
                         <span class="text-gray">Зарегестрирован на сайте:</span>
                         <small>{{ data.user.date_registration.strftime('%d.%m.%Y в %H:%M:%S') }}</small>
+                        <br>
+                        {% if data.user.last_visit %}
+                            <span class="text-gray">Последнее посещение:</span>
+                            <small>{{ moment(data.user.last_visit).fromNow() }}</small>
+                        {% endif %}
                     </p>
-                    
-                    <b>Обо мне:</b>
-                    {% if data.user.about_me %}
-                        <blockquote>
-                            <p>{{ data.user.about_me }}</p>
-                        </blockquote>
-                    {% endif %}
+                    <hr>
+                    <p><b>Обо мне:</b></p>
+                    <div class="about">
+                        {% if data.user.about_me_html %}
+                            {{ data.user.about_me_html|safe }}
+                        {% else %}
+                            {{ data.user.about_me|safe }}
+                        {% endif %}
+                    </div>
                 </div>
             </article>
         </div>

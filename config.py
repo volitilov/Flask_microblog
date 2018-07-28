@@ -3,7 +3,7 @@
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 import os
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -23,8 +23,9 @@ class Config:
     WTF_CSRF_ENABLED = True
 
     # задаёт кол-во элементов на станице
-    FLASKY_POSTS_PER_PAGE = 5
-    FLASKY_FOLLOWERS_PER_PAGE = 10
+    APP_POSTS_PER_PAGE = 5
+    APP_FOLLOWERS_PER_PAGE = 10
+    APP_NOTICE_PER_PAGE = 5
 
     # включает запись информации о запросах
     SQLALCHEMY_RECORD_QUERIES = True
@@ -37,13 +38,16 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # путь загрузки файлов
-    UPLOAD_FOLDER = basedir + os.getenv('UPLOAD_FOLDER')
+    UPLOAD_FOLDER = basedir + '/uploads'
     # разрешонные расширения для изображений
     ALLOWED_EXTENSIONS = set(['.png', '.jpg', '.jpeg', '.gif', '.svg'])
+
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024
 
     APP_MAIL_SENDER = 'Admin volitilov@gmail.com'
     APP_MAIL_SUBJECT_PREFIX = '[ voliTilov ] '
     APP_ADMIN = os.getenv('APP_ADMIN')
+    APP_MODERATOR = os.getenv('APP_MODERATOR')
 
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 465
@@ -51,6 +55,11 @@ class Config:
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
     MAIL_USE_SSL = True
     MAIL_DEFAULT_SENDER = MAIL_USERNAME
+
+    VK_APP_SECRET_KEY = os.getenv('VK_APP_SECRET_KEY')
+    VK_APP_ID = os.getenv('VK_APP_ID')
+    VK_VERSION = '5.52'
+    VK_AUTHORIZATION_URL = 'https://oauth.vk.com/authorize'
 
     @staticmethod
     def init_app(app): pass

@@ -10,9 +10,13 @@ from logging.handlers import RotatingFileHandler
 from app import create_app
 from app import db as database
 from app.models.user import User, Follow
+from app.models.user_settings import UserSettings
 from app.models.role import Role
 from app.models.post import Post
+from app.models.tag import Tag, Rel_tag
 from app.models.comment import Comment
+from app.models.notice import Notice
+from app.models.post_rating import Post_rating
 
 from flask_migrate import Migrate, MigrateCommand
 from dotenv import load_dotenv, find_dotenv
@@ -27,7 +31,11 @@ app = create_app(os.getenv('APP_ENV'))
 migrate = Migrate(app, database)
 
 if not app.debug:
-    handler = RotatingFileHandler('tmp/loggs/warning.log', maxBytes=10000)
+    if not os.path.exists('tmp/loggs'):
+        os.mkdir('tmp/loggs')
+    handler = RotatingFileHandler('tmp/loggs/app.log', maxBytes=10240, backupCount=3)
+    handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
     handler.setLevel(logging.WARNING)
     app.logger.addHandler(handler)
 
@@ -46,7 +54,8 @@ def db():
 def make_shell_context():
     '''Запускает shell со сконфигурированым контекстом'''
     return dict(app=app, db=database, User=User, Post=Post, Role=Role, 
-        Follow=Follow, Comment=Comment)
+        Follow=Follow, Comment=Comment, Notice=Notice, UserSettings=UserSettings,
+        Post_rating=Post_rating, Tag=Tag, Rel_tag=Rel_tag)
 
 
 # flask test
@@ -145,6 +154,9 @@ def set_data():
     
     client.set(key='comment_count', value=Comment.query.count())
     print('Записано в память кол-во комментариев.')
+
+    client.set(key='notice_count', value=Notice.query.count())
+    print('Записано в память кол-во уведомлений.')
 
     print('Работа завершена \n')
 

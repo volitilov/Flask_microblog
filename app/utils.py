@@ -6,9 +6,13 @@
 
 from random import randint
 
-from flask import make_response, render_template, request
+from flask import (
+	make_response, render_template, request, current_app, url_for
+)
 from sqlalchemy.exc import IntegrityError
 import forgery_py as forgery
+
+from flask_login import current_user
 
 from . import db
 from .models.post import Post
@@ -71,6 +75,7 @@ def add_self_follows():
 			user.follow(user)
 			db.session.add(user)
 			db.session.commit()
+
 
 
 def check_recaptcha(response, recaptcha_private_key):

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block style %}{% endblock %}
+{% block scripts %}{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+	<section class="columns">
+        <aside class="one-fourth column">
+           {% include 'components/_nav_publications.html' %}
+        </aside>
+        <div class="three-fourths column">
+            <article class="Box my-3">
+                <div class="Box-body">
+                    <p>На данный момент запрашиваемый вами контент находится в
+                    следующем состоянии:</p>
+                    <p>Контент: <b>{{ data.state_title }}</b>.</p>
+                    <p>Состояние: {{ data.state_body }}.</p>
+                </div>
+            </article>
+        </div>
+    </section>
+{% endblock %}

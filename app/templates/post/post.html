@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 {% from 'macros/_formhelpers.html' import render_field %}
-{% block scripts %}
-	{{ pagedown.include_pagedown() }}
+{% block style %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/post.css') }}" />
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/components/comment.css') }}">
 {% endblock %}
+{% block scripts %}{% endblock %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
@@ -25,49 +27,78 @@
 							<span>{{ data.post.author.name }}</span>
 						</a>
 					{% endif %}
+					{% if data.post.state == 'develop' %} <small class="dev anim-pulse">требуется доработать</small> {% endif %}
+					
 					{% if current_user == data.post.author %}
-						<a class="btn btn-sm btn-outline edit-btn" role="btn" href="{{ url_for('post.editPost_page', id=data.post.id) }}">
+						<a class="btn btn-sm btn-outline" href="{{ url_for('post.editPost_page', id=data.post.id) }}">
 							Редактировать
 						</a>
 					{% endif %}
+					<small class="post-views mr-3">
+						<span><i class="material-icons">visibility</i></span>
+						<span class="Counter">{{ data.post.views }}</span>
+					</small>
+					<small class="post-rating">
+						<span>
+							<a {% if not data.rating_bool %} 
+									href="{{ url_for('post.changeRating_request', id=data.post.id) }}"
+								{% else %} 
+									class="disabled"
+								{% endif %}>
+								<i class="material-icons">add</i>
+							</a>
+						</span>
+						<span class="Counter">{{ data.post.rating }}</span>
+					</small>
 				</div>
 				<div class="Box-body post-body">
-					<small class="post-date">написан: {{ data.post.data_creation.strftime('%d.%m.%Y') }}</small> 
+					<small class="post-date">написан: {{ data.post.data_creation.strftime('%d.%m.%Y') }}</small>
 					<h3>{{ data.post.title }}</h3>
-					<p>
-						{% if data.post.body_html %}
-							{{ data.post.body_html|safe }}
-						{% else %}
-							{{ data.post.text }}
+					<hr>
+					{% if data.tags %}
+						{% for i in data.tags %}
+							<a href="{{ url_for('post.tagPosts_page', id=i.tag.id) }}" class="Label Label--gray-darker mt-1 mr-1">{{ i.tag.name }} </a>
+						{% endfor %}
+					{% endif %}
+					<hr>
+					<div class="body">
+						{% if data.post.t_contents_html %}
+							{{ data.post.t_contents_html|safe }}
 						{% endif %}
-					</p>
+						<hr>
+						{{ data.post.body_html|safe }}
+					</div>
 				</div>
 			</article>
-			{% if not current_user.is_anonymous %}
-				<div class="Subhead">
-					<div class="Subhead-heading">
-						<h3>комментарии:</h3>
+			{% if data.post.state != 'develop' %}
+				{% if not current_user.is_anonymous %}
+					<div class="Subhead">
+						<div class="Subhead-heading">
+							<h3>комментарии:</h3>
+						</div>
+						<div class="Subhead-actions">
+							<a href="{{ url_for('comment.addComment_page', id=data.post.id) }}" 
+								class="btn btn-sm btn-primary">Комментировать</a>
+						</div>
 					</div>
-					<div class="Subhead-actions">
-						<a href="{{ url_for('comment.addComment_page', post_id=data.post.id) }}" class="btn btn-sm btn-primary">Добавить комментарий</a>
+				{% else %}
+					<div class="Subhead">
+						<div class="Subhead-heading">
+							<p>Войдите чтобы оставить комментарий</p>
+						</div>
+						<div class="Subhead-actions">
+							<a href="{{ url_for('comment.addComment_page', id=data.post.id) }}" 
+								class="btn btn-sm btn-primary">Комментировать</a>
+						</div>
 					</div>
-				</div>
-			{% else %}
-				<div class="Subhead">
-					<div class="Subhead-heading">
-						<p>Войдите чтобы оставить комментарий</p>
-					</div>
-					<div class="Subhead-actions">
-						<a href="{{ url_for('auth.login_page') }}" class="btn btn-sm">Войти</a>
-					</div>
-				</div>
+				{% endif %}
+				
+				{% for comment in data.comments %}
+					<ul>
+						{% include 'comment/_comment_small.html' %}
+					</ul>
+				{% endfor %}
 			{% endif %}
-			
-			{% for comment in data.comments %}
-				<ul>
-					{% include 'comment/_comment_small.html' %}
-				</ul>
-			{% endfor %}
         </div>
     </section>
 {% endblock %}

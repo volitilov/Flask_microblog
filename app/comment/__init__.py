@@ -6,4 +6,4 @@ comment = Blueprint('comment', __name__)
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from . import views
+from . import views, req

@@ -2,7 +2,7 @@
     <p>Привет,
         <i style="color:green;">{{ user.name }}</i>,</p>
     <p>Чтобы сбросить пароль, нажмите на следующую ссылку:</p>
-    <a href="{{ url_for('auth.passwordReset', token=token, _external=True) }}">...сбросить...</a>
+    <a href="{{ url_for('auth.passwordReset_page', token=token, _external=True) }}">...сбросить...</a>
     <br>
     <p>Если вы не запросили сброс пароля, просто проигнорируйте это сообщение.</p>
     <p>

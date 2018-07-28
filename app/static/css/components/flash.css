@@ -1,13 +1,11 @@
 .flash-messages {
-  margin-top: 15px;
   margin-bottom: 0px;
 }
 .flash-messages .close {
   position: absolute;
   right: 10px;
   top: 7px;
-  background-color: transparent;
-  border: none;
-  font-size: 25px;
-  cursor: pointer;
+}
+.flash-messages .flash {
+  margin-top: 15px;
 }

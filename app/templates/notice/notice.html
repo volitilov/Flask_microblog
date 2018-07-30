@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% from 'macros/_pagination.html' import render_pagination %}
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/close_notice.js') }}"></script>
+{% endblock %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
@@ -11,13 +14,12 @@
         <div class="three-fourths column">
             <ul>
                 {% for notice in data.notice %}
-                    <li class="Box my-3">
+                    <li class="Box my-3" id=notice_{{ notice.id }}>
                         <div class="Box-header">
                             <small><i class="material-icons">notifications_none</i></small>
                             <small>{{ notice.title }}</small>
-                            <form method="POST" action="{{ url_for('notice.deleteNotice_request', id=notice.id) }}">
-                                <button class="close">&times;</button>
-                            </form>
+                            
+                            <span class="close">&times;</span>
                         </div>
                         <div class="Box-body">
                             <small>

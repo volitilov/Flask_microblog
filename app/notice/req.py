@@ -4,7 +4,7 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import redirect, url_for, flash, current_app
+from flask import redirect, url_for, flash, current_app, jsonify
 from flask_login import current_user, login_required
 
 from . import notice
@@ -18,7 +18,7 @@ from .. import db
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
-@notice.route('/...add', methods=['POST'])
+@notice.route('/notice/...add', methods=['POST'])
 @login_required
 def addNotice_request():
     form = AddNotice_form()
@@ -50,9 +50,9 @@ def addNotice_request():
 
 
 
-@notice.route('/<int:id>/...del', methods=['POST'])
+@notice.route('/<username>/notice/<int:id>/...del', methods=['POST'])
 @login_required
-def deleteNotice_request(id):
+def deleteNotice_request(username, id):
     notice = Notice.query.get_or_404(id)
    
     if current_user == notice.author:
@@ -61,6 +61,10 @@ def deleteNotice_request(id):
     else:
         flash(category='warn', 
             message='Вы не можите удалить уведомление, так как не являетесь его владельцом')
-
-    return redirect(url_for('notice.notice_page', username=current_user.name))
-
+        return jsonify({
+            'success': False
+        })
+    
+    return jsonify({
+        'success': True
+    })

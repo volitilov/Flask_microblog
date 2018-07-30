@@ -26,7 +26,7 @@ def addComment_page(id):
 	return create_response(template='comment/add_comment.html', data={
 		'page_title': page_titles['addComment_page'],
 		'post': Post.query.get_or_404(id),
-		'posts': Post.query.filter_by(state='public'),
+		'all_posts': Post.query.filter_by(state='public'),
         'followed_posts': current_user.followed_posts.filter(Post.state=='public'),
 		'form': AddComment_form()
 	})

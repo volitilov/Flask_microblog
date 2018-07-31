@@ -36,6 +36,9 @@ def create_app(config_name):
     })
     app.memory = base.Client(('localhost', 11211))
 
+    from .errors import errors
+    app.register_blueprint(errors)
+
     from .main import main
     app.register_blueprint(main)
 

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block style %}
+	<link rel="stylesheet" href="{{ url_for('errors.static', filename='css/page_404.css') }}">
+{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+	<div class="Box page_404">
+		<h3>404 page</h3>
+		<hr>
+		<p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aut mollitia 
+		accusantium fugit! Asperiores debitis, inventore itaque voluptate dolorum, 
+		quia id praesentium aspernatur tempore unde dolorem eum. Eius modi explicabo fuga?</p>
+	</div>
+	
+{% endblock %}

@@ -1,17 +1,17 @@
-# app/main/errors.py
+# app/errors/errors.py
 
 #
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import render_template, request, jsonify
+from flask import request, jsonify
 
-from . import main
+from . import errors
 from ..utils import create_response
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@main.app_errorhandler(403)
+@errors.app_errorhandler(403)
 def forbidden(message):
     if request.accept_mimetypes.accept_json and \
         not request.accept_mimetypes.accept_html:
@@ -24,7 +24,7 @@ def forbidden(message):
 
 
 
-@main.app_errorhandler(404)
+@errors.app_errorhandler(404)
 def page_not_found(e):
 	if request.accept_mimetypes.accept_json and \
 		not request.accept_mimetypes.accept_html:
@@ -37,7 +37,7 @@ def page_not_found(e):
 
 
 
-@main.app_errorhandler(500)
+@errors.app_errorhandler(500)
 def internal_server_error(e):
 	if request.accept_mimetypes.accept_json and \
 		not request.accept_mimetypes.accept_html:

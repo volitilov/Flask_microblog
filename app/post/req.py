@@ -18,52 +18,7 @@ from .. import db
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@post.route(rule='/...add', methods=['POST'])
-@login_required
-def addPost_request():
-	'''Обрабатывает запрос на добавление публикации'''
-	form = AddPost_form()
-	client = current_app.memory
-
-	if form.validate_on_submit():
-		title = form.title.data
-		contents = form.contents.data
-		text = form.text.data
-
-		post = Post(title=title, table_of_contents=contents, text=text, 
-			author=current_user)
-		
-		all_tags = []
-		rel_tags = []
-		form_tags = form.tags.data.split(',')
-		for tag in form_tags:
-			tag_name = tag.strip(' ')
-			tag = Tag.query.filter_by(name=tag_name).first()
-			if not tag:
-				tag = Tag(name=tag_name)
-			
-			rel_tag = Rel_tag.query.filter_by(post=post, tag=tag).first()
-			if not rel_tag:
-				rel_tag = Rel_tag(post=post, tag=tag)
-
-			all_tags.append(tag)
-			rel_tags.append(rel_tag)
-
-		db.session.add(post)
-		db.session.add_all(all_tags)
-		db.session.add_all(rel_tags)
-		db.session.commit()
-
-		flash(message='Пост отправлен на модерацию')
-		return redirect(url_for(endpoint='main.home_page'))
-	
-	else:
-		flash(category='error', message='Неправильно заполнена форма')
-		return redirect(url_for('post.addPost_page'))
-
-
-
-@post.route(rule='/<int:id>/...edit', methods=['POST'])
+@post.route(rule='/posts/<int:id>/...edit', methods=['POST'])
 @login_required
 def editPost_request(id):
 	'''Обрабатывает запрос на изменение публикации'''

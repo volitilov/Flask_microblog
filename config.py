@@ -19,6 +19,8 @@ class Config:
     RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY')
     RECAPTCHA_DATA_ATTRS = {'theme': 'light'}
 
+    ELASTICSEARCH_URL = os.getenv('ELASTICSEARCH_URL')
+
     # включение / отключение CSRF
     WTF_CSRF_ENABLED = True
 

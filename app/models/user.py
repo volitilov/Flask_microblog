@@ -224,6 +224,8 @@ class User(UserMixin, db.Model):
 
 
     def ping(self):
+        '''Фиксирует текущее время для свойства пользователя 
+        (последнее посещение)'''
         self.last_visit = datetime.utcnow()
         db.session.add(self)
 

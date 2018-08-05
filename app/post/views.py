@@ -8,7 +8,7 @@
 from functools import wraps
 
 from flask import (
-	request, flash, current_app, url_for
+	request, flash, current_app, url_for, redirect
 )
 
 from flask_login import current_user, login_required
@@ -21,7 +21,7 @@ from ..models.post import Post
 from ..models.user import User
 from ..models.comment import Comment
 from ..models.post_rating import Post_rating
-from ..models.tag import Tag
+from ..models.tag import Tag, Rel_tag
 from .. import db
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -72,14 +72,50 @@ def followedPosts_page():
 	})
 
 
-@post.route(rule='/posts/...add')
+@post.route(rule='/posts/...add', methods=['GET', 'POST'])
 @login_required
 def addPost_page():
 	'''Генерирует страницу с формай создания постов.'''
 	data = get_posts()
+	form = AddPost_form()
+	client = current_app.memory
+
+	if form.validate_on_submit():
+		form.validate_title(form.title)
+		title = form.title.data
+		contents = form.contents.data
+		text = form.text.data
+
+		post = Post(title=title, table_of_contents=contents, text=text, 
+			author=current_user)
+		
+		all_tags = []
+		rel_tags = []
+		form_tags = form.tags.data.split(',')
+		for tag in form_tags:
+			tag_name = tag.strip(' ')
+			tag = Tag.query.filter_by(name=tag_name).first()
+			if not tag:
+				tag = Tag(name=tag_name)
+			
+			rel_tag = Rel_tag.query.filter_by(post=post, tag=tag).first()
+			if not rel_tag:
+				rel_tag = Rel_tag(post=post, tag=tag)
+
+			all_tags.append(tag)
+			rel_tags.append(rel_tag)
+
+		db.session.add(post)
+		db.session.add_all(all_tags)
+		db.session.add_all(rel_tags)
+		db.session.commit()
+
+		flash(message='Пост отправлен на модерацию')
+		return redirect(url_for(endpoint='main.home_page'))
+
 	return create_response(template='post/add_post.html', data={
 		'page_title': page_titles['addPost_page'],
-		'form': AddPost_form(),
+		'form': form,
 		'all_posts': data['all_posts'],
 		'followed_posts': data['followed_posts']
 	})
@@ -147,7 +183,7 @@ def tagPosts_page(id):
 		'endpoint': 'post.tagPosts_page',
 		'count_items': count_items,
 		'all_posts': data['all_posts'],
-		'followed_posts': followed_posts_count
+		'followed_posts': data['followed_posts']
 	})
 
 

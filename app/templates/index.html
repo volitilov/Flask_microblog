@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% from 'macros/_formhelpers.html' import render_field %}
+{% block style %}{% endblock %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
@@ -15,8 +17,8 @@
 				стороны рамки и место обучения кадров влечет за собой процесс 
 				внедрения и модернизации позиций, занимаемых участниками в отношении 
 				поставленных задач.</p>
-				<form class="text-center mt-4">
-					<input class="form-control" type="text" placeholder="Hide Webkit's contact autofill on this input">
+				<form class="text-center mt-4" action="{{ url_for('main.search_request') }}">
+					{{ render_field(data.form.q, placeholder='Найти публикацию', class="form-control") }}
 				</form>
 				<div class="tags text-center mt-6">
 					<ul>

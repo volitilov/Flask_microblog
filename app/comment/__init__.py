@@ -1,9 +1,30 @@
+# comment package
+
+# инициализирует и получает необходимые данные для работы пакета
+
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
 from flask import Blueprint
 
+from .utils import create_response
+from .data import page_titles, get_data
+from .forms import AddComment_form
+from ..models.post import Post
+from ..models.user import User
+from ..models.comment import Comment
+from ..models.notice import Notice
+from ..models.user_settings import UserSettings
+from .. import db
+
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-comment = Blueprint('comment', __name__)
+comment = Blueprint(
+    name='comment', 
+    import_name=__name__, 
+    static_folder='statics_comments',
+    template_folder='templates'
+)
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from . import views, req
+from .routes import page, req, forms_page

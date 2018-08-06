@@ -1,6 +1,7 @@
 # comment/req.py
 
-# 
+# Обрабатывает POST-запросы 
+# Работа с данными: добавление, редактирование, удаление
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -8,13 +9,19 @@ from flask import redirect, request, url_for, flash
 
 from flask_login import current_user, login_required
 
-from . import comment
-from .forms import AddComment_form
-from ..models.post import Post
-from ..models.comment import Comment
-from ..models.notice import Notice
-from ..models.user_settings import UserSettings
-from .. import db
+from .. import (
+	# bluprint
+	comment,
+	
+	# forms
+	AddComment_form,
+
+	# models
+	Post, Comment, Notice, UserSettings, 
+	
+	# database
+	db
+)
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

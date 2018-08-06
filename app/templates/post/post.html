@@ -2,7 +2,7 @@
 {% from 'macros/_formhelpers.html' import render_field %}
 {% block style %}
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/post.css') }}" />
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/components/comment.css') }}">
+	<link rel="stylesheet" href="{{ url_for('comment.static', filename='css/comment.css') }}">
 {% endblock %}
 {% block scripts %}{% endblock %}
 
@@ -95,7 +95,7 @@
 				
 				{% for comment in data.comments %}
 					<ul>
-						{% include 'comment/_comment_small.html' %}
+						{% include '_comment_small.html' %}
 					</ul>
 				{% endfor %}
 			{% endif %}

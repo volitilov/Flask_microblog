@@ -6,7 +6,7 @@
 
 from flask import Blueprint
 
-from .utils import create_response
+from ..utils import create_response
 from .data import page_titles, get_data
 from .forms import AddComment_form
 from ..models.post import Post

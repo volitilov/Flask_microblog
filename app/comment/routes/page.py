@@ -31,19 +31,6 @@ from .. import (
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@comment.route(rule='/comments/...add-comment-to-post-<int:id>')
-@login_required
-def addComment_page(id):
-	'''Генерирует страницу для добавления комментария'''
-	return create_response(template='add_comment.html', data={
-		'page_title': page_titles['addComment_page'],
-		'post': Post.query.get_or_404(id),
-		'all_posts': Post.query.filter_by(state='public'),
-        'followed_posts': current_user.followed_posts.filter(Post.state=='public'),
-		'form': AddComment_form()
-	})
-
-
 @comment.route(rule='/<username>/comments/')
 def comments_page(username):
 	'''Генерирует страницу с комментариями пользователя.'''
@@ -91,31 +78,3 @@ def comment_page(id):
 				'state_body': state_body
 			})
 
-
-
-@comment.route(rule='/<username>/comments/<int:comment_id>...edit')
-@login_required
-def editComment_page(username, comment_id):
-	'''Генерирует страницу редактирования комментария'''
-	comment = Comment.query.get_or_404(comment_id)
-	form = AddComment_form()
-	user = comment.author
-	data = get_data(current_user, user)
-
-	if current_user != user or comment.state == 'moderation':
-		flash(category='warn',
-			message='На данный момент у вас не достаточно прав для редактирования комментария')
-		return redirect(url_for(
-			endpoint='comment.comment_page',
-			username=current_user.name,
-			id=comment.id))
-	else:
-		form.body.data = comment.body
-		return create_response(template='edit_comment.html', data={
-			'page_title': page_titles['editComment_page'],
-			'form': form,
-			'comment': comment,
-			'user': user,
-			'posts': data['posts'],
-			'comments': data['comments']
-		})

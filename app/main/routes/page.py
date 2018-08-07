@@ -1,43 +1,38 @@
-# main/views.py
+# main/routes/page.py
 
-# 
+# Обрабатывает GET-запросы
+# Формирует страницы для запрошенных урлов 
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import (
-    render_template, request, current_app, make_response, redirect, 
-    url_for, current_app, flash
+from flask import request, current_app, url_for, current_app, flash
+
+from flask_login import current_user
+
+from .. import (
+    # blueprint
+    main,
+
+    # forms
+    Search_form,
+
+    # models
+    Post, Tag,
+
+    # utils
+    create_response,
+
+    # data
+    page_titles
 )
 
-from flask_login import current_user, login_required
-from flask_sqlalchemy import get_debug_queries
-
-from . import main
-from .forms import Search_form
-from ..models.post import Post
-from ..models.tag import Tag
-from ..utils import create_response
-
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-@main.after_app_request
-def after_request(response):
-    '''Ведёт отчёт в виде списка о медлиных запросов к базе данных'''
-    for query in get_debug_queries():
-        if query.duration >= current_app.config['FLASKY_SLOW_DB_QUERY_TIME']:
-            current_app.logger.warning(
-                'Slow query: %s\nParameters: %s\nDuration: %fs\nContext: %s\n'
-                % (query.statement, query.parameters, query.duration,
-                query.context))
-    return response
-
-
 
 @main.route('/')
 def home_page():
     '''Генерирует стартовую страницу.'''
-    return create_response(template='index.html', data={
-        'page_title': 'Главная страница.',
+    return create_response(template='home.html', data={
+        'page_title': page_titles['home_page'],
         'tags': Tag.query.all(),
         'form': Search_form()
     })
@@ -66,7 +61,7 @@ def searchResults_page(data):
         message='Показаны результаты по запросу: <br><b>{}</b>'.format(data))
 
     return create_response(template='post/search_results.html', data={
-        'page_title': 'Search results',
+        'page_title': page_titles['searchResults_page'],
         'page_posts': posts,
         'all_posts': Post.query.filter_by(state='public'),
         'followed_posts': followed_posts,

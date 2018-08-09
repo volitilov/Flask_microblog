@@ -7,11 +7,11 @@
 {% block content %}
     <div class="columns mt-3">
         <aside class="one-fourth column">
-            {% include 'admin/_nav_panell.html' %}
+            {% include '_nav_panell.html' %}
         </aside>
         <div class="three-fourths column">
             <div class="Box">
-                <a class="btn btn-sm" href="{{ url_for('notice.addNotice_page') }}">Создать уведомление</a>
+                <a class="btn btn-sm" href="{{ url_for('notice.addNotice_page', username=current_user.name) }}">Создать уведомление</a>
             </div>
         </div>
     </div>

@@ -10,7 +10,7 @@
 			<small>Форма регистрации</small>
 		</div>
 		<div class="Box-body">
-			<form method="POST" action="{{ url_for('auth.registration_page') }}" novalidate>
+			<form method="POST">
 				{{ data.form.csrf_token }}
 				{{ render_field(data.form.username, class="form-control", autofocus=true) }}
 				{{ render_field(data.form.email, class="form-control") }}

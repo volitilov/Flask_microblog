@@ -1,22 +1,32 @@
-# auth/req.py
+# auth/routes/reqs.py
 
-# 
+# Обрабатывает POST-запросы 
+# Работа с данными: добавление, редактирование, удаление
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import redirect, url_for, flash, request, current_app
-
-# app modules
-from . import auth
-from .forms import PasswordResetRequest_form, PasswordReset_form
-from .. import db
-from ..models.user import User
-from ..models.user_settings import UserSettings
-from ..email import send_email
-from ..utils import create_response
-
-# installed modules
+from flask import redirect, url_for, flash, request
 from flask_login import login_required, current_user, logout_user
+
+from .. import (
+	# blueprint
+	auth,
+
+	# forms 
+	PasswordResetRequest_form, PasswordReset_form,
+
+	# models
+	User, UserSettings,
+
+	# database
+	db,
+
+	# email
+	send_email,
+
+	# utils
+	create_response
+)
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

@@ -1,9 +1,31 @@
+# auth package
+
+# инициализирует и получает необходимые данные для работы пакета
+
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
 from flask import Blueprint
 
+from .forms import (
+	Login_form, Registration_form, PasswordResetRequest_form, 
+	PasswordReset_form
+)
+from .data import page_titles
+from .. import db
+from ..models.user import User
+from ..models.user_settings import UserSettings
+from ..email import send_email
+from ..utils import create_response
+
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-auth = Blueprint('auth', __name__)
+auth = Blueprint(
+    name='auth', 
+    import_name=__name__, 
+    static_folder='statics_auth',
+    template_folder='templates'
+)
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from . import views, req
+from .routes import pages, reqs, forms_pages

@@ -1,4 +1,4 @@
-# main/routes/page.py
+# main/routes/pages.py
 
 # Обрабатывает GET-запросы
 # Формирует страницы для запрошенных урлов 

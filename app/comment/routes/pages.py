@@ -1,4 +1,4 @@
-# comment/routes/page.py
+# comment/routes/pages.py
 
 # Обрабатывает GET-запросы
 # Формирует страницы для запрошенных урлов 

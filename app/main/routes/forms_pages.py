@@ -1,4 +1,4 @@
-# main/routes/forms_page.py
+# main/routes/forms_pages.py
 
 # Обрабатывает страницы с формами
 

@@ -24,4 +24,4 @@ main = Blueprint(
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from .routes import page, forms_page, req
+from .routes import pages, forms_pages, reqs

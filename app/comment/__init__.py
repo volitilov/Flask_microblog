@@ -27,4 +27,4 @@ comment = Blueprint(
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from .routes import page, req, forms_page
+from .routes import pages, reqs, forms_pages

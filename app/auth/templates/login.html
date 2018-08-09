@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% from 'macros/_formhelpers.html' import render_field %}
+{% block style %}
+	<link rel="stylesheet" href="{{ url_for('auth.static', filename='css/login.css') }}" />
+{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+	<div class="Box one-half centered mt-3 login">
+		<div class="Box-header">
+			<small>Форма входа</small>
+		</div>
+		<div class="Box-body">
+			<form method="POST">
+				{{ data.form.csrf_token }}
+				{{ render_field(data.form.email, class="form-control", autofocus=true) }}
+				{{ render_field(data.form.password, class="form-control") }}
+				<div class="form-checkbox">
+					<label>
+						{{ data.form.remember_me(checked="checked")}}
+						{{ data.form.remember_me.label }}
+					</label>
+					<p class="note">
+						Это позволит вам не входить каждый раз после закрытия сайта!
+					</p>
+				</div>
+				<button class="btn btn-primary" type="submit">Войти на сайт</button>
+			</form>
+		</div>
+		<div class="Box-footer">
+			<a href="{{ url_for('auth.resetPassword_page') }}">Забыли пароль?</a>
+			<a href="{{ url_for('auth.registration_page') }}">Зарегистрироваться.</a>
+		</div>
+	</div>
+
+{% endblock %}

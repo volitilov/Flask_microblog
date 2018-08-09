@@ -14,13 +14,15 @@ from bleach.linkifier import Linker
 
 from app.exceptions import ValidationError
 from .tag import Rel_tag
+from .search import SearchableMixin
 from .. import db
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-class Post(db.Model):
+class Post(SearchableMixin, db.Model):
     '''Создаёт статьи'''
     __tablename__ = 'posts'
+    __searchable__ = ['title', 'text']
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, unique=True)
     table_of_contents = db.Column(db.Text)
@@ -120,3 +122,5 @@ class Post(db.Model):
 
 db.event.listen(Post.text, 'set', Post.on_changed_body)
 db.event.listen(Post.table_of_contents, 'set', Post.on_changed_table_of_contents)
+db.event.listen(db.session, 'before_commit', Post.before_commit)
+db.event.listen(db.session, 'after_commit', Post.after_commit)

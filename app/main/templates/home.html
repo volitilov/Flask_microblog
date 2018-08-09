@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% from 'macros/_formhelpers.html' import render_field %}
+{% block style %}{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+	<section class="mt-3">
+		<div class="blankslate">
+			<h3>This is a blank slate</h3>
+			<p>Равным образом укрепление и развитие структуры позволяет выполнять 
+				важные задания по разработке направлений прогрессивного развития. 
+				Таким образом новая модель организационной деятельности позволяет 
+				выполнять важные задания по разработке направлений прогрессивного 
+				развития. Таким образом сложившаяся структура организации позволяет 
+				оценить значение направлений прогрессивного развития. С другой 
+				стороны рамки и место обучения кадров влечет за собой процесс 
+				внедрения и модернизации позиций, занимаемых участниками в отношении 
+				поставленных задач.</p>
+				<form class="text-center mt-4" action="{{ url_for('main.search_request') }}">
+					{{ render_field(data.form.q, placeholder='Найти публикацию', class="form-control") }}
+				</form>
+				<div class="tags text-center mt-6">
+					<ul>
+						{% for tag in data.tags %}
+							<li>
+								<a href="{{ url_for('post.tagPosts_page', id=tag.id) }}" class="Label Label--gray-darker mx-1 p-2">
+									{{ tag.name }}
+								</a>
+							</li>
+						{% endfor %}
+					</ul>
+				</div>
+		</div>
+    </section>
+{% endblock %}

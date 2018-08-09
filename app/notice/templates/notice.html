@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% from 'macros/_pagination.html' import render_pagination %}
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('notice.static', filename='css/notice.css') }}">
+{% endblock %}
+{% block scripts %}
+    <script src="{{ url_for('notice.static', filename='js/close_notice.js') }}"></script>
+{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+    <div class="columns notice">
+        <aside class="one-fourth column my-3">
+            {% include 'components/_nav_user.html' %}
+        </aside>
+        <div class="three-fourths column">
+            <ul>
+                {% for notice in data.notice %}
+                    <li class="Box my-3" id=notice_{{ notice.id }}>
+                        <div class="Box-header">
+                            <small><i class="material-icons">notifications_none</i></small>
+                            <small>{{ notice.title }}</small>
+                            
+                            <span class="close">&times;</span>
+                        </div>
+                        <div class="Box-body">
+                            <small>
+                                когда: {{ notice.timestamp.strftime('%d.%m.%Y') }}
+                            </small>
+                            {% if notice.body_html %}
+                                {{ notice.body_html|safe }}
+                            {% else %}
+                                {{ notice.body|safe }}
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% if data.notice_count > data.notice_per_page %}
+                {{ render_pagination(data.pagination, data.endpoint) }}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

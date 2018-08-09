@@ -8,6 +8,7 @@ from flask import Flask
 from werkzeug import SharedDataMiddleware
 from config import config
 from pymemcache.client import base
+from elasticsearch import Elasticsearch
 
 # extension
 from flaskext.lesscss import lesscss
@@ -20,6 +21,9 @@ from .extensions import (
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
+
+    app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
+        if app.config['ELASTICSEARCH_URL'] else None
     
     config[config_name].init_app(app)
 
@@ -35,6 +39,9 @@ def create_app(config_name):
         '/uploads':  app.config['UPLOAD_FOLDER']
     })
     app.memory = base.Client(('localhost', 11211))
+
+    from .errors import errors
+    app.register_blueprint(errors)
 
     from .main import main
     app.register_blueprint(main)

@@ -20,11 +20,9 @@
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/components/flash.css') }}" />
 		<!-- pages -->
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/edit_account.css') }}" />
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/login.css') }}" />
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/notice.css') }}" />
 		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_atom-one-light.css') }}" /> -->
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_monokai-sublime.css') }}" />
-		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link href="{{ url_for('static', filename='css/fonts/material_icons.css') }}" rel="stylesheet">
 
 		<title>
 			{% if data %}
@@ -39,8 +37,9 @@
 		<div class="anim-grow-x bg-green"></div>
 		{% include 'components/_header.html' %}
 		
-		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+		<script src="{{ url_for('static', filename='js/helpers/code_highlight.min.js') }}"></script>
 		<script>hljs.initHighlightingOnLoad();</script>
+		
 		<div class="container main">
 			{% with messages = get_flashed_messages(with_categories=true) %} 
 				{% if messages %}
@@ -58,7 +57,9 @@
 		</div>
 
 		<!-- Optional JavaScript -->
-		<script src="{{ url_for('static', filename='js/close_buttons.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/helpers/jquery.min.js') }}">
+		</script>
+		<script src="{{ url_for('static', filename='js/close_flash.js') }}"></script>
 		{% block scripts %}{% endblock %}
 	</body>
 </html>

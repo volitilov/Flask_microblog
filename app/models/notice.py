@@ -28,28 +28,20 @@ class Notice(db.Model):
         '''Функция создаёт HTML-версию уведомления и сохраняет его в поле 
         body_html, обеспечивая тем самым автоматическое преобразование
         разметки Markdown в html'''
-        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
-            'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 
-            'h3', 'h4', 'h5', 'h6', 'p', 'img', 'br', 'table', 'tbody', 'thead', 'td', 
-            'th', 'tr', 'figcaption', '```', 'iframe', 'span']
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'i', 'li', 
+            'ol', 'strong', 'ul', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'span']
 
-        allowed_attrs = ['href', 'rel', 'alt', 'title', 'style', 'width', 'height', 
-            'src', 'target', 'id']
-        allowed_style = ['color', 'width', 'height']
+        allowed_attrs = ['href', 'rel', 'alt', 'target']
         allowed_protocols = ['http', 'https']
         
         target.body_html = bleach.linkify(bleach.clean(
             markdown(value, extras=[
-                    'fenced-code-blocks', 'code-friendly', 'break-on-newline',
-                    'cuddled-lists', 'footnotes', 'header-ids', 'pyshell',
-                    'numbering', 'metadata', 'smarty-pants', 'spoiler', 'xml', 
-                    'tables', 'wiki-tables']),
+                    'break-on-newline', 'cuddled-lists', 'footnotes']),
                 attributes=allowed_attrs, tags=allowed_tags, 
-                styles=allowed_style, protocols=allowed_protocols, 
-                strip=True))
+                protocols=allowed_protocols, strip=True))
 
-    def __str__(self):
-        return '<Notice - {}>'.format(self.name)
+
+
 
 
 db.event.listen(Notice.body, 'set', Notice.on_changed_body)

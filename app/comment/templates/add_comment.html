@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% from 'macros/_formhelpers.html' import render_field %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+<section class="columns">
+	<aside class="one-fourth column">
+		{% include 'components/_nav_publications.html' %}
+	</aside>
+	<div class="three-fourths column">
+		<div class="Box my-3">
+			<div class="Box-header">
+				<small>Форма добавления комментариев</small>
+			</div>
+			<div class="Box-body">
+                <form method="POST">
+                    {{ data.form.csrf_token }}
+                    {{ render_field(data.form.body, rows=10, cols=60, class="form-control") }}
+					<button class="btn btn-sm btn-primary" type="submit">Добавить комментарий</button>
+					<a href="javascript:history.go(-1)" class="btn btn-sm" role="button">Отмена</a>
+                </form>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}

@@ -1,17 +1,11 @@
 # comment/utils.py
 
-# 
+# утилиты необходимые для работы данного пакета
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from functools import wraps
-
-from flask_login import current_user
-
-from ..models.comment import Comment
-from ..utils import create_response
-
+# imports heare
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-create_response = create_response
+

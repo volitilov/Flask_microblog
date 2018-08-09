@@ -14,7 +14,7 @@
 				<small>Форма добавления постов</small>
 			</div>
 			<div class="Box-body">
-				<form action="{{ url_for('post.addPost_request') }}" method="POST" novalidate>
+				<form method="POST">
 					{{ data.form.csrf_token }}
 					{{ render_field(data.form.title, class="form-control") }}
 					{{ render_field(data.form.contents, rows=10, cols=60, class="form-control") }}

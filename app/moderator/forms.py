@@ -15,5 +15,5 @@ class AddNotice_form(FlaskForm):
 	body = PageDownField(label='Текст уведомления', validators=[
 		DataRequired(), 
 		Length(min=15, max=1000, 
-			message='Уведомление не должено быть меньше 5, больше 64 символов')])
+			message='Уведомление не должено быть меньше 15, больше 1000 символов')])
 

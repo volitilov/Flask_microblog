@@ -1,31 +1,25 @@
-#! notice/views.py
+# notice/routes/pages.py
 
-#
+# Обрабатывает GET-запросы
+# Формирует страницы для запрошенных урлов 
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 from flask import request, current_app, flash, redirect, url_for
-
 from flask_login import login_required, current_user
 
-from . import notice
-from .forms import AddNotice_form
-from ..models.notice import Notice
-from ..models.post import Post
-from ..models.comment import Comment
-from ..utils import create_response
+from .. import (
+    # blueprint
+    notice,
+
+    # models
+    Notice, Post, Comment,
+
+    # utils
+    create_response
+)
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-@notice.route('/<username>/notice/add')
-@login_required
-def addNotice_page(username):
-    form = AddNotice_form()
-    return create_response(template='notice/add.html', data={
-        'page_title': 'Страница создания уведомления',
-        'form': form,
-    })
-
 
 @notice.route('/<username>/notice')
 @login_required
@@ -44,7 +38,7 @@ def notice_page(username):
     pagination = notice.order_by(Notice.timestamp.desc()).paginate(
         page, per_page=count_items, error_out=False)
 
-    return create_response(template='notice/notice.html', data={
+    return create_response(template='notice.html', data={
         'page_title': 'Страница уведомлений',
         'notice': pagination.items,
         'posts': posts,

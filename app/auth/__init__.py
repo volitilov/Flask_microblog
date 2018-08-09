@@ -6,14 +6,15 @@
 
 from flask import Blueprint
 
+from ..models.user import User
+from ..models.user_settings import UserSettings
+from .. import db
+
 from .forms import (
 	Login_form, Registration_form, PasswordResetRequest_form, 
 	PasswordReset_form
 )
 from .data import page_titles
-from .. import db
-from ..models.user import User
-from ..models.user_settings import UserSettings
 from ..email import send_email
 from ..utils import create_response
 

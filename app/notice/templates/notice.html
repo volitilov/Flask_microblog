@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 {% from 'macros/_pagination.html' import render_pagination %}
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('notice.static', filename='css/notice.css') }}">
+{% endblock %}
 {% block scripts %}
-    <script src="{{ url_for('static', filename='js/close_notice.js') }}"></script>
+    <script src="{{ url_for('notice.static', filename='js/close_notice.js') }}"></script>
 {% endblock %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
@@ -25,14 +28,11 @@
                             <small>
                                 когда: {{ notice.timestamp.strftime('%d.%m.%Y') }}
                             </small>
-                            <p>
+                            {% if notice.body_html %}
+                                {{ notice.body_html|safe }}
+                            {% else %}
                                 {{ notice.body|safe }}
-                                <!-- {% if notice.body_html %}
-                                    {{ notice.body_html|safe }}
-                                {% else %}
-                                    {{ notice.body|safe }}
-                                {% endif %} -->
-                            </p>
+                            {% endif %}
                         </div>
                     </li>
                 {% endfor %}

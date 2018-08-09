@@ -6,12 +6,13 @@
 
 from flask import Blueprint
 
-from .forms import Search_form
-from .data import page_titles
 from ..models.post import Post
 from ..models.tag import Tag
-from ..utils import create_response
 from .. import db
+
+from .forms import Search_form
+from .data import page_titles
+from ..utils import create_response
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

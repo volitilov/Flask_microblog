@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% from 'macros/_formhelpers.html' import render_field %}
 {% block style %}
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/post.css') }}" />
+	<link rel="stylesheet" href="{{ url_for('post.static', filename='css/post.css') }}" />
 	<link rel="stylesheet" href="{{ url_for('comment.static', filename='css/comment.css') }}">
 {% endblock %}
 {% block scripts %}{% endblock %}
@@ -30,11 +30,11 @@
 					{% if data.post.state == 'develop' %} <small class="dev anim-pulse">требуется доработать</small> {% endif %}
 					
 					{% if current_user == data.post.author %}
-						<a class="btn btn-sm btn-outline" href="{{ url_for('post.editPost_page', id=data.post.id) }}">
+						<a class="btn btn-sm btn-outline ml-3" href="{{ url_for('post.editPost_page', id=data.post.id) }}">
 							Редактировать
 						</a>
 					{% endif %}
-					<small class="post-views mr-3">
+					<small class="post-views">
 						<span><i class="material-icons">visibility</i></span>
 						<span class="Counter">{{ data.post.views }}</span>
 					</small>

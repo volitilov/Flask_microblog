@@ -60,7 +60,7 @@ def searchResults_page(data):
     flash(category='success', 
         message='Показаны результаты по запросу: <br><b>{}</b>'.format(data))
 
-    return create_response(template='post/search_results.html', data={
+    return create_response(template='search_results.html', data={
         'page_title': page_titles['searchResults_page'],
         'page_posts': posts,
         'all_posts': Post.query.filter_by(state='public'),

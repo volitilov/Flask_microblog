@@ -1,28 +1,29 @@
-# -*- coding: utf-8 -*-
-# post/views.py
+# post/routes/pages.py
 
-# 
+# Обрабатывает GET-запросы
+# Формирует страницы для запрошенных урлов 
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from functools import wraps
-
-from flask import (
-	request, flash, current_app, url_for, redirect
-)
-
+from flask import request, flash, current_app
 from flask_login import current_user, login_required
 
-from . import post
-from .utils import create_response
-from .forms import AddPost_form
-from .data import get_posts, page_titles
-from ..models.post import Post
-from ..models.user import User
-from ..models.comment import Comment
-from ..models.post_rating import Post_rating
-from ..models.tag import Tag, Rel_tag
-from .. import db
+from .. import (
+	# blueprint
+	post,
+
+	# utils
+	create_response,
+
+	# models
+	Post, User, Comment, Post_rating, Tag,
+
+	# database
+	db,
+
+	# data
+	get_posts, page_titles
+)
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -36,7 +37,7 @@ def posts_page():
 	pagination = posts.paginate(
 		page, per_page=count_items, error_out=False)
 
-	return create_response(template='post/posts.html', data={
+	return create_response(template='posts.html', data={
 		'page_title': page_titles['posts_page'],
 		'pagination': pagination,
 		'all_posts': posts,
@@ -60,7 +61,7 @@ def followedPosts_page():
 	pagination = data['followed_posts'].order_by(Post.data_creation.desc()).paginate(
 		page, per_page=count_items, error_out=False)
 
-	return create_response(template='post/posts.html', data={
+	return create_response(template='posts.html', data={
 		'page_title': page_titles['followedPosts_page'],
 		'pagination': pagination,
 		'page_posts': pagination.items,
@@ -71,54 +72,6 @@ def followedPosts_page():
 		'count_items': count_items
 	})
 
-
-@post.route(rule='/posts/...add', methods=['GET', 'POST'])
-@login_required
-def addPost_page():
-	'''Генерирует страницу с формай создания постов.'''
-	data = get_posts()
-	form = AddPost_form()
-	client = current_app.memory
-
-	if form.validate_on_submit():
-		form.validate_title(form.title)
-		title = form.title.data
-		contents = form.contents.data
-		text = form.text.data
-
-		post = Post(title=title, table_of_contents=contents, text=text, 
-			author=current_user)
-		
-		all_tags = []
-		rel_tags = []
-		form_tags = form.tags.data.split(',')
-		for tag in form_tags:
-			tag_name = tag.strip(' ')
-			tag = Tag.query.filter_by(name=tag_name).first()
-			if not tag:
-				tag = Tag(name=tag_name)
-			
-			rel_tag = Rel_tag.query.filter_by(post=post, tag=tag).first()
-			if not rel_tag:
-				rel_tag = Rel_tag(post=post, tag=tag)
-
-			all_tags.append(tag)
-			rel_tags.append(rel_tag)
-
-		db.session.add(post)
-		db.session.add_all(all_tags)
-		db.session.add_all(rel_tags)
-		db.session.commit()
-
-		flash(message='Пост отправлен на модерацию')
-		return redirect(url_for(endpoint='main.home_page'))
-
-	return create_response(template='post/add_post.html', data={
-		'page_title': page_titles['addPost_page'],
-		'form': form,
-		'all_posts': data['all_posts'],
-		'followed_posts': data['followed_posts']
-	})
 
 
 @post.route(rule='/posts/<username>/posts/')
@@ -138,7 +91,7 @@ def userPosts_page(username):
 	pagination = posts.order_by(Post.data_creation.desc()).paginate(
 		page, per_page=count_items, error_out=False)
 
-	return create_response(template='post/user_posts.html', data={
+	return create_response(template='user_posts.html', data={
 		'page_title': page_titles['userPosts_page'],
 		'page': 'user_posts',
 		'posts': pagination.items,
@@ -176,7 +129,7 @@ def tagPosts_page(id):
 	flash(category='success', 
 		message='Показаны результаты запроса по тегу <b>{}</b>'.format(tag.name))
 
-	return create_response(template='post/posts.html', data={
+	return create_response(template='posts.html', data={
 		'page_title': page_titles['tagPosts_page'],
 		'page_posts': tag_posts,
 		'pagination': pagination,
@@ -185,6 +138,7 @@ def tagPosts_page(id):
 		'all_posts': data['all_posts'],
 		'followed_posts': data['followed_posts']
 	})
+
 
 
 @post.route(rule='/posts/<int:id>')
@@ -211,7 +165,7 @@ def post_page(id):
 
 	if post.state == 'public' or \
 		post.state == 'develop' and post.author == current_user:
-			return create_response(template='post/post.html', data={
+			return create_response(template='post.html', data={
 				'page_title': page_titles['post_page'] + post.title,
 				'post': post,
 				'comments': post.comments.filter(Comment.state=='public'),
@@ -233,30 +187,6 @@ def post_page(id):
 			})
 
 
-@post.route(rule='/posts/<int:id>/...edit')
-@login_required
-def editPost_page(id):
-	'''Генерирует страницу редактирования поста.'''
-	data = get_posts()
-	form = AddPost_form()
-	post = Post.query.get_or_404(id)
-	
-	form.text.data = post.text
-	form.contents.data = post.table_of_contents
-
-	tags = []
-	for rel_tag in post.tags.all():
-		tags.append(rel_tag.tag.name)
-	form.tags.data = ', '.join(tags)
-
-	return create_response(template='post/edit_post.html', data={
-		'page_title': page_titles['editPost_page'],
-		'form': form,
-		'post': post,
-		'all_posts': data['all_posts'],
-		'followed_posts': data['followed_posts']
-	})
-
 
 @post.route(rule='/posts/by_viewing/')
 def byViewingPosts_page():
@@ -268,7 +198,7 @@ def byViewingPosts_page():
 	pagination = data['all_posts'].paginate(page, 
 		per_page=count_items, error_out=False)
 
-	return create_response(template='post/posts.html', data={
+	return create_response(template='posts.html', data={
 		'page_title': page_titles['byViewingPosts_page'],
 		'page': 'post_views',
 		'page_posts': pagination.items,
@@ -278,6 +208,7 @@ def byViewingPosts_page():
 		'followed_posts': data['followed_posts'],
 		'count_items': count_items
 	})
+
 
 
 @post.route(rule='/posts/by_rating/')
@@ -290,7 +221,7 @@ def byRatingPosts_page():
 	pagination = data['all_posts'].paginate(page, 
 		per_page=count_items, error_out=False)
 
-	return create_response(template='post/posts.html', data={
+	return create_response(template='posts.html', data={
 		'page_title': page_titles['byRatingPosts_page'],
 		'page': 'post_ratings',
 		'page_posts': pagination.items,

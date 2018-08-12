@@ -35,7 +35,8 @@ def confirmPost_request(id):
     post.state = 'public'
 
     notice_title = 'Модерация публикаций'
-    notice_body = 'Пост: <b>{}</b> <br> успешно прошёл модерацию.'.format(post.title)
+    notice_body = 'Пост: <a href="{}">{}</a> <br> успешно прошёл модерацию.'.format(
+        url_for('post.post_page', id=post.id), post.title)
     notice = Notice(title=notice_title, body=notice_body, author=post.author)
     
     db.session.add_all([post, notice])

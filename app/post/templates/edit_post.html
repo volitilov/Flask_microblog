@@ -18,8 +18,9 @@
 				<small>Редактирование поста.</small>
 			</div>
 			<div class="Box-body">
-				<form action="{{ url_for('post.editPost_request', id=data.post.id) }}" method="POST" novalidate>
+				<form method="POST">
 					{{ data.form.csrf_token }}
+					{{ data.form.id(type="hidden", value=data.post.id) }}
 					{{ render_field(data.form.title, value=data.post.title, class="form-control") }}
 					{{ render_field(data.form.contents, rows=10, class="form-control") }}
 					{{ render_field(data.form.text, rows=10, class="form-control") }}

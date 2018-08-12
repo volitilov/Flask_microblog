@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% from 'macros/_pagination.html' import render_pagination %}
 {% block style %}
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/post.css') }}" />
+	<link rel="stylesheet" href="{{ url_for('post.static', filename='css/post.css') }}" />
 {% endblock %}
 {% block scripts %}{% endblock %}
 
@@ -17,7 +17,7 @@
 				<ul>
 					{% for post in data.page_posts %}
 						<li>
-							{% include 'post/_post_small.html' %}
+							{% include '_post_small.html' %}
 						</li>
 					{% endfor %}
 				</ul>

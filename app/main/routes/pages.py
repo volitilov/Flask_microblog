@@ -51,6 +51,7 @@ def searchResults_page(data):
     page = request.args.get('page', 1, type=int)
 
     posts, total = Post.search(data, page, count_items)
+    posts = posts.filter_by(state='public')
 
     next_url = url_for('main.search_request', q=data, page=page + 1) \
         if total > page * count_items else None

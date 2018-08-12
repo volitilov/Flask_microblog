@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block style %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/profile.css') }}">
+    <link rel="stylesheet" href="{{ url_for('user.static', filename='css/profile.css') }}">
 {% endblock %}
 {% block scripts %}
     {{ moment.include_jquery() }}

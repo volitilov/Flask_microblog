@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block style %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/follow.css') }}">
+    <link rel="stylesheet" href="{{ url_for('user.static', filename='css/follow.css') }}">
 {% endblock %}
 {% from 'macros/_pagination.html' import render_pagination %}
 
@@ -25,9 +25,9 @@
                                 </a>
                                 {% if not current_user.is_anonymous and current_user == data.user %}
                                     {% if data.unfollow_btn %}
-                                        <a class="btn btn-sm btn-danger" role="btn" href="{{ url_for('user.unfollow', user_id=follow.user.id) }}">Отписаться</a>
+                                        <a class="btn btn-sm btn-danger" role="btn" href="{{ url_for('user.unfollow_request', user_id=follow.user.id) }}">Отписаться</a>
                                     {% else %}
-                                        <a class="btn btn-sm btn-danger" role="btn" href="{{ url_for('user.unsubscribe', user_id=follow.user.id) }}">Отписать</a>
+                                        <a class="btn btn-sm btn-danger" role="btn" href="{{ url_for('user.unsubscribe_request', user_id=follow.user.id) }}">Отписать</a>
                                     {% endif %}
                                 {% endif %}
                             </div>

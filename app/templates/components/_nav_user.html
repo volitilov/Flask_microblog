@@ -30,9 +30,9 @@
     </nav>
     {% if current_user != data.user %}
         {% if current_user.is_anonymous or not current_user.is_following(data.user) %}
-            <a class="btn btn-block btn-primary" role="btn" href="{{ url_for('user.follow', user_id=data.user.id) }}">Подписаться</a>
+            <a class="btn btn-block btn-primary" role="btn" href="{{ url_for('user.follow_request', user_id=data.user.id) }}">Подписаться</a>
         {% else %}
-            <a class="btn btn-block btn-danger" role="btn" href="{{ url_for('user.unfollow', user_id=data.user.id) }}">Отписаться</a>
+            <a class="btn btn-block btn-danger" role="btn" href="{{ url_for('user.unfollow_request', user_id=data.user.id) }}">Отписаться</a>
         {% endif %}
     {% endif %}
 </section>

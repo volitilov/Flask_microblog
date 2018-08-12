@@ -6,7 +6,7 @@
 {% block content %}
 <section class="columns mt-3">
 	<aside class="one-fourth column">
-		{% include 'user/admin/_nav_panell.html' %}
+		{% include 'admin/_nav_panell.html' %}
 	</aside>
 	<div class="three-fourths column">
 		<div class="Box">
@@ -17,7 +17,7 @@
 				<p>Комментарий: <a href="{{ url_for('user.adminComment_page', username=current_user.name, id=data.comment.id) }}">комментарий</a></p>
 				<p>Автор: <a href="{{ url_for('user.profile_page', username=data.comment.author.name) }}">{{ data.comment.author.name }}</a></p>
 				<hr>
-                <form action="{{ url_for('user.sendNoticeComment_request', id=data.comment.id) }}" method="POST" novalidate>
+                <form method="POST">
 					{{ data.form.csrf_token }}
 					<p class="note">
 						Напишите о причине возврата, чтобы он смог доработать свой комментарий.

@@ -1,6 +1,6 @@
-# post/utils.py
+# user/utils.py
 
-# 
+# утилиты необходимые для работы данного пакета
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -12,13 +12,7 @@ from flask_login import current_user
 from wtforms.validators import ValidationError
 from werkzeug.exceptions import RequestEntityTooLarge
 
-from ..models.post import Post
-from ..utils import create_response
-
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-create_response = create_response
-
 
 class FileSize:
     '''Проверяет размер загружаемого файла'''

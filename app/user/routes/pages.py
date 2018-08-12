@@ -21,7 +21,10 @@ from .. import (
     create_response,
 
     # database
-    db
+    db,
+
+    # data
+    page_titles
 )
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -39,7 +42,7 @@ def profile_page(username):
             comments = user.comments.filter(Comment.state!='moderation')
     
     return create_response(template='profile.html', data={
-        'page_title': 'Страница профиля',
+        'page_title': page_titles['profile_page'],
         'page': 'profile',
         'user': user,
         'posts': posts,
@@ -51,8 +54,9 @@ def profile_page(username):
 @user.route(rule='/<username>/settings/account')
 @login_required
 def editAccount_page(username):
+    '''Генерирует страницу редактирования аккаунта.'''
     return create_response(template='edit_account.html', data={
-        'page_title': 'Страница редактирования аккаунта',
+        'page_title': page_titles['editAccount_page'],
         'page': 'edit_account'
     })
 
@@ -60,6 +64,7 @@ def editAccount_page(username):
 
 @user.route(rule='/<username>/followers/')
 def followers_page(username):
+    '''Генерирует страницу подписчиков.'''
     user = User.query.filter_by(name=username).first()
     posts = user.posts.filter_by(state='public')
     comments = user.comments.filter_by(state='public')
@@ -82,7 +87,7 @@ def followers_page(username):
                 for item in pagination.items] 
 
     return create_response(template='followers.html', data={
-        'page_title': 'Страница подписчиков.',
+        'page_title': page_titles['followers_page'],
         'page': 'followers',
         'user': user,
         'posts': posts,
@@ -124,7 +129,7 @@ def followedBy_page(username):
                 for item in pagination.items]
 
     return create_response(template='followers.html', data={
-        'page_title': 'Страница подписок.',
+        'page_title': page_titles['followedBy_page'],
         'page': 'followed',
         'user': user,
         'posts': posts,
@@ -144,6 +149,7 @@ def followedBy_page(username):
 @user.route('/<username>/admin/')
 @login_required
 def adminDashboard_page(username):
+    '''Генерирует главную страницу администрирования пользователя'''
     comments = []
     for i in current_user.posts:
         com = i.comments.filter_by(state='moderation')
@@ -152,16 +158,19 @@ def adminDashboard_page(username):
     user = User.query.filter_by(name=username).first()
 
     return create_response(template='admin/dashboard.html', data={
-        'title_page': 'Страница администрирования',
+        'title_page': page_titles['adminDashboard_page'],
         'page': 'dashboard',
         'comments': comments,
         'user': user
     })
 
 
+
 @user.route('/<username>/admin/comments/')
 @login_required
 def adminComments_page(username):
+    '''Генерирует страницу администрирования комментариев к постам текущего
+    пользователя'''
     comments = []
     for i in current_user.posts:
         com = i.comments.filter_by(state='moderation')
@@ -170,16 +179,19 @@ def adminComments_page(username):
     posts = Post.query.filter_by(state='moderation')
     
     return create_response(template='admin/comments.html', data={
-        'title_page': 'Страница модерации комментариев',
+        'title_page': page_titles['adminComments_page'],
         'page': 'comments',
         'comments': comments,
         'posts': posts
     })
 
 
+
 @user.route('/<username>/admin/coments/<int:id>')
 @login_required
 def adminComment_page(username, id):
+    '''Генерирует страницу модерирования комментария к посту текущего
+    пользователя'''
     posts = Post.query.filter_by(state='moderation')
     comment = Comment.query.get_or_404(id)
     comments = []
@@ -201,7 +213,7 @@ def adminComment_page(username, id):
         })
     else:
         return create_response(template='admin/comment.html', data={
-            'title_page': 'Страница модерации комментария',
+            'title_page': page_titles['adminComment_page'],
             'comment': comment,
             'comments': comments,
             'posts': posts

@@ -27,7 +27,10 @@ from .. import (
     create_response,
 
     # database
-    db
+    db,
+
+    # data
+    page_titles
 )
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -80,7 +83,7 @@ def editProfile_page(username):
     form.about.data = user.about_me
     
     return create_response(template='edit_profile.html', data={
-        'page_title': 'Страница редактирования профиля',
+        'page_title': page_titles['editProfile_page'],
         'page': 'edit_profile',
         'form': form
     })
@@ -102,7 +105,7 @@ def changeLogin_page(username):
         return redirect(url_for('user.editAccount_page', username=current_user.name))
     
     return create_response(template='change_login.html', data={
-        'page_title': 'Страница изменения логина',
+        'page_title': page_titles['changeLogin_page'],
         'form': form
     })
 
@@ -127,7 +130,7 @@ def changePassword_page(username):
             return redirect(url_for('user.changePassword_page', username=current_user.name))
 
     return create_response(template='change_password.html', data={
-        'page_title': 'Страница изменения пароля',
+        'page_title': page_titles['changePassword_page'],
         'form': form
     })
 
@@ -151,7 +154,7 @@ def changeEmail_page(username):
         return redirect(url_for('user.editAccount_page', username=current_user.name))
     
     return create_response(template='change_email.html', data={
-        'page_title': 'Страница изменения email',
+        'page_title': page_titles['changeEmail_page'],
         'form': form
     })
 
@@ -189,7 +192,7 @@ def editNotice_page(username):
     form.post_moderated.data = user_settings.post_moderated
 
     return create_response(template='edit_notice.html', data={
-        'page_title': 'Страница настроек уведомлений',
+        'page_title': page_titles['editNotice_page'],
         'page': 'edit_notice',
         'form': form
     })
@@ -228,7 +231,7 @@ def adminReturnComment_page(username, id):
         comments.extend(com)
 
     return create_response(template='admin/noticeComment_form.html', data={
-        'title_page': 'Страница формы уведомления',
+        'title_page': page_titles['adminReturnComment_page'],
         'form': form,
         'comment': comment,
         'posts': posts,

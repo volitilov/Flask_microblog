@@ -17,6 +17,7 @@ from .forms import (
     EditProfile_form, ChangeEmail_form, ChangeLogin_form, 
     ChangePassword_form, EditNotice_form, AddNotice_form
 )
+from .data import page_titles
 from ..email import send_email
 from ..utils import create_response
 

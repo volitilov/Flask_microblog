@@ -94,7 +94,7 @@ def userPosts_page(username):
 	return create_response(template='user_posts.html', data={
 		'page_title': page_titles['userPosts_page'],
 		'page': 'user_posts',
-		'posts': pagination.items,
+		'page_posts': pagination.items,
 		'pagination': pagination,
 		'endpoint': 'post.userPosts_page',
 		'user': user,

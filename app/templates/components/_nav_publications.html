@@ -1,6 +1,9 @@
 <section class="nav-publications nav-left">
     <nav class="menu my-3">
-        <span class="menu-heading">Навигация по публикациям</span>
+        <span class="menu-heading">
+            <span>Навигация по публикациям</span>
+            <span><i class="material-icons">arrow_drop_down</i></span>
+        </span>
         <a class="menu-item {% if data.page == 'all_posts' %}selected{% endif %}" href="{{ url_for('post.posts_page') }}">
             Все посты <!-- &#9207; -->
             <span class="Counter">{{ data.all_posts.count() }}</span>
@@ -23,7 +26,4 @@
             По кол-ву просмотров
         </a>
     </nav>
-    <span class="tooltipped tooltipped-s" aria-label="Написать и опубликовать свой пост">							
-        <a class="btn btn-block btn-primary" role="btn" href="{{ url_for('post.addPost_page') }}">Добавить пост</a>
-    </span>
 </section>

@@ -25,6 +25,7 @@
 							<a href="{{ url_for('post.posts_page') }}">Публикации</a>
 						</span>
 					</li>
+					
 					{% if current_user.is_authenticated %}
 						<li>
 							<span class="tooltipped tooltipped-s" aria-label="Перейти на страницу с уведомлениями">
@@ -66,6 +67,13 @@
 					{% else %}
 						<li><a href="{{ url_for('auth.login_page') }}">Войти</a></li>
 					{% endif %}
+					<li class="add">
+						<span class="tooltipped tooltipped-s" aria-label="Написать и опубликовать свой пост">							
+							<a class="btn btn-block btn-primary circle" role="btn" href="{{ url_for('post.addPost_page') }}">
+								<i class="material-icons">add</i>
+							</a>
+						</span>
+					</li>
 				</nav>
 			</div>
 		</div>

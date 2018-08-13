@@ -48,7 +48,7 @@ header figcaption p {
 }
 header nav {
   float: right;
-  padding-top: 13px;
+  padding-top: 8px;
 }
 header nav li {
   display: inline-block;
@@ -116,4 +116,14 @@ header nav .dropdown-toggle:focus ~ .dropdown-content {
   opacity: 1;
   visibility: visible;
   top: 50px;
+}
+header nav .add a {
+  padding: 0;
+  padding-top: 6px;
+  width: 40px;
+  height: 40px;
+}
+header nav .add i {
+  margin: 0;
+  padding: 0;
 }

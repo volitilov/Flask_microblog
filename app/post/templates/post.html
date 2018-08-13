@@ -4,14 +4,28 @@
 	<link rel="stylesheet" href="{{ url_for('post.static', filename='css/post.css') }}" />
 	<link rel="stylesheet" href="{{ url_for('comment.static', filename='css/comment.css') }}">
 {% endblock %}
-{% block scripts %}{% endblock %}
+{% block scripts %}
+	<script src="{{ url_for('post.static', filename='js/create_nav.js') }}"></script>
+	<script src="{{ url_for('post.static', filename='js/fixed_nav.js') }}"></script>
+{% endblock %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
 {% block content %}
 	<section class="columns">
         <aside class="one-fourth column">
-           {% include 'components/_nav_publications.html' %}
+		   {% include 'components/_nav_publications.html' %}
+		   <div id="sticky">
+				<section class="nav-publications nav-post nav-left">
+					{{ data.post.t_contents_html|safe }}
+					<nav class="menu my-3">
+						<span class="menu-heading">
+							<span>Навигация по посту</span>
+							<span><i class="material-icons">arrow_drop_down</i></span>
+						</span>
+					</nav>
+				</section>
+		   </div>
         </aside>
         <div class="three-fourths column">
 			<article class="Box my-3 post">
@@ -62,10 +76,6 @@
 					{% endif %}
 					<hr>
 					<div class="body">
-						{% if data.post.t_contents_html %}
-							{{ data.post.t_contents_html|safe }}
-						{% endif %}
-						<hr>
 						{{ data.post.body_html|safe }}
 					</div>
 				</div>

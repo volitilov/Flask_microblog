@@ -90,7 +90,7 @@ def registrationForm_req():
 
 @auth.route(rule='/password_reset/<token>', methods=['POST'])
 def passwordResetForm_req(token):
-    '''Обрабатывает запрос на изменения пароля'''
+    '''Обрабатывает запрос на сброс пароля'''
     form = PasswordReset_form()
 
     if not current_user.is_anonymous:

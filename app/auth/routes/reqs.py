@@ -51,9 +51,9 @@ def before_request():
 
 
 
-@auth.route(rule='/<username>/...logout')
+@auth.route(rule='/...logout')
 @login_required
-def logout_request(username):
+def logout_request():
     logout_user()
     flash(category='success', message='Вы успешно вышли')
     return redirect(url_for('main.home_page'))

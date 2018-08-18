@@ -28,11 +28,11 @@
                     {% endif %}
                     
                     <a class="btn btn-sm btn-primary" 
-                        href="{{ url_for('user.adminConfirmComment_request', id=data.comment.id) }}">
+                        href="{{ url_for('user.adminConfirmComment_request', username=current_user.name, id=data.comment.id) }}">
                         Подтвердить
                     </a>
                     <a class="btn btn-sm btn-danger mx-2" 
-                        href="{{ url_for('user.adminDeleteComment_request', id=data.comment.id) }}">
+                        href="{{ url_for('user.adminDeleteComment_request', username=current_user.name, id=data.comment.id) }}">
                         Удалить
                     </a>
                     <a class="btn btn-sm btn-outline" 

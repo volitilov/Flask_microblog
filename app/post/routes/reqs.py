@@ -25,14 +25,13 @@ from .. import (
 @login_required
 def deletePost_request(id):
 	post = Post.query.get(id)
-
-	if current_user == post.author:
-		db.session.delete(post)
-		db.session.commit()
-		flash(message='Пост успешно удалён', category='success')
-	else:
+	
+	if current_user != post.author:
 		flash(category='warn', message='У вас недостаточно прав на удаление')
 
+	db.session.delete(post)
+	db.session.commit()
+	flash(message='Пост успешно удалён', category='success')
 	return redirect(url_for('post.posts_page'))
 
 

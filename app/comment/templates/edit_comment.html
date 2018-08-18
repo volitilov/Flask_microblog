@@ -17,11 +17,11 @@
 				<small>Редактирование коментария.</small>
 			</div>
 			<div class="Box-body">
-				<form action="{{ url_for('comment.editCommentForm_req', username=current_user.name, comment_id=data.comment.id) }}" method="POST">
+				<form action="{{ url_for('comment.editCommentForm_req', comment_id=data.comment.id) }}" method="POST">
 					{{ data.form.csrf_token }}
 					{{ render_field(data.form.body, rows=10, class="form-control") }}
 					<button class="btn btn-sm btn-primary" type="submit">Сохранить</button>
-					<a href="{{ url_for('comment.delComment_request', username=current_user.name, comment_id=data.comment.id) }}" 
+					<a href="{{ url_for('comment.delComment_request', comment_id=data.comment.id) }}" 
 						class="btn btn-sm btn-danger" role="button">Удалить</a>
 					<a href="javascript:history.go(-1)" class="btn btn-sm" role="button">Отмена</a>
 				</form>

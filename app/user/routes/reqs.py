@@ -5,7 +5,7 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import redirect, url_for, flash
+from flask import redirect, url_for, flash, request
 from flask_login import current_user, login_required, fresh_login_required
 
 from .. import (
@@ -46,11 +46,15 @@ def returnDefaultNoticeSettings_request():
 
 
 
-@user.route('/admin/comments/<int:id>...confirm')
+@user.route('/<username>/admin/comments/<int:id>...confirm')
 @login_required
-def adminConfirmComment_request(id):
+def adminConfirmComment_request(username, id):
     comment = Comment.query.get_or_404(id)
     comment.state = 'public'
+
+    if username != current_user.name:
+        flash(category='warn', message='Вы не являетесь администратором данного аккаунта.')
+        return redirect(url_for('user.adminDashboard_page', username=current_user.name))
 
     user_settings = UserSettings.query.filter_by(state='custom', profile=comment.author).first()
     if user_settings.comment_moderated:
@@ -73,10 +77,14 @@ def adminConfirmComment_request(id):
 
 
 
-@user.route('/admin/comments/<int:id>...del')
+@user.route('/<username>/admin/comments/<int:id>...del')
 @login_required
-def adminDeleteComment_request(id):
+def adminDeleteComment_request(username, id):
     comment = Comment.query.get_or_404(id)
+
+    if username != current_user.name:
+        flash(category='warn', message='Вы не являетесь администратором данного аккаунта.')
+        return redirect(url_for('user.adminDashboard_page', username=current_user.name))
 
     db.session.delete(comment)
     db.session.commit()
@@ -117,6 +125,7 @@ def changeEmail_request(token):
 @user.route(rule='/follow/<user_id>')
 @login_required
 def follow_request(user_id):
+    '''Обрабатывает запрос на подписку'''
     user = User.query.filter_by(id=user_id).first()
     if user is None:
         flash(category='error', message='Недействительный пользователь.')
@@ -144,7 +153,7 @@ def follow_request(user_id):
 @user.route(rule='/unfollow/<user_id>')
 @login_required
 def unfollow_request(user_id):
-    '''Реализовывает отписку от пользователя'''
+    '''Обрабатывает отписку от пользователя'''
     user = User.query.filter_by(id=user_id).first()
     if not current_user.is_following(user):
         flash(category='warn', message='Вы уже отписаны.')

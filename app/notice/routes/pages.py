@@ -19,19 +19,17 @@ from .. import (
     AddNotice_form,
 
     # utils
-    create_response
+    create_response,
+
+    # data
+    page_titles
 )
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@notice.route('/<username>/notice')
+@notice.route('/notice')
 @login_required
-def notice_page(username):
-    if current_user.name != username:
-        flash(category='warn', 
-            message='У вас есть доступ, только к своим уведомлениям')
-        return redirect(url_for('notice.notice_page', username=current_user.name))
-
+def notice_page():
     posts = current_user.posts.filter(Post.state!='moderator')
     comments = current_user.comments.filter(Comment.state!='moderation')
     notice = current_user.notice
@@ -42,7 +40,7 @@ def notice_page(username):
         page, per_page=count_items, error_out=False)
 
     return create_response(template='notice.html', data={
-        'page_title': 'Страница уведомлений',
+        'page_title': page_titles['notice_page'],
         'notice': pagination.items,
         'posts': posts,
         'comments': comments,
@@ -55,12 +53,12 @@ def notice_page(username):
 
 
 
-@notice.route('/<username>/notice/add')
+@notice.route('/notice/add')
 @login_required
-def addNotice_page(username):
+def addNotice_page():
     form = AddNotice_form()
 
     return create_response(template='add_notice.html', data={
-        'page_title': 'Страница создания уведомления',
+        'page_title': page_titles['addNotice_page'],
         'form': form,
     })

@@ -17,7 +17,7 @@
 				<small>Форма добавления комментариев</small>
 			</div>
 			<div class="Box-body">
-                <form action="{{ url_for('comment.addCommentForm_req', username=current_user.name, id=data.post.id) }}" method="POST">
+                <form action="{{ url_for('comment.addCommentForm_req', id=data.post.id) }}" method="POST">
                     {{ data.form.csrf_token }}
                     {{ render_field(data.form.body, rows=10, cols=60, class="form-control") }}
 					<button class="btn btn-sm btn-primary" type="submit">Добавить комментарий</button>

@@ -76,6 +76,10 @@ def editPostForm_req(id):
     form = EditPost_form()
     post = Post.query.get_or_404(id)
 
+    if current_user != post.author:
+        flash(category='warn', message='Вы не являетесь автором публикации.')
+        return redirect(url_for('post.posts_page'))
+
     if post.state == 'moderation':
         return redirect(url_for('post.post_page', id=post.id))
 

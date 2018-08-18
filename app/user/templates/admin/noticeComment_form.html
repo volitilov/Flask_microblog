@@ -20,7 +20,7 @@
 				<p>Комментарий: <a href="{{ url_for('user.adminComment_page', username=current_user.name, id=data.comment.id) }}">комментарий</a></p>
 				<p>Автор: <a href="{{ url_for('user.profile_page', username=data.comment.author.name) }}">{{ data.comment.author.name }}</a></p>
 				<hr>
-                <form action="{{ url_for('user.adminReturnCommentForm_req', id=data.comment.id) }}" method="POST">
+                <form action="{{ url_for('user.adminReturnCommentForm_req', username=current_user.name, id=data.comment.id) }}" method="POST">
 					{{ data.form.csrf_token }}
 					<p class="note">
 						Напишите о причине возврата, чтобы он смог доработать свой комментарий.

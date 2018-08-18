@@ -173,12 +173,16 @@ def editNotice_page():
 
 
 
-@user.route('/admin/comments/<int:id>/...return', methods=['POST'])
+@user.route('/<username>/admin/comments/<int:id>/...return', methods=['POST'])
 @login_required
-def adminReturnCommentForm_req(id):
+def adminReturnCommentForm_req(username, id):
     '''Генерирует и обрабатывает страницу возврата комментария на доработку'''
     form = AddNotice_form()
     comment = Comment.query.get_or_404(id)
+
+    if username != current_user.name:
+        flash(category='warn', message='Вы не являетесь администратором данного аккаунта.')
+        return redirect(url_for('user.adminDashboard_page', username=current_user.name))
 
     if form.validate():
         user_settings = UserSettings.query.filter_by(state='custom', profile=comment.author).first()

@@ -13,6 +13,7 @@ from ..models.post import Post
 from ..models.comment import Comment
 from .. import db
 
+from .data import page_titles
 from .forms import AddNotice_form
 from ..utils import create_response, flash_errors, is_admin
 

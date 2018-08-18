@@ -33,14 +33,18 @@ from .. import (
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@user.route('/admin/comments/<int:id>/...return')
+@user.route('/<username>/admin/comments/<int:id>/...return')
 @login_required
-def adminReturnComment_page(id):
+def adminReturnComment_page(username, id):
     '''Генерирует и обрабатывает страницу возврата комментария на доработку'''
     form = AddNotice_form()
     comment = Comment.query.get_or_404(id)
     posts = Post.query.filter_by(state='moderation')
     comments = []
+
+    if username != current_user.name:
+        flash(category='warn', message='Вы не являетесь администратором данного аккаунта.')
+        return redirect(url_for('user.adminDashboard_page', username=current_user.name))
     
     for i in current_user.posts:
         com = i.comments.filter_by(state='moderation')

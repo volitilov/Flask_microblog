@@ -37,6 +37,10 @@ def editPost_page(id):
     data = get_posts()
     form = EditPost_form()
     post = Post.query.get_or_404(id)
+
+    if current_user != post.author:
+        flash(category='warn', message='Вы не являетесь автором публикации.')
+        return redirect(url_for('post.posts_page'))
     
     if post.state == 'moderation':
         return redirect(url_for('post.post_page', id=post.id))
@@ -96,6 +100,7 @@ def posts_page():
     })
 
 
+
 @post.route('/posts/followed_posts/')
 @login_required
 def followedPosts_page():
@@ -151,6 +156,7 @@ def userPosts_page(username):
     })
 
 
+
 @post.route(rule='/posts/tag/<int:id>/')
 def tagPosts_page(id):
     '''Генерирует страницу с публикациями по запрошенному тегу.'''
@@ -194,6 +200,7 @@ def post_page(id):
     data = get_posts()
     post = Post.query.get_or_404(id)
     tags = post.tags
+    
     if current_user != post.author:
         post.views += 1
         db.session.add(post)
@@ -210,29 +217,29 @@ def post_page(id):
         if post.author == current_user:
             rating_bool = True
 
-    if post.state != 'moderation' and post.author == current_user:
-            return create_response(template='post.html', data={
-                'page_title': page_titles['post_page'] + post.title,
-                'post': post,
-                'comments': post.comments.filter(Comment.state=='public'),
-                'rating_bool': rating_bool,
-                'tags': tags,
-                'all_posts': data['all_posts'],
-                'followed_posts': data['followed_posts']
-            })
-    else:
-        if post.state == 'moderation':
-            state_body = 'Находится на модерации'
-        if post.state == 'develop':
-            state_body = 'Находится на доработке'
-        if post.state != 'public':
-            return create_response(template='state.html', data={
-                'page_title': 'Стадия контента',
-                'state_title': 'Пост',
-                'state_body': state_body,
-                'all_posts': data['all_posts'],
-                'followed_posts': data['followed_posts']
-            })
+    if post.state == 'public' or post.state == 'develop' \
+        and post.author == current_user:
+        return create_response(template='post.html', data={
+            'page_title': page_titles['post_page'] + post.title,
+            'post': post,
+            'comments': post.comments.filter(Comment.state=='public'),
+            'rating_bool': rating_bool,
+            'tags': tags,
+            'all_posts': data['all_posts'],
+            'followed_posts': data['followed_posts']
+        })
+    if post.state == 'moderation':
+        state_body = 'Находится на модерации'
+    if post.state == 'develop':
+        state_body = 'Находится на доработке'
+    if post.state != 'public':
+        return create_response(template='state.html', data={
+            'page_title': 'Стадия контента',
+            'state_title': 'Пост',
+            'state_body': state_body,
+            'all_posts': data['all_posts'],
+            'followed_posts': data['followed_posts']
+        })
 
 
 

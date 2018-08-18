@@ -26,9 +26,9 @@ from .. import (
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@notice.route('/<username>/notice/add', methods=['POST'])
+@notice.route('/notice/add', methods=['POST'])
 @is_admin
-def addNoticeForm_req(username):
+def addNoticeForm_req():
     '''Обрабатывает форму добавления уведомлений'''
     form = AddNotice_form()
 

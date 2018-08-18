@@ -26,9 +26,9 @@ from .. import (
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@comment.route(rule='/<username>/comments/...post-<int:id>', methods=['POST'])
+@comment.route(rule='/comments/...post-<int:id>', methods=['POST'])
 @login_required
-def addCommentForm_req(username, id):
+def addCommentForm_req(id):
     '''Генерирует страницу для добавления комментария'''
     form = AddComment_form()
     post = Post.query.get_or_404(id)
@@ -44,7 +44,7 @@ def addCommentForm_req(username, id):
                 <b>{}</b><br><br>На данный момент он отправлен к вам на модерацию, 
                 <a href="{}">посмотреть</a>'''.format(
                     comment.author.name, comment.post.title, 
-                    url_for('user.adminComment_page', username=username, id=comment.id)
+                    url_for('user.adminComment_page', username=current_user.name, id=comment.id)
             )
             notice = Notice(title=notice_title, body=notice_body, author=comment.post.author)
             db.session.add(notice)
@@ -60,21 +60,26 @@ def addCommentForm_req(username, id):
 
 
 
-@comment.route(rule='/<username>/comments/<int:comment_id>...edit', methods=['POST'])
+@comment.route(rule='/comments/<int:comment_id>...edit', methods=['POST'])
 @login_required
-def editCommentForm_req(username, comment_id):
+def editCommentForm_req(comment_id):
     '''Генерирует страницу редактирования комментария'''
     comment = Comment.query.get_or_404(comment_id)
     form = AddComment_form()
 
-    if form.validate():
-        comment.body = form.body.data
-        comment.state = 'moderation'
+    if current_user == comment.author:	
+        if form.validate():
+            comment.body = form.body.data
+            comment.state = 'moderation'
 
-        db.session.add(comment)
-        db.session.commit()
-        flash(message='Ваш комментарий отправлен на модерацию')
-        return jsonify({'next_url': url_for('comment.comment_page', id=comment_id)})
+            db.session.add(comment)
+            db.session.commit()
+            flash(message='Ваш комментарий отправлен на модерацию')
+            return jsonify({'next_url': url_for('comment.comment_page', id=comment_id)})
+        else:
+            return jsonify({'errors': flash_errors(form)})
+	
+    flash(category='warn', message='У вас не достаточно прав для редактирования данного контента')
+    return redirect(url_for('main.home_page'))
 
-    return jsonify({'errors': flash_errors(form)})
     

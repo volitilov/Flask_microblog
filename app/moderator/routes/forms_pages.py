@@ -1,10 +1,10 @@
 # moderator/routes/forms_pages.py
 
-# Обрабатывает страницы с формами
+# Обрабатывает запросы от форм
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import flash, redirect, url_for 
+from flask import flash, redirect, url_for, jsonify
 
 from .. import (
     # blueprint
@@ -14,13 +14,10 @@ from .. import (
     AddNotice_form,
 
     # utils
-    is_moderator, create_response,
+    is_moderator, create_response, flash_errors,
 
     # models
     Post, Notice, UserSettings,
-
-    # data
-    page_titles, get_data,
 
     # database
     db
@@ -29,16 +26,15 @@ from .. import (
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@moderator.route('/moderator/posts/<int:id>...return', methods=['GET', 'POST'])
+@moderator.route('/moderator/posts/<int:id>...return', methods=['POST'])
 @is_moderator
-def returnPost_page(id):
+def returnPostForm_req(id):
     '''Обрабатывает запросы на отправку уведомлений пользователям о том, 
     что их публикации необходимо доработать.'''
-    data = get_data()
     form = AddNotice_form()
     post = Post.query.get_or_404(id)
 
-    if form.validate_on_submit():
+    if form.validate():
         user_settings = UserSettings.query.filter_by(state='custom', profile=post.author).first()
         post.state = 'develop'
         
@@ -55,12 +51,7 @@ def returnPost_page(id):
         db.session.commit()
         
         flash(category='success', message='Пост успешно отправлен на доработку')
-        return redirect(url_for('moderator.posts_page'))
+        return jsonify({'next_url': url_for('moderator.posts_page')})
 
-    return create_response(template='mod_noticePost_form.html', data={
-        'title_page': page_titles['returnPost_page'],
-        'form': form,
-        'post': post,
-        'comments': data['comments'],
-        'posts': data['posts']
-    })
+    return jsonify({'errors': flash_errors(form)}) 
+

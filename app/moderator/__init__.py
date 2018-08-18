@@ -12,10 +12,9 @@ from ..models.comment import Comment
 from ..models.notice import Notice
 from .. import db
 
-from .utils import is_moderator
 from .forms import AddNotice_form
 from .data import page_titles, get_data
-from ..utils import create_response
+from ..utils import create_response, flash_errors, is_moderator
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

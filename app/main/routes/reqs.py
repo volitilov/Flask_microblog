@@ -36,13 +36,3 @@ def after_request(response):
                 query.context))
     return response
 
-
-
-@main.route('/posts/...search')
-def search_request():
-    form = Search_form()
-
-    if not form.validate():
-        return redirect(url_for('main.home_page'))
-    
-    return redirect(url_for('main.searchResults_page', data=form.q.data))

@@ -51,6 +51,7 @@ def searchResults_page(data):
     page = request.args.get('page', 1, type=int)
 
     posts, total = Post.search(data, page, count_items)
+    posts = posts.filter_by(state='public')
 
     next_url = url_for('main.search_request', q=data, page=page + 1) \
         if total > page * count_items else None
@@ -60,7 +61,7 @@ def searchResults_page(data):
     flash(category='success', 
         message='Показаны результаты по запросу: <br><b>{}</b>'.format(data))
 
-    return create_response(template='post/search_results.html', data={
+    return create_response(template='search_results.html', data={
         'page_title': page_titles['searchResults_page'],
         'page_posts': posts,
         'all_posts': Post.query.filter_by(state='public'),

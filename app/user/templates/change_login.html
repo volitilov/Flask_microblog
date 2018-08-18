@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% from 'macros/_formhelpers.html' import render_field %}
+{% block scripts %}
+	<script src="{{ url_for('static', filename='js/scripts/ajax_form.js') }}"></script>
+{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+    <section class="columns mt-3 edit-account">
+        <aside class="one-fourth column">
+            {% include 'components/_nav_settings.html' %}
+        </aside>
+        <div class="three-fourths column">
+            <div class="Box">
+                <div class="Box-header">
+                    <small>Изменение логина</small>
+                </div>
+                <div class="Box-row">
+                    <form action="{{ url_for('user.changeLoginForm_req') }}" method="POST">
+                        {{ data.form.csrf_token }}
+                        <p class="note">Login не должен быть меньше 5, больше 20 символов,
+                            также имена пользователей должны иметь только числа,<br> 
+                            точки или символы подчеркивания, но не должны начинаться с точки или цифр
+                            или нижнего подчёркивания.
+                        </p>
+                        {{ render_field(data.form.name, class="form-control") }}
+                        <br><hr>
+                        <button class="btn btn-sm" type="submit">Изменить логин</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

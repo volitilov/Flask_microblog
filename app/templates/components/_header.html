@@ -25,10 +25,11 @@
 							<a href="{{ url_for('post.posts_page') }}">Публикации</a>
 						</span>
 					</li>
+					
 					{% if current_user.is_authenticated %}
 						<li>
 							<span class="tooltipped tooltipped-s" aria-label="Перейти на страницу с уведомлениями">
-								<a href="{{ url_for('notice.notice_page', username=current_user.name) }}">
+								<a href="{{ url_for('notice.notice_page') }}">
 									<span><i class="material-icons">notifications_none</i></span>
 									<span class="Counter">{{ current_user.notice.count() }}</span>
 								</a>
@@ -50,13 +51,13 @@
 							<ul class="Popover right-0 left-0 dropdown-content">
 								<ul class="menu Popover-message Box box-shadow-large">
 									<li class="menu-item"><a href="{{ url_for('user.profile_page', username=current_user.name) }}">Профиль</a></li>
-									<li class="menu-item"><a href="{{ url_for('user.editProfile_page', username=current_user.name) }}">Настройки</a></li>
-									<li class="menu-item"><a href="{{ url_for('auth.logout_request', username=current_user.name) }}">Выйти</a></li>
+									<li class="menu-item"><a href="{{ url_for('user.editProfile_page') }}">Настройки</a></li>
+									<li class="menu-item"><a href="{{ url_for('auth.logout_request') }}">Выйти</a></li>
 									<li class="menu-item"><a href="{{ url_for('user.adminDashboard_page', username=current_user.name) }}">Админка</a></li>
-									{% if current_user.is_moderator() %}
+									{% if current_user.is_moderator %}
 										<li class="menu-item"><a href="{{ url_for('moderator.dashboard_page') }}">Мод. панель</a></li>
 									{% endif %}
-									{% if current_user.is_admin() %}
+									{% if current_user.is_admin %}
 										<li class="menu-item"><a href="{{ url_for('admin.dashboard_page',) }}">Админ. панель</a></li>
 									{% endif %}
 								</ul>
@@ -66,6 +67,13 @@
 					{% else %}
 						<li><a href="{{ url_for('auth.login_page') }}">Войти</a></li>
 					{% endif %}
+					<li class="add">
+						<span class="tooltipped tooltipped-s" aria-label="Написать и опубликовать свой пост">							
+							<a class="btn btn-block btn-primary circle" role="btn" href="{{ url_for('post.addPost_page') }}">
+								<i class="material-icons">add</i>
+							</a>
+						</span>
+					</li>
 				</nav>
 			</div>
 		</div>

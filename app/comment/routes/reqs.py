@@ -25,16 +25,15 @@ from .. import (
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@comment.route(rule='/<username>/comments/<int:comment_id>...del')
+@comment.route(rule='/comments/<int:comment_id>...del')
 @login_required
-def delComment_request(username, comment_id):
+def delComment_request(comment_id):
 	comment = Comment.query.get_or_404(comment_id)
 
-	if current_user == comment.author:
-		db.session.delete(comment)
-		db.session.commit()
-		flash(message='Ваш комментарий успешно удалён.', category='success')
-	else:
-		flash(category='warn', 
-			message='У вас не достаточно прав для удаления данного контента')
+	if current_user != comment.author:
+		flash(category='warn', message='У вас не достаточно прав для удаления данного контента')
+	
+	db.session.delete(comment)
+	db.session.commit()
+	flash(message='Ваш комментарий успешно удалён.', category='success')
 	return redirect(url_for('comment.comments_page', username=comment.author.name))

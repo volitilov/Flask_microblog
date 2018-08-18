@@ -116,8 +116,8 @@ class UserModelTestCash(unittest.TestCase):
         no_admin = User(name='no_admin', email='ex@mail.ru', password='ewq')
         db.session.add_all([admin, no_admin])
         db.session.commit()
-        self.assertTrue(admin.is_admin())
-        self.assertFalse(no_admin.is_admin())
+        self.assertTrue(admin.is_admin)
+        self.assertFalse(no_admin.is_admin)
     
     def test_timestamps(self):
         u = User(name='test', email='test@mail.ru', password='test')

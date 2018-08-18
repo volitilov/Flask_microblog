@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('user.static', filename='css/edit_account.css') }}" />
+{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+    <section class="columns mt-3 edit-account">
+        <aside class="one-fourth column">
+            {% include 'components/_nav_settings.html' %}
+        </aside>
+        <div class="three-fourths column">
+            <div class="Box">
+                <div class="Box-header">
+                    <small>Настройки аккаунта</small>
+                </div>
+                <div class="Box-row">
+                    <a href="{{ url_for('user.changePassword_page') }}"><h5>Изменить пароль</h5></a>
+                </div>
+                <div class="Box-row">
+                    <a href="{{ url_for('user.changeLogin_page') }}"><h5>Изменить login</h5></a>
+                </div>
+                <div class="Box-row">
+                    <a href="{{ url_for('user.changeEmail_page') }}"><h5>Изменить email</h5></a>
+                </div>
+                <div class="Box-row">
+                    <form method="POST" action="/delete_account" novalidate>
+                        
+                        <p class="note">
+                            После удаления вся ваша активность, кроме публикаций, на данном 
+                            ресурсе будет удалена и у вас не будет <br> возможности востановить свой аккаунт. 
+                        </p>
+                        <button class="btn btn-sm btn-danger" type="submit">Удалить аккаунт</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

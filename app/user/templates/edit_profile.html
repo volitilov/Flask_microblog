@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% from 'macros/_formhelpers.html' import render_field %}
+{% block scripts %}
+	<script src="{{ url_for('static', filename='js/scripts/ajax_form.js') }}"></script>
+{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+    <section class="columns mt-3">     
+        <aside class="one-fourth column">
+            {% include 'components/_nav_settings.html' %}
+        </aside>
+        <div class="three-fourths column">
+            <div class="Box">
+                <div class="Box-header">
+                    <small>Настройки профиля</small>
+                </div>
+                <div class="Box-body">
+                    <form method="POST" enctype="multipart/form-data" action="{{ url_for('user.editProfileForm_req') }}">
+                        {{ data.form.csrf_token }}
+                        {{ render_field(data.form.file_photo) }}            
+                        {{ render_field(data.form.first_name, class="form-control") }}
+                        {{ render_field(data.form.last_name, class="form-control") }}
+                        {{ render_field(data.form.about, cols=50, rows=10, class="form-control") }}
+                        {{ render_field(data.form.location, class="form-control") }}
+                        
+                        <button class="btn btn-sm btn-primary" type="submit">Сохранить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

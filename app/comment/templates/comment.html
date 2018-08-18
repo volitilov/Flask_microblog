@@ -29,7 +29,7 @@
                     {% if current_user == data.comment.author %}
                         <a class="btn btn-sm btn-outline edit-btn" 
                             role="btn" 
-                            href="{{ url_for('comment.editComment_page', username=current_user.name, comment_id=data.comment.id) }}">
+                            href="{{ url_for('comment.editComment_page', comment_id=data.comment.id) }}">
 							Редактировать
 						</a>
 					{% endif %}

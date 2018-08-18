@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% from 'macros/_formhelpers.html' import render_field %}
+{% block scripts %}
+	<script src="{{ url_for('static', filename='js/scripts/ajax_form.js') }}"></script>
+{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+    <section class="columns mt-3 edit-account">
+        <aside class="one-fourth column">
+            {% include 'components/_nav_settings.html' %}
+        </aside>
+        <div class="three-fourths column">
+            <div class="Box">
+                <div class="Box-header">
+                    <small>Изменение логина</small>
+                </div>
+                <div class="Box-row">
+                    <form action="{{ url_for('user.changeEmailForm_req') }}" method="POST">
+                        {{ data.form.csrf_token }}
+                        <p class="note">
+                            Email-адрес не должен быть меньше 5, больше 64 символов
+                        </p>
+                        {{ render_field(data.form.email, class="form-control") }}
+                        <br><hr>
+                        <button class="btn btn-sm" type="submit">Изменить email</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('user.static', filename='css/profile.css') }}">
+{% endblock %}
+{% block scripts %}
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
+    {{ moment.lang('ru') }}
+{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+    <section class="columns mt-3">
+        <aside class="one-fourth column">
+            {% include 'components/_nav_user.html' %}
+        </aside>
+        <div class="three-fourths column">
+            <article class="Box profile">
+                <div class="Box-header">
+                    <small>Профиль пользователя</small>
+                </div>
+                <div class="Box-body">
+                    <span class="Label Label--outline Label--outline-green mb-3"><small>{{ data.user.name }}</small></span>
+                    {% if data.user.first_name or data.user.last_name %}
+                        <h4>{{ data.user.first_name }} {{ data.user.last_name }}</h4>
+                    {% endif %}
+                    <p>
+                        <span class="text-gray">Зарегестрирован на сайте:</span>
+                        <small>{{ data.user.date_registration.strftime('%d.%m.%Y в %H:%M:%S') }}</small>
+                        <br>
+                        {% if data.user.last_visit %}
+                            <span class="text-gray">Последнее посещение:</span>
+                            <small>{{ moment(data.user.last_visit).fromNow() }}</small>
+                        {% endif %}
+                    </p>
+                    <hr>
+                    <p><b>Обо мне:</b></p>
+                    <div class="about">
+                        {% if data.user.about_me_html %}
+                            {{ data.user.about_me_html|safe }}
+                        {% else %}
+                            {{ data.user.about_me|safe }}
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+{% endblock %}

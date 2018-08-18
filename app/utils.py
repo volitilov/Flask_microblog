@@ -5,14 +5,16 @@
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 from random import randint
+from functools import wraps
 
 from flask import (
-	make_response, render_template, request, current_app, url_for
+	make_response, render_template, request, current_app, url_for,
+	redirect, flash
 )
 from sqlalchemy.exc import IntegrityError
 import forgery_py as forgery
 
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 from . import db
 from .models.post import Post
@@ -95,3 +97,42 @@ def check_recaptcha(response, recaptcha_private_key):
 	except Exception as e:
 		print(e)
 		return False
+
+
+
+def flash_errors(form):
+    '''Формирует данные о ошибках в форме'''
+    all_errors = [] 
+    for field, errors in form.errors.items():
+        for error in errors:
+            all_errors.append({'field': field, 'error': error})
+    return all_errors
+
+
+
+def is_moderator(func):
+    '''Обёртка для проверки пользователя на авторизацию и является ли
+    текущий пользователь модератором.'''
+    @wraps(func)
+    @login_required
+    def wrap(*args, **kwargs):
+        if not current_user.is_moderator:
+            flash(category='warn', message='Ты не являешся модератором.')
+            return redirect(url_for('main.home_page'))
+        else:
+            return func(*args, **kwargs)
+    return wrap
+
+
+def is_admin(func):
+    '''Обёртка для проверки пользователя на авторизацию и является ли
+    текущий пользователь администратором.'''
+    @wraps(func)
+    @login_required
+    def wrap(*args, **kwargs):
+        if not current_user.is_admin:
+            flash(category='warn', message='Ты не являешся администратором.')
+            return redirect(url_for('main.home_page'))
+        else:
+            return func(*args, **kwargs)
+    return wrap

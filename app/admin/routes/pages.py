@@ -13,7 +13,7 @@ from .. import (
     admin, 
     
     # utils
-    create_response,
+    create_response, is_admin,
 
     # data
     page_titles
@@ -22,13 +22,9 @@ from .. import (
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 @admin.route('/admin')
-@login_required
+@is_admin
 def dashboard_page():
-    if not current_user.is_admin():
-        flash(category='warn', message='Тебе туда нельзя')
-        return redirect(url_for('main.home_page'))
-    else:
-        return create_response(template='dashboard.html', data={
-            'title_page': page_titles['dashboard_page']
-        })
+    return create_response(template='dashboard.html', data={
+        'title_page': page_titles['dashboard_page']
+    })
 

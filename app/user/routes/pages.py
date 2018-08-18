@@ -8,7 +8,7 @@
 from flask import (
     redirect, request, url_for, flash, session, abort, current_app
 )
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required, fresh_login_required
 
 from .. import (
     # blueprint
@@ -16,6 +16,10 @@ from .. import (
 
     # models
     User, Post, Comment,
+
+    # forms
+    EditProfile_form, ChangeLogin_form, ChangePassword_form,
+    ChangeEmail_form, AddNotice_form,
 
     # utils
     create_response,
@@ -28,6 +32,89 @@ from .. import (
 )
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+@user.route('/admin/comments/<int:id>/...return')
+@login_required
+def adminReturnComment_page(id):
+    '''Генерирует и обрабатывает страницу возврата комментария на доработку'''
+    form = AddNotice_form()
+    comment = Comment.query.get_or_404(id)
+    posts = Post.query.filter_by(state='moderation')
+    comments = []
+    
+    for i in current_user.posts:
+        com = i.comments.filter_by(state='moderation')
+        comments.extend(com)
+
+    return create_response(template='admin/noticeComment_form.html', data={
+        'title_page': page_titles['adminReturnComment_page'],
+        'form': form,
+        'comment': comment,
+        'posts': posts,
+        'comments': comments
+    })
+
+
+
+@user.route(rule='/settings/account/change_email')
+@fresh_login_required
+def changeEmail_page():
+    '''Генерирует и обрабатывает страницу изменения email'''
+    form = ChangeEmail_form()
+    form.email.data = current_user.email
+
+    return create_response(template='change_email.html', data={
+        'page_title': page_titles['changeEmail_page'],
+        'form': form
+    })
+
+
+
+@user.route(rule='/settings/account/change_password')
+@fresh_login_required
+def changePassword_page():
+    '''Генерирует и обрабатывает страницу изменения пароля'''
+    form = ChangePassword_form()
+
+    return create_response(template='change_password.html', data={
+        'page_title': page_titles['changePassword_page'],
+        'form': form
+    })
+
+
+
+@user.route(rule='/settings/accout/change_login')
+@fresh_login_required
+def changeLogin_page():
+    '''Генерирует и обрабатывает страницу изменения логина'''
+    form = ChangeLogin_form()
+    form.name.data = current_user.name
+
+    return create_response(template='change_login.html', data={
+        'page_title': page_titles['changeLogin_page'],
+        'form': form
+    })
+
+
+
+@user.route(rule='/settings/profile')
+@login_required
+def editProfile_page():
+    '''Генерирует и обрабатывает страницу настроек пользователя'''
+    form = EditProfile_form()
+    
+    form.first_name.data = current_user.first_name
+    form.last_name.data = current_user.last_name
+    form.about.data = current_user.about_me
+    form.location.data = current_user.location
+    
+    return create_response(template='edit_profile.html', data={
+        'page_title': page_titles['editProfile_page'],
+        'page': 'edit_profile',
+        'form': form
+    })
+
+
 
 @user.route(rule='/<username>')
 def profile_page(username):
@@ -51,9 +138,9 @@ def profile_page(username):
 
 
 
-@user.route(rule='/<username>/settings/account')
+@user.route(rule='/settings/account')
 @login_required
-def editAccount_page(username):
+def editAccount_page():
     '''Генерирует страницу редактирования аккаунта.'''
     return create_response(template='edit_account.html', data={
         'page_title': page_titles['editAccount_page'],
@@ -150,6 +237,10 @@ def followedBy_page(username):
 @login_required
 def adminDashboard_page(username):
     '''Генерирует главную страницу администрирования пользователя'''
+    if username != current_user.name:
+        flash(category='warn', message='Вы не являетесь администратором данного аккаунта.')
+        return redirect(url_for('user.adminDashboard_page', username=current_user.name))
+
     comments = []
     for i in current_user.posts:
         com = i.comments.filter_by(state='moderation')
@@ -171,6 +262,10 @@ def adminDashboard_page(username):
 def adminComments_page(username):
     '''Генерирует страницу администрирования комментариев к постам текущего
     пользователя'''
+    if username != current_user.name:
+        flash(category='warn', message='Вы не являетесь администратором данного аккаунта.')
+        return redirect(url_for('user.adminComments_page', username=current_user.name))
+
     comments = []
     for i in current_user.posts:
         com = i.comments.filter_by(state='moderation')
@@ -192,6 +287,10 @@ def adminComments_page(username):
 def adminComment_page(username, id):
     '''Генерирует страницу модерирования комментария к посту текущего
     пользователя'''
+    if username != current_user.name:
+        flash(category='warn', message='Вы не являетесь администратором данного аккаунта.')
+        return redirect(url_for('user.adminComments_page', username=current_user.name))
+    
     posts = Post.query.filter_by(state='moderation')
     comment = Comment.query.get_or_404(id)
     comments = []

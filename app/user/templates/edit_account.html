@@ -16,13 +16,13 @@
                     <small>Настройки аккаунта</small>
                 </div>
                 <div class="Box-row">
-                    <a href="{{ url_for('user.changePassword_page', username=current_user.name) }}"><h5>Изменить пароль</h5></a>
+                    <a href="{{ url_for('user.changePassword_page') }}"><h5>Изменить пароль</h5></a>
                 </div>
                 <div class="Box-row">
-                    <a href="{{ url_for('user.changeLogin_page', username=current_user.name) }}"><h5>Изменить login</h5></a>
+                    <a href="{{ url_for('user.changeLogin_page') }}"><h5>Изменить login</h5></a>
                 </div>
                 <div class="Box-row">
-                    <a href="{{ url_for('user.changeEmail_page', username=current_user.name) }}"><h5>Изменить email</h5></a>
+                    <a href="{{ url_for('user.changeEmail_page') }}"><h5>Изменить email</h5></a>
                 </div>
                 <div class="Box-row">
                     <form method="POST" action="/delete_account" novalidate>

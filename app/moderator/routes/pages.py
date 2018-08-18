@@ -69,3 +69,21 @@ def post_page(id):
         'tags': tags
     })
 
+
+
+@moderator.route('/moderator/posts/<int:id>...return')
+@is_moderator
+def returnPost_page(id):
+    '''Обрабатывает запросы на отправку уведомлений пользователям о том, 
+    что их публикации необходимо доработать.'''
+    data = get_data()
+    form = AddNotice_form()
+    post = Post.query.get_or_404(id)
+
+    return create_response(template='mod_noticePost_form.html', data={
+        'title_page': page_titles['returnPost_page'],
+        'form': form,
+        'post': post,
+        'comments': data['comments'],
+        'posts': data['posts']
+    })

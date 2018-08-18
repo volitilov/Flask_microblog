@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% from 'macros/_formhelpers.html' import render_field %}
+{% block scripts %}
+	<script src="{{ url_for('static', filename='js/scripts/ajax_form.js') }}"></script>
+{% endblock %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
@@ -17,7 +20,7 @@
 				<p>Пост: <a href="{{ url_for('post.post_page', id=data.post.id) }}">{{ data.post.title }}</a></p>
 				<p>Автор: <a href="{{ url_for('user.profile_page', username=data.post.author.name) }}">{{ data.post.author.name }}</a></p>
 				<hr>
-                <form method="POST">
+                <form action="{{ url_for('moderator.returnPostForm_req', id=data.post.id) }}" method="POST">
                     {{ data.form.csrf_token }}
                     {{ render_field(data.form.body, rows=10, cols=60, class="form-control") }}
 					<button class="btn btn-sm btn-primary" type="submit">Отправить</button>

@@ -14,7 +14,7 @@ from ..models.post_rating import Post_rating
 from .. import db
 
 from .forms import AddPost_form, EditPost_form
-from ..utils import create_response
+from ..utils import create_response, flash_errors
 from .data import get_posts, page_titles
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

@@ -5,9 +5,10 @@
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, ValidationError, HiddenField, IntegerField
+from wtforms import (
+    StringField, ValidationError, HiddenField, IntegerField, 
+    TextAreaField)
 from wtforms.validators import DataRequired, Length, Regexp
-from flask_pagedown.fields import PageDownField
 
 from ..models.post import Post
 
@@ -16,13 +17,16 @@ from ..models.post import Post
 class Post_form(FlaskForm):
     '''Форма добавления поста.'''
     id = IntegerField()
-    title = StringField(label='Загаловок поста', validators=[DataRequired()])
-    contents = PageDownField(label='Оглавление поста', validators=[DataRequired()])
-    text = PageDownField(label='Текст поста', validators=[DataRequired()])
+    title = StringField(label='Загаловок поста', validators=[
+        Length(min=10, max=200, message='Заглавие не может быть меньше 10, больше 200 символов.')])
+    contents = TextAreaField(label='Оглавление поста', validators=[
+        Length(min=10, max=1000, message='Оглавление не может быть меньше 10, больше 1000 символов.')])
+    text = TextAreaField(label='Текст поста', validators=[
+        Length(min=200, max=20000, message='Пост не может быть меньше 200, больше 20000 символов.')])
     tags = StringField(label='Теги', 
         validators=[
             DataRequired(message='Теги указывать обязательно'), 
-            Length(min=1, max=24, message='Название тегов не должно превышать 24 символов'),
+            Length(max=100, message='Сумма названий тегов не должна превышать 100 символов'),
             Regexp(regex='^[A-Za-z][A-Za-z0-9,\s]*$', 
                 message='Имена тегов должны иметь только буквы и числа')])
 
@@ -30,7 +34,6 @@ class Post_form(FlaskForm):
 
 class AddPost_form(Post_form):
     def validate_title(self, title):
-        print(self.id)
         if Post.query.filter_by(title=title.data).first():
             raise ValidationError(message='Данное название уже занято.')
 

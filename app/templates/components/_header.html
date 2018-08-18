@@ -54,10 +54,10 @@
 									<li class="menu-item"><a href="{{ url_for('user.editProfile_page', username=current_user.name) }}">Настройки</a></li>
 									<li class="menu-item"><a href="{{ url_for('auth.logout_request', username=current_user.name) }}">Выйти</a></li>
 									<li class="menu-item"><a href="{{ url_for('user.adminDashboard_page', username=current_user.name) }}">Админка</a></li>
-									{% if current_user.is_moderator() %}
+									{% if current_user.is_moderator %}
 										<li class="menu-item"><a href="{{ url_for('moderator.dashboard_page') }}">Мод. панель</a></li>
 									{% endif %}
-									{% if current_user.is_admin() %}
+									{% if current_user.is_admin %}
 										<li class="menu-item"><a href="{{ url_for('admin.dashboard_page',) }}">Админ. панель</a></li>
 									{% endif %}
 								</ul>

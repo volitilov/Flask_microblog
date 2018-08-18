@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% from 'macros/_formhelpers.html' import render_field %}
 {% block style %}{% endblock %}
-{% block scripts %}{% endblock %}
-
-
+{% block scripts %}
+	<script src="{{ url_for('static', filename='js/scripts/ajax_form.js') }}"></script>
+{% endblock %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
@@ -18,7 +18,7 @@
 				<small>Редактирование поста.</small>
 			</div>
 			<div class="Box-body">
-				<form method="POST">
+				<form action="{{ url_for('post.editPostForm_req', id=data.post.id) }}" method="POST">
 					{{ data.form.csrf_token }}
 					{{ data.form.id(type="hidden", value=data.post.id) }}
 					{{ render_field(data.form.title, value=data.post.title, class="form-control") }}

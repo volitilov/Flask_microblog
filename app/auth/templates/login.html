@@ -3,6 +3,9 @@
 {% block style %}
 	<link rel="stylesheet" href="{{ url_for('auth.static', filename='css/login.css') }}" />
 {% endblock %}
+{% block scripts %}
+	<script src="{{ url_for('static', filename='js/scripts/ajax_form.js') }}"></script>
+{% endblock %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
@@ -12,7 +15,7 @@
 			<small>Форма входа</small>
 		</div>
 		<div class="Box-body">
-			<form method="POST">
+			<form action="{{ url_for('auth.loginForm_req') }}" method="POST">
 				{{ data.form.csrf_token }}
 				{{ render_field(data.form.email, class="form-control", autofocus=true) }}
 				{{ render_field(data.form.password, class="form-control") }}
@@ -25,6 +28,7 @@
 						Это позволит вам не входить каждый раз после закрытия сайта!
 					</p>
 				</div>
+				<hr>
 				<button class="btn btn-primary" type="submit">Войти на сайт</button>
 			</form>
 		</div>

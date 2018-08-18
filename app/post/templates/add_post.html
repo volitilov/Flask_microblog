@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% from 'macros/_formhelpers.html' import render_field %}
+{% block scripts %}
+	<script src="{{ url_for('static', filename='js/scripts/ajax_form.js') }}"></script>
+{% endblock %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
@@ -14,7 +17,7 @@
 				<small>Форма добавления постов</small>
 			</div>
 			<div class="Box-body">
-				<form method="POST">
+				<form action="{{ url_for('post.addPostForm_req') }}" method="POST">
 					{{ data.form.csrf_token }}
 					{{ render_field(data.form.title, class="form-control") }}
 					{{ render_field(data.form.contents, rows=10, cols=60, class="form-control") }}

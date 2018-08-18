@@ -14,7 +14,7 @@ from ..models.comment import Comment
 from .. import db
 
 from .forms import AddNotice_form
-from ..utils import create_response
+from ..utils import create_response, flash_errors, is_admin
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

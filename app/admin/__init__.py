@@ -7,7 +7,7 @@
 from flask import Blueprint
 
 from .data import page_titles
-from ..utils import create_response
+from ..utils import create_response, is_admin
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

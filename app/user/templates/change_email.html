@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% from 'macros/_formhelpers.html' import render_field %}
+{% block scripts %}
+	<script src="{{ url_for('static', filename='js/scripts/ajax_form.js') }}"></script>
+{% endblock %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
@@ -14,12 +17,12 @@
                     <small>Изменение логина</small>
                 </div>
                 <div class="Box-row">
-                    <form method="POST">
+                    <form action="{{ url_for('user.changeEmailForm_req') }}" method="POST">
                         {{ data.form.csrf_token }}
                         <p class="note">
                             Email-адрес не должен быть меньше 5, больше 64 символов
                         </p>
-                        {{ render_field(data.form.email, value=current_user.email, class="form-control") }}
+                        {{ render_field(data.form.email, class="form-control") }}
                         <br><hr>
                         <button class="btn btn-sm" type="submit">Изменить email</button>
                     </form>

@@ -1,16 +1,17 @@
 // close_flash.js
 
-//
+// Применяется делегированная обработка события нажатия по закрытию
+// flash-сообщений.
 
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-var closeFlash_btns = document.querySelectorAll('.closeFlash_btn');
+var j = jQuery.noConflict();
 
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-for (var i=0; i < closeFlash_btns.length; i++) {
-    closeFlash_btns[i].addEventListener('click', function(event) {
-        target = event.target || window.event.target;
+j(function() {
+    j('.main').on('click', '.closeFlash_btn', function(e) {
+        target = e.target || window.e.target;
         target.parentNode.style.display = 'none';
-    });
-}
+    })
+})

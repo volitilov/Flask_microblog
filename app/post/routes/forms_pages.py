@@ -1,10 +1,10 @@
 # post/routes/forms_pages.py
 
-# Обрабатывает страницы с формами
+# Обрабатывает запросы от форм
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import flash, current_app, url_for, redirect
+from flask import flash, current_app, url_for, redirect, jsonify
 from flask_login import current_user, login_required
 
 from .. import (
@@ -12,7 +12,7 @@ from .. import (
     post,
 
     # utils
-    create_response,
+    create_response, flash_errors,
 
     # forms
     AddPost_form, EditPost_form,
@@ -21,22 +21,18 @@ from .. import (
     Post, Tag, Rel_tag,
 
     # database
-    db,
-
-    # data
-    get_posts, page_titles
+    db
 )
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@post.route(rule='/posts/...add', methods=['GET', 'POST'])
+@post.route(rule='/posts/...add', methods=['POST'])
 @login_required
-def addPost_page():
-    '''Генерирует страницу с формай создания постов.'''
-    data = get_posts()
+def addPostForm_req():
+    '''Обрабатывает отправленные данные формой создания постов.'''
     form = AddPost_form()
 
-    if form.validate_on_submit():
+    if form.validate():
         title = form.title.data
         contents = form.contents.data
         text = form.text.data
@@ -66,26 +62,24 @@ def addPost_page():
         db.session.commit()
 
         flash(message='Пост отправлен на модерацию')
-        return redirect(url_for(endpoint='main.home_page'))
+        return jsonify({'next_url': url_for(endpoint='main.home_page')})
 
-    return create_response(template='add_post.html', data={
-        'page_title': page_titles['addPost_page'],
-        'form': form,
-        'all_posts': data['all_posts'],
-        'followed_posts': data['followed_posts']
-    })
+    return jsonify({'errors': flash_errors(form)})
 
 
 
-@post.route(rule='/posts/<int:id>/...edit', methods=['GET', 'POST'])
+@post.route(rule='/posts/<int:id>/...edit', methods=['POST'])
 @login_required
-def editPost_page(id):
-    '''Генерирует страницу редактирования поста.'''
-    data = get_posts()
+def editPostForm_req(id):
+    '''Обрабатывает отправленные данные формой редактирования 
+    поста.'''
     form = EditPost_form()
     post = Post.query.get_or_404(id)
 
-    if form.validate_on_submit():
+    if post.state == 'moderation':
+        return redirect(url_for('post.post_page', id=post.id))
+
+    if form.validate():
         post.tags.delete()
         post.title = form.title.data
         post.text = form.text.data
@@ -114,20 +108,6 @@ def editPost_page(id):
         db.session.commit()
 
         flash(message='Пост отправлен на модерацию.')
-        return redirect(url_for('post.editPost_page', id=post.id))
+        return jsonify({'next_url': url_for('post.userPosts_page', username=current_user.name)})
     
-    form.text.data = post.text
-    form.contents.data = post.table_of_contents
-
-    tags = []
-    for rel_tag in post.tags.all():
-        tags.append(rel_tag.tag.name)
-    form.tags.data = ', '.join(tags)
-
-    return create_response(template='edit_post.html', data={
-        'page_title': page_titles['editPost_page'],
-        'form': form,
-        'post': post,
-        'all_posts': data['all_posts'],
-        'followed_posts': data['followed_posts']
-    })
+    return jsonify({'errors': flash_errors(form)})

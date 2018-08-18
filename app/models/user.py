@@ -208,14 +208,16 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         return True
 
-
+    
+    @property
     def is_admin(self):
         '''Проверяет является ли текущий пользователь администратором.'''
         if self.email == current_app.config['APP_ADMIN']:
             return True
         return False
     
-
+    
+    @property
     def is_moderator(self):
         '''Проверяет является ли текущий пользователь модератором.'''
         if self.email == current_app.config['APP_MODERATOR']:

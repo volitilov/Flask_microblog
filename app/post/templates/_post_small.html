@@ -2,12 +2,12 @@
     <div class="Box-header">
         {% if post.author.photo_url %}
             <a class="user-avatar" href="{{ url_for('user.profile_page', username=post.author.name) }}">
-                <span><img width="33px" src="{{ url_for('uploads', filename=post.author.photo_url) }}" alt="Аватар"></span>
+                <span><img src="{{ url_for('uploads', filename=post.author.photo_url) }}" alt="Аватар"></span>
                 <span>{{ post.author.name }}</span>
             </a>
         {% else %}
             <a class="user-avatar" href="{{ url_for('user.profile_page', username=post.author.name) }}">
-                <span><img width="33px" src="{{ post.author.gravatar(size=50) }}" alt="Аватар"></span>
+                <span><img src="{{ post.author.gravatar(size=50) }}" alt="Аватар"></span>
                 <span>{{ post.author.name }}</span>
             </a>
         {% endif %}

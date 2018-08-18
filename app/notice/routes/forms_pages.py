@@ -1,10 +1,10 @@
 # notice/routes/forms_pages.py
 
-# Обрабатывает страницы с формами
+# Обрабатывает запросы от форм
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import flash, redirect, url_for
+from flask import flash, redirect, url_for, jsonify
 from flask_login import login_required, current_user
 
 from .. import (
@@ -21,17 +21,18 @@ from .. import (
     db,
 
     # utils
-    create_response
+    flash_errors, is_admin
 )
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@notice.route('/<username>/notice/add', methods=['GET', 'POST'])
-@login_required
-def addNotice_page(username):
+@notice.route('/<username>/notice/add', methods=['POST'])
+@is_admin
+def addNoticeForm_req(username):
+    '''Обрабатывает форму добавления уведомлений'''
     form = AddNotice_form()
 
-    if form.validate_on_submit():
+    if form.validate():
         body = form.body.data
 
         user_role = Role.query.filter_by(name='Admin').first()
@@ -46,9 +47,8 @@ def addNotice_page(username):
         db.session.commit()
 
         flash(message='Ваше уведомление отправленно', category='success')
-        return redirect(url_for('notice.addNotice_page', username=current_user.name))
-
-    return create_response(template='add.html', data={
-        'page_title': 'Страница создания уведомления',
-        'form': form,
-    })
+        return jsonify({
+            'next_url': url_for('notice.addNotice_page', username=current_user.name)
+        }) 
+    
+    return jsonify({'errors': flash_errors(form)})

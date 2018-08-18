@@ -1,10 +1,10 @@
 # auth/routes/forms_pages.py
 
-# Обрабатывает страницы с формами
+# Обрабатывает запросы от форм
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import redirect, url_for, flash, request, current_app
+from flask import redirect, url_for, flash, request, current_app, jsonify
 from flask_login import login_user, login_required, current_user
 
 from .. import (
@@ -12,8 +12,8 @@ from .. import (
     auth,
 
     # forms
-    Login_form, Registration_form, PasswordResetRequest_form, 
-    PasswordReset_form,
+    Login_form, Registration_form, PasswordReset_form, 
+    PasswordResetRequest_form,
 
     # models 
     User,
@@ -25,49 +25,46 @@ from .. import (
     send_email,
 
     # utils
-    create_response,
-
-    # data
-    page_titles
+    flash_errors
 )
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@auth.route(rule='/login', methods=['GET', 'POST'])
-def login_page():
-    '''Генерирует страницу авторизации'''
+@auth.route(rule='/login_form_request', methods=['POST'])
+def loginForm_req():
+    '''Обрабатывает запрос на авторизацию'''
     form = Login_form()
 
-    if form.validate_on_submit():
+    if form.validate():
         email = form.email.data
         password = form.password.data
         remember_me = form.remember_me.data
 
         user = User.query.filter_by(email=email).first()
-        if user is not None and user.verify_password(password):
+        if user.verify_password(password):
             login_user(user, remember_me)
             next = request.cookies.get('next')
             if next is None:
                 next = url_for('main.home_page')
             flash(category='success', message='Вы успешно авторизовались')
-            return redirect(next)
+            return jsonify({'next_url': next})
+        else:
+            return jsonify({
+                'errors': flash_errors(form),
+                'flash': {'category': 'error', 'message': 'Пароль не подходит к данному email'}
+            })
 
-        flash(message='Неправильное имя пользователя или пароль.', category='error')
-
-    return create_response(template='login.html', data={
-        'form': form,
-        'page_title': page_titles['login_page']
-    })
+    return jsonify({'errors': flash_errors(form)})
 
 
 
-@auth.route(rule='/register', methods=['GET', 'POST'])
-def registration_page():
+@auth.route(rule='/registration_form_request', methods=['POST'])
+def registrationForm_req():
     '''Генерирует страницу регистрации'''
     form = Registration_form()
-    recaptcha_private_key = current_app.config['RECAPTCHA_PRIVATE_KEY']
+    # recaptcha_private_key = current_app.config['RECAPTCHA_PRIVATE_KEY']
 
-    if form.validate_on_submit():
+    if form.validate():
         # response = request.form.get('g-recaptcha-response')
         # if check_recaptcha(response, recaptcha_private_key):
         username = form.username.data
@@ -83,41 +80,53 @@ def registration_page():
             user=user, token=token)
         flash('Письмо для подтверждения регистрации отправленно, на почтовый ящик')
 
-        return redirect(url_for('auth.login_page'))
-    
-    return create_response(template='registr.html', data={
-        'form': form,
-        'page_title': page_titles['registration_page']
-    })
+        return jsonify({
+            'next_url': url_for('auth.login_page')
+        })
+
+    return jsonify({'errors': flash_errors(form)})
 
 
 
-@auth.route(rule='/reset_password')
-def resetPassword_page():
-    '''Генерирует страницу запроса для сброса пароля'''
-    form = PasswordResetRequest_form()
-    return create_response(template='reset_password_request.html', data={
-        'page_title': page_titles['resetPassword_page'],
-        'form': form
-    })
-
-
-
-@auth.route(rule='/reset/<token>', methods=['GET', 'POST'])
-def passwordReset_page(token):
+@auth.route(rule='/password_reset/<token>', methods=['POST'])
+def passwordResetForm_req(token):
     '''Обрабатывает запрос на изменения пароля'''
     form = PasswordReset_form()
 
     if not current_user.is_anonymous:
         return redirect(url_for('main.home_page'))
-    if form.validate_on_submit():
+    if form.validate():
         if User.reset_password(token, form.password.data):
             db.session.commit()
             flash('Ваш пароль успешно изменён.')
-            return redirect(url_for('auth.login_page'))
+            return jsonify({'next_url': url_for('auth.login_page')})
         else:
-            return redirect(url_for('main.home_page'))
-    return create_response(template='reset_password.html', data={
-        'page_title': page_titles['passwordReset_page'],
-        'form': form
-    })
+            return jsonify({
+                'flash': {'category': 'error', 'message': 'Токен не действителен, попробуйте снова.'}
+            })
+    return jsonify({'errors': flash_errors(form)})
+
+
+
+@auth.route(rule='/...reset_password', methods=['POST'])
+def resetPasswordForm_req():
+    '''Генерирует страницу запроса для сброса пароля'''
+    form = PasswordResetRequest_form()
+
+    if not current_user.is_anonymous:
+        return redirect(url_for('main.home_page'))
+    if form.validate():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            token = user.generate_resetPassword_token()
+            send_email(user.email, 'Сброс пароля', 'mail/auth/reset_password/reset', 
+            user=user, token=token, next=request.args.get('next'))
+            flash('Письмо для сброса пароля было отправленно вам на почтовый ящик.')
+            return jsonify({'next_url': url_for('auth.login_page')})
+        else:
+            return jsonify({
+                'flash': {'category': 'error', 'message': 'Данный email не зарегестрирован'}
+            })
+
+    return jsonify({'errors': flash_errors(form)})
+

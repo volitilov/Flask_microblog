@@ -15,6 +15,9 @@ from .. import (
     # models
     Notice, Post, Comment,
 
+    # forms
+    AddNotice_form,
+
     # utils
     create_response
 )
@@ -50,3 +53,14 @@ def notice_page(username):
         'notice_per_page': count_items
     })
 
+
+
+@notice.route('/<username>/notice/add')
+@login_required
+def addNotice_page(username):
+    form = AddNotice_form()
+
+    return create_response(template='add_notice.html', data={
+        'page_title': 'Страница создания уведомления',
+        'form': form,
+    })

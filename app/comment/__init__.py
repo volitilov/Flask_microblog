@@ -13,7 +13,7 @@ from ..models.notice import Notice
 from ..models.user_settings import UserSettings
 from .. import db
 
-from ..utils import create_response
+from ..utils import create_response, flash_errors
 from .data import page_titles, get_data
 from .forms import AddComment_form
 

@@ -4,7 +4,7 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import flash, current_app, url_for, redirect, jsonify
+from flask import flash, current_app, url_for, redirect, jsonify, abort
 from flask_login import current_user, login_required
 
 from .. import (
@@ -77,8 +77,7 @@ def editPostForm_req(id):
     post = Post.query.get_or_404(id)
 
     if current_user != post.author:
-        flash(category='warn', message='Вы не являетесь автором публикации.')
-        return redirect(url_for('post.posts_page'))
+        abort(403)
 
     if post.state == 'moderation':
         return redirect(url_for('post.post_page', id=post.id))

@@ -5,7 +5,7 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import redirect, url_for, flash
+from flask import redirect, url_for, flash, abort
 from flask_login import current_user, login_required
 
 from .. import (
@@ -27,7 +27,7 @@ def deletePost_request(id):
 	post = Post.query.get(id)
 	
 	if current_user != post.author:
-		flash(category='warn', message='У вас недостаточно прав на удаление')
+		abort(403)
 
 	db.session.delete(post)
 	db.session.commit()

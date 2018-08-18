@@ -5,8 +5,7 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import redirect, request, url_for, flash
-
+from flask import redirect, request, url_for, flash, abort
 from flask_login import current_user, login_required
 
 from .. import (
@@ -31,7 +30,7 @@ def delComment_request(comment_id):
 	comment = Comment.query.get_or_404(comment_id)
 
 	if current_user != comment.author:
-		flash(category='warn', message='У вас не достаточно прав для удаления данного контента')
+		abort(403)
 	
 	db.session.delete(comment)
 	db.session.commit()

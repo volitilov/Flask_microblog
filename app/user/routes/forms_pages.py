@@ -6,7 +6,8 @@
 
 import os
 from flask import (
-    redirect, request, url_for, flash, session, current_app, jsonify
+    redirect, request, url_for, flash, session, current_app, jsonify,
+    abort
 )
 from werkzeug.utils import secure_filename
 from flask_login import current_user, login_required, fresh_login_required
@@ -181,8 +182,7 @@ def adminReturnCommentForm_req(username, id):
     comment = Comment.query.get_or_404(id)
 
     if username != current_user.name:
-        flash(category='warn', message='Вы не являетесь администратором данного аккаунта.')
-        return redirect(url_for('user.adminDashboard_page', username=current_user.name))
+        abort(403)
 
     if form.validate():
         user_settings = UserSettings.query.filter_by(state='custom', profile=comment.author).first()

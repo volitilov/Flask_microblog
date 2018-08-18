@@ -6,7 +6,7 @@
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 from flask import (
-    redirect, request, url_for, flash, session, abort, current_app
+    redirect, request, url_for, flash, session, abort, current_app, abort
 )
 from flask_login import current_user, login_required, fresh_login_required
 
@@ -43,8 +43,7 @@ def adminReturnComment_page(username, id):
     comments = []
 
     if username != current_user.name:
-        flash(category='warn', message='Вы не являетесь администратором данного аккаунта.')
-        return redirect(url_for('user.adminDashboard_page', username=current_user.name))
+        abort(403)
     
     for i in current_user.posts:
         com = i.comments.filter_by(state='moderation')
@@ -204,7 +203,6 @@ def followedBy_page(username):
 
     if user is None:
         abort(404)
-        return redirect(url_for('main.home_page'))
     
     count_items = current_app.config['APP_FOLLOWERS_PER_PAGE']
 
@@ -242,8 +240,7 @@ def followedBy_page(username):
 def adminDashboard_page(username):
     '''Генерирует главную страницу администрирования пользователя'''
     if username != current_user.name:
-        flash(category='warn', message='Вы не являетесь администратором данного аккаунта.')
-        return redirect(url_for('user.adminDashboard_page', username=current_user.name))
+        abort(403)
 
     comments = []
     for i in current_user.posts:
@@ -267,8 +264,7 @@ def adminComments_page(username):
     '''Генерирует страницу администрирования комментариев к постам текущего
     пользователя'''
     if username != current_user.name:
-        flash(category='warn', message='Вы не являетесь администратором данного аккаунта.')
-        return redirect(url_for('user.adminComments_page', username=current_user.name))
+        abort(403)
 
     comments = []
     for i in current_user.posts:
@@ -292,8 +288,7 @@ def adminComment_page(username, id):
     '''Генерирует страницу модерирования комментария к посту текущего
     пользователя'''
     if username != current_user.name:
-        flash(category='warn', message='Вы не являетесь администратором данного аккаунта.')
-        return redirect(url_for('user.adminComments_page', username=current_user.name))
+        abort(403)
     
     posts = Post.query.filter_by(state='moderation')
     comment = Comment.query.get_or_404(id)

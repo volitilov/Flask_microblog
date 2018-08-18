@@ -9,7 +9,7 @@ from functools import wraps
 
 from flask import (
 	make_response, render_template, request, current_app, url_for,
-	redirect, flash
+	redirect, flash, abort
 )
 from sqlalchemy.exc import IntegrityError
 import forgery_py as forgery
@@ -117,10 +117,8 @@ def is_moderator(func):
     @login_required
     def wrap(*args, **kwargs):
         if not current_user.is_moderator:
-            flash(category='warn', message='Ты не являешся модератором.')
-            return redirect(url_for('main.home_page'))
-        else:
-            return func(*args, **kwargs)
+            abort(403)
+        return func(*args, **kwargs)
     return wrap
 
 
@@ -131,8 +129,6 @@ def is_admin(func):
     @login_required
     def wrap(*args, **kwargs):
         if not current_user.is_admin:
-            flash(category='warn', message='Ты не являешся администратором.')
-            return redirect(url_for('main.home_page'))
-        else:
-            return func(*args, **kwargs)
+            abort(403)
+        return func(*args, **kwargs)
     return wrap

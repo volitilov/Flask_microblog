@@ -5,7 +5,7 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import redirect, url_for, flash, request
+from flask import redirect, url_for, flash, request, abort
 from flask_login import current_user, login_required, fresh_login_required
 
 from .. import (
@@ -53,8 +53,7 @@ def adminConfirmComment_request(username, id):
     comment.state = 'public'
 
     if username != current_user.name:
-        flash(category='warn', message='Вы не являетесь администратором данного аккаунта.')
-        return redirect(url_for('user.adminDashboard_page', username=current_user.name))
+       abort(403)
 
     user_settings = UserSettings.query.filter_by(state='custom', profile=comment.author).first()
     if user_settings.comment_moderated:
@@ -83,8 +82,7 @@ def adminDeleteComment_request(username, id):
     comment = Comment.query.get_or_404(id)
 
     if username != current_user.name:
-        flash(category='warn', message='Вы не являетесь администратором данного аккаунта.')
-        return redirect(url_for('user.adminDashboard_page', username=current_user.name))
+        abort(403)
 
     db.session.delete(comment)
     db.session.commit()

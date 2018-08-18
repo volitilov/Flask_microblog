@@ -4,7 +4,7 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import redirect, request, url_for, flash, jsonify
+from flask import redirect, request, url_for, flash, jsonify, abort
 from flask_login import current_user, login_required
 
 from .. import (
@@ -79,7 +79,6 @@ def editCommentForm_req(comment_id):
         else:
             return jsonify({'errors': flash_errors(form)})
 	
-    flash(category='warn', message='У вас не достаточно прав для редактирования данного контента')
-    return redirect(url_for('main.home_page'))
+    abort(403)
 
     

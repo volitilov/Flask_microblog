@@ -5,7 +5,7 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import redirect, request, url_for, flash
+from flask import redirect, request, url_for, flash, abort
 from flask_login import current_user, login_required
 
 from .. import (
@@ -123,5 +123,4 @@ def editComment_page(comment_id):
             'comments': data['comments']
         })
     
-    flash(category='warn', message='У вас не достаточно прав для редактирования данного контента')
-    return redirect(url_for('main.home_page'))
+    abort(403)

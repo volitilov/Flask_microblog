@@ -1,0 +1,48 @@
+.social-buttons li {
+  display: inline-block;
+  vertical-align: middle;
+}
+.social-buttons li svg {
+  width: 30px;
+  height: 30px;
+  fill: #fff;
+}
+.social-buttons li a {
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  margin-right: 3px;
+  border-radius: 3px;
+}
+.social-buttons li .fab {
+  background-image: none;
+}
+.social-buttons li .facebook {
+  background-color: #4267b2;
+}
+.social-buttons li .telegram {
+  background-color: #0088cc;
+}
+.social-buttons li .twitter {
+  background-color: #1da1f2;
+}
+.social-buttons li .vk {
+  background-color: #4a76a8;
+}
+.social-buttons li .pocket {
+  background-color: #f54952;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNCIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDE0IDEyIj4KICA8cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMTMuMzQ0LDAuNzkyIEMxMy4xNzYsMC4zMTIgMTIuNzIsMCAxMi4xOTIsMCBMMTIuMTkyLDAgTDExLjA0LDAgTDEuMiwwIEMwLjY5NiwwIDAuMjQsMC4zMTIgMC4wNzIsMC43OTIgQzAuMDI0LDAuOTM2IDAsMS4wOCAwLDEuMjI0IEwwLDUuMjggTDAuMDQ4LDYuMDk2IEMwLjI0LDcuOTIgMS4yLDkuNTI4IDIuNjY0LDEwLjY1NiBDMi42ODgsMTAuNjggMi43MTIsMTAuNzA0IDIuNzM2LDEwLjcwNCBMMi43NiwxMC43MDQgQzMuNTUyLDExLjI4IDQuNDQsMTEuNjY0IDUuMzc2LDExLjg1NiBDNS44MDgsMTEuOTUyIDYuMjY0LDEyIDYuNzIsMTIgQzcuMTI4LDEyIDcuNTYsMTEuOTUyIDcuOTY4LDExLjg4IEM4LjAxNiwxMS44OCA4LjA2NCwxMS44NTYgOC4xMTIsMTEuODU2IEM4LjEzNiwxMS44NTYgOC4xMzYsMTEuODU2IDguMTYsMTEuODMyIEM5LjA3MiwxMS42NCA5LjkxMiwxMS4yNTYgMTAuNjgsMTAuNzA0IEwxMC43MDQsMTAuNzA0IEMxMC43MjgsMTAuNjggMTAuNzUyLDEwLjY1NiAxMC43NzYsMTAuNjU2IEMxMi4yNCw5LjUyOCAxMy4yLDcuOTQ0IDEzLjM5Miw2LjA5NiBMMTMuNDQsNS4yOCBMMTMuNDQsMS4yIEMxMy40MTYsMS4wOCAxMy4zOTIsMC45MzYgMTMuMzQ0LDAuNzkyIFogTTEwLjUxMiw1LjAxNiBMNy4zNDQsOC4wNCBDNy4xNzYsOC4yMDggNi45MzYsOC4zMDQgNi42OTYsOC4zMDQgQzYuNDU2LDguMzA0IDYuMjQsOC4yMDggNi4wNDgsOC4wNCBMMi45MDQsNS4wMTYgQzIuNTQ0LDQuNjU2IDIuNTIsNC4wOCAyLjg4LDMuNzIgQzMuMjQsMy4zNiAzLjgxNiwzLjMzNiA0LjE3NiwzLjY5NiBMNi42OTYsNi4xMiBMOS4yMTYsMy42OTYgQzkuNTc2LDMuMzM2IDEwLjE3NiwzLjM2IDEwLjUxMiwzLjcyIEMxMC44NzIsNC4wOCAxMC44NzIsNC42NTYgMTAuNTEyLDUuMDE2IFoiLz4KPC9zdmc+Cg==');
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+}
+.social-buttons li .google {
+  margin-top: -5px;
+  background-color: #d34836;
+  padding-top: 5px;
+  padding-left: 5px;
+}
+.social-buttons li .google svg {
+  width: 20px;
+  height: 20px;
+}

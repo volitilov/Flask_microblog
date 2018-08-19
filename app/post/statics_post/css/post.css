@@ -115,4 +115,8 @@
   float: right;
   margin-top: -2px;
 }
+.post .Box-footer .comment-btn {
+  float: right;
+  margin-top: -32px;
+}
 

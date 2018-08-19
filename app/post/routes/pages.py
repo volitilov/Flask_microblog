@@ -5,6 +5,7 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+import urllib
 from flask import request, flash, current_app, redirect, url_for, abort
 from flask_login import current_user, login_required
 
@@ -219,13 +220,14 @@ def post_page(id):
     if post.state == 'public' or post.state == 'develop' \
         and post.author == current_user:
         return create_response(template='post.html', data={
-            'page_title': page_titles['post_page'] + post.title,
+            'page_title': post.title,
             'post': post,
             'comments': post.comments.filter(Comment.state=='public'),
             'rating_bool': rating_bool,
             'tags': tags,
             'all_posts': data['all_posts'],
-            'followed_posts': data['followed_posts']
+            'followed_posts': data['followed_posts'],
+            'base_url': request.base_url
         })
     if post.state == 'moderation':
         state_body = 'Находится на модерации'

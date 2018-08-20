@@ -61,7 +61,7 @@ def addPostForm_req():
         db.session.add_all(rel_tags)
         db.session.commit()
 
-        flash(message='Пост отправлен на модерацию')
+        flash(category='success', message='Пост успешно сохранён.')
         return jsonify({'next_url': url_for(endpoint='main.home_page')})
 
     return jsonify({'errors': flash_errors(form)})

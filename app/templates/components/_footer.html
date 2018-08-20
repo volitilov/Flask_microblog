@@ -17,26 +17,28 @@
                 A eius nam iusto accusamus tempora itaque earum quibusdam, 
                 necessitatibus eveniet nobis magnam cumque.</p>
             </div>
-            <div class="column one-fifth">
-                <div class="user-logo" href="#">
-                    <span>
-                        {% if current_user.photo_url %}
-                            <img class="avatar avatar-small" width="32" height="32" src="{{ url_for('uploads', filename=current_user.photo_url) }}" alt="photo" />
-                        {% else %}
-                            <img class="avatar avatar-small" width="32" height="32" src="{{ current_user.gravatar(size=50) }}" alt="Аватар">
-                        {% endif %}
-                    </span>
-                    <span>
-                        <h4>{{ current_user.name }}</h4>
-                    </span>
+            {% if not current_user.is_anonymous %}
+                <div class="column one-fifth">
+                    <div class="user-logo" href="#">
+                        <span>
+                            {% if current_user.photo_url %}
+                                <img class="avatar avatar-small" width="32" height="32" src="{{ url_for('uploads', filename=current_user.photo_url) }}" alt="photo" />
+                            {% else %}
+                                <img class="avatar avatar-small" width="32" height="32" src="{{ current_user.gravatar(size=50) }}" alt="Аватар">
+                            {% endif %}
+                        </span>
+                        <span>
+                            <h4>{{ current_user.name }}</h4>
+                        </span>
+                    </div>
+                    <ul>
+                        <li><a href="{{ url_for('user.profile_page', username=current_user.name) }}">Профиль</a></li>
+                        <li><a href="{{ url_for('notice.notice_page') }}">Уведомления</a></li>
+                        <li><a href="{{ url_for('user.editProfile_page') }}">Настройки</a></li>
+                        <li><a href="{{ url_for('user.adminDashboard_page', username=current_user.name) }}">Админка</a></li>
+                    </ul>
                 </div>
-                <ul>
-                    <li><a href="{{ url_for('user.profile_page', username=current_user.name) }}">Профиль</a></li>
-                    <li><a href="{{ url_for('notice.notice_page') }}">Уведомления</a></li>
-                    <li><a href="{{ url_for('user.editProfile_page') }}">Настройки</a></li>
-                    <li><a href="{{ url_for('user.adminDashboard_page', username=current_user.name) }}">Админка</a></li>
-                </ul>
-            </div>
+            {% endif %}
             <div class="column one-fifth">
                 <h4>Публикации</h4>
                 <ul>

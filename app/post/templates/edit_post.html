@@ -45,10 +45,10 @@
 						</dl>
 					{% endif %}
 					<br>
-					<button class="btn btn-sm btn-primary" type="submit">Сохранить пост</button>
+					<button class="btn btn-sm btn-primary" type="submit">Опубликовать пост</button>
 					<a href="{{ url_for('post.deletePost_request', id=data.post.id) }}" 
 						class="btn btn-sm btn-danger" role="button">Удалить пост</a>
-					<a href="javascript:history.go(-1)" class="btn btn-sm" role="button">Отмена</a>
+					<a href="javascript:history.go(-1)" class="btn btn-sm" role="button">Назад</a>
 				</form>
 			</div>
 		</div>

@@ -44,8 +44,9 @@
 						</dl>
 					{% endif %}
 					<br>
-					<button class="btn btn-primary" type="submit">Добавить пост</button>
-					<a href="javascript:history.go(-1)" class="btn btn-sm" role="button">Отмена</a>
+					<button class="btn btn-primary" type="submit">Сохранить</button>
+					<a href="{{ url_for('post.sendPost_request', id=data.post.id) }}">Опубликовать</a>
+					<a href="javascript:history.go(-1)" class="btn btn-sm" role="button">Назад</a>
 				</form>
 			</div>
 		</div>

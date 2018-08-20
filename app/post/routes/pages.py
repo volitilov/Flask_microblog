@@ -211,7 +211,7 @@ def post_page(id):
     if current_user.is_anonymous:
         rating_bool = False
     else:
-        if Post_rating.query.filter_by(post=post).filter_by(author=current_user).first():
+        if Post_rating.query.filter_by(post=post, author=current_user).first():
             rating_bool = True
 
         if post.author == current_user:
@@ -251,7 +251,8 @@ def byViewingPosts_page():
     count_items = current_app.config['APP_POSTS_PER_PAGE']
 
     page = request.args.get('page', 1, type=int)
-    pagination = data['all_posts'].paginate(page, 
+    posts = data['all_posts'].order_by(Post.views.desc())
+    pagination = posts.paginate(page, 
         per_page=count_items, error_out=False)
 
     return create_response(template='posts.html', data={
@@ -274,7 +275,8 @@ def byRatingPosts_page():
     count_items = current_app.config['APP_POSTS_PER_PAGE']
 
     page = request.args.get('page', 1, type=int)
-    pagination = data['all_posts'].paginate(page, 
+    posts = data['all_posts'].order_by(Post.rating.desc())
+    pagination = posts.paginate(page, 
         per_page=count_items, error_out=False)
 
     return create_response(template='posts.html', data={

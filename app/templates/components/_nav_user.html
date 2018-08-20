@@ -24,7 +24,7 @@
             <span class="Counter">{{ data.user.followers.count() - 1 }}</span>
         </a>
         <a class="menu-item {% if data.page == 'followed' %}selected{% endif %}" href="{{ url_for('user.followedBy_page', username=data.user.name) }}">
-            Подписан 
+            Подписан на
             <span class="Counter">{{ data.user.followed.count() - 1 }}</span>
         </a>
     </nav>

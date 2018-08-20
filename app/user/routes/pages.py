@@ -126,8 +126,8 @@ def profile_page(username):
     posts = user.posts.filter_by(state='public')
     comments = user.comments.filter_by(state='public')
     
-    if not current_user.is_anonymous:
-        if current_user.name == username:
+    if not current_user.is_anonymous and \
+        current_user.name == username:
             posts = user.posts.filter(Post.state!='moderator')
             comments = user.comments.filter(Comment.state!='moderation')
     

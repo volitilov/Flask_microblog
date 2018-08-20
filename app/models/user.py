@@ -49,11 +49,12 @@ class User(UserMixin, db.Model):
     last_visit = db.Column(db.DateTime, default=datetime.utcnow())
     avatar_hash = db.Column(db.String(32))
     photo_url = db.Column(db.String, nullable=True)
+    rating = db.Column(db.Integer, index=True, default=0)
 
     settings = db.relationship('UserSettings', backref='profile', lazy='dynamic')
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
-    ratings = db.relationship('Post_rating', backref='author', lazy='dynamic')
+    post_ratings = db.relationship('Post_rating', backref='author', lazy='dynamic')
     notice = db.relationship('Notice', backref='author', lazy='dynamic')
     followed = db.relationship('Follow', foreign_keys=[Follow.followed_id],
             backref=db.backref('follower', lazy='joined'),

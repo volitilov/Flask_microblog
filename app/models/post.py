@@ -33,7 +33,7 @@ class Post(SearchableMixin, db.Model):
     t_contents_html = db.Column(db.Text)
     views = db.Column(db.Integer, index=True, default=0)
     rating = db.Column(db.Integer, index=True, default=0)
-    state = db.Column(db.String, default='moderation')
+    state = db.Column(db.String, default='develop')
 
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
     ratings = db.relationship('Post_rating', backref='post', lazy='dynamic')
@@ -92,7 +92,7 @@ class Post(SearchableMixin, db.Model):
 
         def change_url(attrs, new=False):
             p = urlparse(attrs[(None, u'href')])
-            if p.netloc not in ['my-domain.com', 'other-domain.com']:
+            if p.netloc not in ['blacklist.com', 'other-domain.com']:
                 attrs[(None, u'rel')] = u'nofollow'
                 attrs[(None, u'href')] = u'/posts/{}{}'.format(target.id, attrs[(None, u'href')])
             else:

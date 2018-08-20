@@ -22,7 +22,7 @@ class Comment(db.Model):
     body_html = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     disabled = db.Column(db.Boolean)
-    state = db.Column(db.String, default='moderation')
+    state = db.Column(db.String, default='develop')
 
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))

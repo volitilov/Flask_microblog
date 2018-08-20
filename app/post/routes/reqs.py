@@ -21,13 +21,29 @@ from .. import (
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+@post.route(rule='/posts/<int:id>...send')
+@login_required
+def sendPost_request(id):
+	post = Post.query.get_or_404(id)
+	post.state = 'moderation'
+	db.session.add(post)
+	db.session.commit()
+	flash(category='success', message='Пост успешно отправлен на модерацию.')
+	return redirect(url_for('post.posts_page'))
+
+
+
 @post.route(rule='/<int:id>/...del')
 @login_required
 def deletePost_request(id):
-	post = Post.query.get(id)
+	post = Post.query.get_or_404(id)
 	
 	if current_user != post.author:
 		abort(403)
+
+	post_r = Post_rating.query.filter_by(post=post).all()
+	for pr in post_r:
+		db.session.delete(pr)
 
 	db.session.delete(post)
 	db.session.commit()

@@ -88,26 +88,8 @@
 .post .body code {
   border-radius: 3px;
 }
-.post .user-avatar {
-  color: #24292e;
-}
-.post .user-avatar img {
-  border-radius: 50%;
-  width: 25px;
-  height: 25px;
-}
-.post .user-avatar span {
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 5px;
-  font-size: 12px;
-}
-.post .user-avatar span:nth-child(2) {
-  margin-top: -5px;
-}
-.post .user-avatar:hover {
-  text-decoration: none;
-}
+
+
 .post .Box-header .dev {
   color: red;
 }

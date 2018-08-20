@@ -1,7 +1,7 @@
 footer {
   border-top: 1px solid #e1e4e8;
   background-color: #f3f5f8;
-  padding-top: 50px;
+  padding-top: 70px;
 }
 footer ul {
   padding-top: 20px;
@@ -9,8 +9,10 @@ footer ul {
   list-style-type: disc;
 }
 footer .about {
-  margin-right: 20px;
-  margin-top: -4px;
+  margin-right: 40px;
+  margin-top: -24px;
+  padding: 20px;
+  background-color: #f3f5f8;
 }
 footer .logo {
   text-decoration: none;
@@ -30,8 +32,10 @@ footer .user-logo span {
   vertical-align: middle;
 }
 footer .user-logo span img {
-  margin-top: -4px;
+  margin-right: 7px;
   border-radius: 50%;
+  width: 25px;
+  height: 25px;
 }
 footer .footer-bottom {
   background-color: #d1d5da;

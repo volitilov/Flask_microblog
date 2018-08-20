@@ -126,3 +126,32 @@ body {
 #scrollUp {
   display: none;
 }
+
+.user-avatar {
+  height: 25px;
+  color: #24292e;
+  background-color: #f3f5f8;
+  padding: 5px 10px 5px 0;
+  border-radius: 20px 3px 3px 20px;
+  &:hover {
+    background-color: #e1e4e8;
+    text-decoration: none;
+  }
+  img {
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+  }
+  span {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+    font-size: 12px;
+  }
+  span:nth-child(1) {
+    margin-top: 4px;
+  }
+  span:nth-child(2) {
+    margin-top: -2px;
+  }
+}

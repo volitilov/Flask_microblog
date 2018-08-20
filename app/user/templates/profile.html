@@ -21,7 +21,17 @@
                     <small>Профиль пользователя</small>
                 </div>
                 <div class="Box-body">
-                    <span class="Label Label--outline Label--outline-green mb-3"><small>{{ data.user.name }}</small></span>
+                    {% if data.user.photo_url %}
+                        <a class="user-avatar">
+                            <span><img src="{{ url_for('uploads', filename=data.user.photo_url) }}" alt="Аватар"></span>
+                            <span>{{ data.user.name }}</span>
+                        </a>
+                    {% else %}
+                        <a class="user-avatar">
+                            <span><img src="{{ data.user.gravatar(size=50) }}" alt="Аватар"></span>
+                            <span>{{ data.user.name }}</span>
+                        </a>
+                    {% endif %}
                     {% if data.user.first_name or data.user.last_name %}
                         <h4>{{ data.user.first_name }} {{ data.user.last_name }}</h4>
                     {% endif %}
@@ -39,10 +49,14 @@
                     <hr>
                     <p><b>Обо мне:</b></p>
                     <div class="about">
-                        {% if data.user.about_me_html %}
-                            {{ data.user.about_me_html|safe }}
+                        {% if data.user.about %}
+                            {% if data.user.about_me_html %}
+                                {{ data.user.about_me_html|safe }}
+                            {% else %}
+                                {{ data.user.about_me|safe }}
+                            {% endif %}
                         {% else %}
-                            {{ data.user.about_me|safe }}
+                            <p>Пока не могу про себя нечего разказать.</p>
                         {% endif %}
                     </div>
                 </div>

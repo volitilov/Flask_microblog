@@ -45,9 +45,13 @@
 						</dl>
 					{% endif %}
 					<br>
-					<button class="btn btn-sm btn-primary" type="submit">Опубликовать пост</button>
+					<p class="note">Чтобы не потерять внесённые изменения перед публикайией, сохраните их.</p>
+					<hr>
+					<button class="btn btn-sm btn-primary" type="submit">Сохранить</button>
+					<a class="btn btn-sm btn-blue"
+						href="{{ url_for('post.sendModerationPost_request', id=data.post.id) }}">Опубликовать</a>
 					<a href="{{ url_for('post.deletePost_request', id=data.post.id) }}" 
-						class="btn btn-sm btn-danger" role="button">Удалить пост</a>
+						class="btn btn-sm btn-danger" role="button">Удалить</a>
 					<a href="javascript:history.go(-1)" class="btn btn-sm" role="button">Назад</a>
 				</form>
 			</div>

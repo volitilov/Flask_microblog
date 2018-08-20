@@ -17,6 +17,13 @@
 				<small>Форма добавления постов</small>
 			</div>
 			<div class="Box-body">
+				<p class="note">Если вы не разу не публиковали на данном ресурсе 
+					предворительно прочитайте <a href="#">документацию</a>, это 
+					поможет избежать много лишней работы. В частности оглавление 
+					должно соответствовать <a href="#">документации</a>, иначе публикация не пройдёт
+					модерацию.
+				</p>
+				<hr>
 				<form action="{{ url_for('post.addPostForm_req') }}" method="POST">
 					{{ data.form.csrf_token }}
 					{{ render_field(data.form.title, class="form-control") }}
@@ -43,9 +50,8 @@
 							<dd>{{ data.form.tags(class="form-control") }}</dd>
 						</dl>
 					{% endif %}
-					<br>
+					<br><hr>
 					<button class="btn btn-primary" type="submit">Сохранить</button>
-					<a href="{{ url_for('post.sendPost_request', id=data.post.id) }}">Опубликовать</a>
 					<a href="javascript:history.go(-1)" class="btn btn-sm" role="button">Назад</a>
 				</form>
 			</div>

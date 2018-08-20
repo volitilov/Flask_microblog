@@ -26,7 +26,7 @@
                         <h4>{{ data.user.first_name }} {{ data.user.last_name }}</h4>
                     {% endif %}
                     <p>
-                        <span class="text-gray">Зарегестрирован на сайте:</span>
+                        <span class="text-gray">Зарегестрирован:</span>
                         <small>{{ data.user.date_registration.strftime('%d.%m.%Y в %H:%M:%S') }}</small>
                         <br>
                         {% if data.user.last_visit %}
@@ -34,6 +34,8 @@
                             <small>{{ moment(data.user.last_visit).fromNow() }}</small>
                         {% endif %}
                     </p>
+                    <br>
+                    <span class="text-gray">Рейтинг: <b>{{ data.user.rating }}</b></span>
                     <hr>
                     <p><b>Обо мне:</b></p>
                     <div class="about">

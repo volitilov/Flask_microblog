@@ -1,39 +1,67 @@
 <footer>
     <section class="container">
         <div class="columns">
-            <div class="column one-third">
-                <h4>Freelance house</h4>
+            <div class="column one-third about">
+                <a href="/" class="logo">
+					<figure>
+						<span></span>
+						<!-- <img src="{{ url_for('static', filename='img/favicon.svg') }}"> -->
+						<figcaption>
+							<h4>freelance house</h4>
+							<p>Freelance web house.</p>
+						</figcaption>
+					</figure>
+				</a>
                 <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit.
                 Accusantium laboriosam eos eaque laudantium, nam quam saepe. 
                 A eius nam iusto accusamus tempora itaque earum quibusdam, 
                 necessitatibus eveniet nobis magnam cumque.</p>
             </div>
             <div class="column one-fifth">
-                <h4>{{ current_user.name }}</h4>
+                <div class="user-logo" href="#">
+                    <span>
+                        {% if current_user.photo_url %}
+                            <img class="avatar avatar-small" width="32" height="32" src="{{ url_for('uploads', filename=current_user.photo_url) }}" alt="photo" />
+                        {% else %}
+                            <img class="avatar avatar-small" width="32" height="32" src="{{ current_user.gravatar(size=50) }}" alt="Аватар">
+                        {% endif %}
+                    </span>
+                    <span>
+                        <h4>{{ current_user.name }}</h4>
+                    </span>
+                </div>
                 <ul>
-                    <li><a href="#">Профиль</a></li>
-                    <li><a href="#">Уведомления</a></li>
-                    <li><a href="#">Настройки</a></li>
-                    <li><a href="#">Админка</a></li>
+                    <li><a href="{{ url_for('user.profile_page', username=current_user.name) }}">Профиль</a></li>
+                    <li><a href="{{ url_for('notice.notice_page') }}">Уведомления</a></li>
+                    <li><a href="{{ url_for('user.editProfile_page') }}">Настройки</a></li>
+                    <li><a href="{{ url_for('user.adminDashboard_page', username=current_user.name) }}">Админка</a></li>
                 </ul>
             </div>
-            <div class="column one-fourth">
+            <div class="column one-fifth">
                 <h4>Публикации</h4>
                 <ul>
-                    <li><a href="#">Все посты</a></li>
-                    <li><a href="#">По подписке</a></li>
-                    <li><a href="#">По рейтингу</a></li>
-                    <li><a href="#">По кол-ву просмотров</a></li>
+                    <li><a href="{{ url_for('post.posts_page') }}">Все посты</a></li>
+                    <li><a href="{{ url_for('post.followedPosts_page') }}">По подписке</a></li>
+                    <li><a href="{{ url_for('post.byRatingPosts_page') }}">По рейтингу</a></li>
+                    <li><a href="{{ url_for('post.byViewingPosts_page') }}">По кол-ву просмотров</a></li>
+                </ul>
+            </div>
+            <div class="column one-fifth">
+                <h4>Другое</h4>
+                <ul>
+                    <li><a href="#">О сайте</a></li>
+                    <li><a href="#">Служба поддержки</a></li>
                 </ul>
             </div>
         </div>
+        <a id="scrollUp" href="#">
+            <i class="material-icons">eject</i>
+        </a>
     </section>
     <section class="footer-bottom">
         <div class="container">
             <ul>
                 <li>© 2018 Все прова защищены.</li>
-                <li><a href="#">О сайте</a></li>
-                <li><a href="#">Служба поддержки</a></li>
             </ul>
         </div>
     </section>

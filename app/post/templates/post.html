@@ -3,10 +3,12 @@
 {% block style %}
 	<link rel="stylesheet" href="{{ url_for('post.static', filename='css/post.css') }}" />
 	<link rel="stylesheet" href="{{ url_for('comment.static', filename='css/comment.css') }}">
+	<link rel="stylesheet" href="{{ url_for('post.static', filename='css/scroll_up.css') }}" />
 {% endblock %}
 {% block scripts %}
 	<script src="{{ url_for('post.static', filename='js/create_nav.js') }}"></script>
 	<script src="{{ url_for('post.static', filename='js/fixed_nav.js') }}"></script>
+	<script src="{{ url_for('post.static', filename='js/scroll_up.js') }}"></script>
 {% endblock %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->

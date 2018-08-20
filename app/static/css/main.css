@@ -78,3 +78,44 @@ body {
 .flask-moment {
   display: inline-block;
 }
+.logo figure {
+  margin: 0;
+  padding-top: 6px;
+}
+.logo figure span {
+  display: block;
+  background-color: green;
+  border-radius: 4px;
+  width: 27px;
+  height: 27px;
+  position: absolute;
+  margin-top: 8px;
+  color: green;
+  font-weight: bold;
+  font-size: 21px;
+  padding: 0 4px;
+}
+.logo figure img {
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  margin-top: 5px;
+}
+.logo figcaption {
+  margin-left: 37px;
+}
+.logo figcaption h4 {
+  color: green;
+  margin-top: 3px;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.logo figcaption p {
+  color: #24292e;
+  font-size: 12px;
+  margin-top: -5px;
+  padding-top: 0;
+}
+#scrollUp {
+  display: none;
+}

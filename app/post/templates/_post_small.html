@@ -11,7 +11,7 @@
                 <span>{{ post.author.name }}</span>
             </a>
         {% endif %}
-        {% if post.state == 'develop' %} <small class="dev anim-pulse">в разработке</small> {% endif %}
+        {% if post.state == 'develop' %} <small class="dev anim-pulse">&nbsp;&nbsp;в разработке</small> {% endif %}
         <small class="post-views">
             <span><i class="material-icons">visibility</i></span>
             <span class="Counter">{{ post.views }}</span>
@@ -21,20 +21,15 @@
             <span class="Counter">{{ post.rating }}</span>
         </small>
     </div>
-    <div class="Box-body post-body p-3">
-        <small class="post-date">написан: {{ post.data_creation.strftime('%d.%m.%Y') }}</small> 
+    <div class="Box-body post-body">
         <h3><a href="{{ url_for('post.post_page', id=post.id) }}">{{ post.title }}</a></h3>
+        <small class="date">написан: <span>{{ post.data_creation.strftime('%d.%m.%Y') }}</span></small> 
         <hr>
         <div class="body">
             {% if post.t_contents_html %}
                 <h5>Оглавление:</h5>
                 {{ post.t_contents_html|safe }}
             {% endif %}
-            <hr>
-            <span class="hidden-text-expander">
-                <a role="btn" class="ellipsis-expander" 
-                    href="{{ url_for('post.post_page', id=post.id) }}">&hellip;</a>
-            </span>
         </div>
     </div>
 </article>

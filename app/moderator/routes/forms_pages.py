@@ -40,7 +40,7 @@ def returnPostForm_req(id):
         
         if user_settings.post_moderated:
             title = 'Moderator'
-            body = 'Пост: <a href="{}">{}</a> <br>'.format(
+            body = 'Ваш пост: <a href="{}">{}</a> <br>'.format(
                 url_for('post.post_page', id=post.id),
                 post.title)
             body = body + form.body.data

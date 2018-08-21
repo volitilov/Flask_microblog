@@ -12,7 +12,7 @@ j(function() {
     var elem = j('.nav-post ol');
     elem.hide();
         
-    j('.nav-post ol').children().each(function(index, item) {
+    j(elem).children().each(function(index, item) {
         var content = j(item).find('a').text();
         var content_url = j(item).find('a').attr('href');
         var html_elem = `<a class="menu-item" rel="nofollow" href="${content_url}">${content}</a>`;
@@ -21,3 +21,4 @@ j(function() {
     });
 
 })
+

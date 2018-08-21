@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/nav_user.css') }}" />
     <link rel="stylesheet" href="{{ url_for('user.static', filename='css/follow.css') }}">
 {% endblock %}
 {% from 'macros/_pagination.html' import render_pagination %}
@@ -21,7 +22,7 @@
                             <div class="Box-row">
                                 <a class="user-avatar" href="{{ url_for('user.profile_page', username=follow.user.name) }}">
                                     <span><img class="Avatar" src="{{ follow.user.gravatar(size=32) }}"></span>
-                                    <span class="mb-1">{{ follow.user.name }}</span>
+                                    <span>{{ follow.user.name }}</span>
                                 </a>
                                 {% if not current_user.is_anonymous and current_user == data.user %}
                                     {% if data.unfollow_btn %}

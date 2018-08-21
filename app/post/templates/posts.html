@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% from 'macros/_pagination.html' import render_pagination %}
 {% block style %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/components/nav_publications.css') }}" />
 	<link rel="stylesheet" href="{{ url_for('post.static', filename='css/post.css') }}" />
 {% endblock %}
 {% block scripts %}{% endblock %}

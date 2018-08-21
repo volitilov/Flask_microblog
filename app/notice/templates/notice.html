@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% from 'macros/_pagination.html' import render_pagination %}
 {% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/nav_user.css') }}" />
     <link rel="stylesheet" href="{{ url_for('notice.static', filename='css/notice.css') }}">
 {% endblock %}
 {% block scripts %}
@@ -18,13 +19,8 @@
             <ul>
                 {% for notice in data.notice %}
                     <li class="Box my-3" id=notice_{{ notice.id }}>
-                        <div class="Box-header">
-                            <small><i class="material-icons">notifications_none</i></small>
-                            <small>{{ notice.title }}</small>
-                            
-                            <span class="close">&times;</span>
-                        </div>
                         <div class="Box-body">
+                            <span class="close">&times;</span>
                             <small>
                                 когда: {{ notice.timestamp.strftime('%d.%m.%Y') }}
                             </small>

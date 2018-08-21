@@ -7,7 +7,10 @@
         {% endif %}
     </div>
     <nav class="menu">
-        <span class="menu-heading">Информация о пользователе</span>
+        <span class="menu-heading">
+            <span>Информация о пользов...</span>
+            <span><i class="material-icons">arrow_drop_down</i></span>
+        </span>
         <a class="menu-item {% if data.page == 'profile' %}selected{% endif %}" href="{{ url_for('user.profile_page', username=data.user.name) }}">
             Профиль
         </a>

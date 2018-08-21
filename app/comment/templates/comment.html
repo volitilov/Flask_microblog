@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/nav_user.css') }}" />
     <link rel="stylesheet" href="{{ url_for('comment.static', filename='css/comment.css') }}">
 {% endblock %}
 {% block sripts %}{% endblock %}
@@ -35,18 +36,18 @@
 					{% endif %}
                 </div>
                 <div class="Box-body">
-                    <small>
-                        {{ data.comment.timestamp.strftime('%d.%m.%Y') }}
-                        к посту: 
+                    <small class="date">
+                        <span>{{ data.comment.timestamp.strftime('%d.%m.%Y') }}</span>
+                        &nbsp;&nbsp;к посту: 
                         {% if not data.comment.post.id %}
                             удалён
                         {% else %}
                             <a href="{{ url_for('post.post_page', id=data.comment.post.id) }}">{{ data.comment.post.title }}</a>
                         {% endif %}
+                    
                     </small>
-                    <p>
-                        {{ data.comment.body_html|safe }}
-                    </p>
+                    <hr>
+                    {{ data.comment.body_html|safe }}
                 </div>
             </div>
         </div>

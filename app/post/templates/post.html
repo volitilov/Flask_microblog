@@ -1,14 +1,29 @@
 {% extends 'base.html' %}
 {% from 'macros/_formhelpers.html' import render_field %}
 {% block style %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/components/social_buttons.css') }}" />
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_highlight.min.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_atom-one-light.css') }}" />
+	<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_monokai-sublime.css') }}" /> -->
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/components/nav_publications.css') }}" />
+	
 	<link rel="stylesheet" href="{{ url_for('post.static', filename='css/post.css') }}" />
 	<link rel="stylesheet" href="{{ url_for('comment.static', filename='css/comment.css') }}">
 	<link rel="stylesheet" href="{{ url_for('post.static', filename='css/scroll_up.css') }}" />
 {% endblock %}
 {% block scripts %}
+	<script src="{{ url_for('static', filename='js/helpers/code_highlight.min.js') }}"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+
 	<script src="{{ url_for('post.static', filename='js/create_nav.js') }}"></script>
 	<script src="{{ url_for('post.static', filename='js/fixed_nav.js') }}"></script>
 	<script src="{{ url_for('post.static', filename='js/scroll_up.js') }}"></script>
+	<script>
+		// свернуть навигацию по публикациям для удобного чтения
+		j('.nav-publications .menu').children('.menu-item').each(function(index, item) {
+			j(item).toggle(250);
+		});
+	</script>
 {% endblock %}
 
 <!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
@@ -19,7 +34,7 @@
 		   {% include 'components/_nav_publications.html' %}
 		   <div id="sticky">
 				<section class="nav-publications nav-post nav-left">
-					{{ data.post.t_contents_html|safe }}
+					<span style="display:none;">{{ data.post.t_contents_html|safe }}</span>
 					<nav class="menu my-3">
 						<span class="menu-heading">
 							<span>Навигация по посту</span>
@@ -43,7 +58,7 @@
 							<span>{{ data.post.author.name }}</span>
 						</a>
 					{% endif %}
-					{% if data.post.state == 'develop' %} <small class="dev anim-pulse">в разработке</small> {% endif %}
+					{% if data.post.state == 'develop' %} <small class="dev anim-pulse">&nbsp;&nbsp;в разработке</small> {% endif %}
 					
 					{% if current_user == data.post.author %}
 						<a class="btn btn-sm btn-outline ml-3" href="{{ url_for('post.editPost_page', id=data.post.id) }}">
@@ -68,8 +83,8 @@
 					</small>
 				</div>
 				<div class="Box-body post-body">
-					<small class="post-date">написан: {{ data.post.data_creation.strftime('%d.%m.%Y') }}</small>
 					<h3>{{ data.post.title }}</h3>
+					<small class="date">написан: <span>{{ data.post.data_creation.strftime('%d.%m.%Y') }}</span></small>
 					<hr>
 					{% if data.tags %}
 						{% for i in data.tags %}

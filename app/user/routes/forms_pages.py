@@ -55,9 +55,10 @@ def editProfileForm_req():
         if photo:
             filename = secure_filename(photo.filename)
             new_file_url = os.path.join(upload_folder, 'photos', filename)
-            old_file_url = os.path.join(upload_folder, current_user.photo_url)
+            if current_user.photo_url:
+                old_file_url = os.path.join(upload_folder, current_user.photo_url)
+                os.remove(old_file_url)
 
-            os.remove(old_file_url)
             if os.path.isfile(new_file_url):
                 os.remove(new_file_url)
                 

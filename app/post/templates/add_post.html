@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 {% from 'macros/_formhelpers.html' import render_field %}
+{% block style %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/components/nav_publications.css') }}" />
+	<link rel="stylesheet" href="{{ url_for('post.static', filename='css/post.css') }}">
+{% endblock %}
 {% block scripts %}
 	<script src="{{ url_for('static', filename='js/scripts/ajax_form.js') }}"></script>
 {% endblock %}
@@ -18,9 +22,9 @@
 			</div>
 			<div class="Box-body">
 				<p class="note">Если вы не разу не публиковали на данном ресурсе 
-					предворительно прочитайте <a href="#">документацию</a>, это 
+					предворительно прочитайте <a href="/posts/61">документацию</a>, это 
 					поможет избежать много лишней работы. В частности оглавление 
-					должно соответствовать <a href="#">документации</a>, иначе публикация не пройдёт
+					должно соответствовать <a href="/posts/61#3">документации</a>, иначе публикация не пройдёт
 					модерацию.
 				</p>
 				<hr>

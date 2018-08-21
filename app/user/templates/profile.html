@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/nav_user.css') }}" />
     <link rel="stylesheet" href="{{ url_for('user.static', filename='css/profile.css') }}">
 {% endblock %}
 {% block scripts %}
@@ -45,7 +46,7 @@
                         {% endif %}
                     </p>
                     <br>
-                    <span class="text-gray">Рейтинг: <b>{{ data.user.rating }}</b></span>
+                    <span class="text-gray">Рейтинг автора: <b>{{ data.user.rating }}</b></span>
                     <hr>
                     <p><b>Обо мне:</b></p>
                     <div class="about">

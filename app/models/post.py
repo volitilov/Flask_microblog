@@ -62,11 +62,12 @@ class Post(SearchableMixin, db.Model):
         разметки Markdown в html'''
         allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
             'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 
-            'h3', 'h4', 'h5', 'h6', 'p', 'img', 'br', 'table', 'tbody', 'thead', 'td', 
-            'th', 'tr', 'figcaption', '```', 'iframe', 'span']
+            'h3', 'h4', 'h5', 'h6', 'p', 'img', 'br', 'table', 'tbody', 
+            'tfoot', 'thead', 'td', 
+            'th', 'tr', '```', 'iframe', 'span', 'font']
 
         allowed_attrs = ['href', 'rel', 'alt', 'title', 'style', 'width', 'height', 
-            'src', 'target', 'id']
+            'src', 'target', 'id', 'color']
         allowed_style = ['color', 'width', 'height']
         allowed_protocols=['http', 'https']
         

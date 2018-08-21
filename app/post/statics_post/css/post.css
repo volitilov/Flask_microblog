@@ -1,8 +1,3 @@
-.post .post-date {
-  font-size: 11px;
-  margin-bottom: 15px;
-  display: block;
-}
 .post .post-views,
 .post .post-rating {
   float: right;
@@ -40,7 +35,15 @@
 .post .body h6,
 .post .body blockquote {
   margin: 10px 0;
-  margin-top: 20px;
+  margin-top: 50px;
+}
+.post .body h1:first-child,
+.post .body h2:first-child,
+.post .body h3:first-child,
+.post .body h4:first-child,
+.post .body h5:first-child,
+.post .body h6:first-child {
+  margin-top: 0;
 }
 .post .body ol {
   list-style-type: decimal;
@@ -89,16 +92,15 @@
   border-radius: 3px;
 }
 
+#text {
+  height: 500px;
+}
 
-.post .Box-header .dev {
-  color: red;
-}
-.post .Box-header .btn {
-  float: right;
-  margin-top: -2px;
-}
 .post .Box-footer .comment-btn {
   float: right;
   margin-top: -32px;
+}
+.post .post-body {
+  padding-bottom: 30px;
 }
 

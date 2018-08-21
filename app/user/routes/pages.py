@@ -119,7 +119,7 @@ def editProfile_page():
 
 
 
-@user.route(rule='/<username>')
+@user.route(rule='/profile/<username>')
 def profile_page(username):
     '''Генерирует страницу профиля пользователя.'''
     user = User.query.filter_by(name=username).first_or_404()

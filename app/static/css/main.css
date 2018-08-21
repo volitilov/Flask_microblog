@@ -63,6 +63,12 @@ body {
   padding-bottom: 5px;
   background-color: transparent;
 }
+.Box-header .dev {
+  color: red;
+}
+.Box-header .btn {
+  float: right;
+}
 .Box-header small {
   display: inline-block;
   vertical-align: middle;
@@ -146,4 +152,27 @@ body {
 }
 .user-avatar span:nth-child(2) {
   margin-top: -2px;
+}
+.menu-heading {
+  cursor: pointer;
+}
+.menu-heading span {
+  vertical-align: middle;
+  display: inline-block;
+}
+.menu-heading span:last-child {
+  float: right;
+}
+.menu-heading i {
+  padding: 0;
+  margin-top: 0;
+  margin-right: -5px;
+}
+.date {
+  font-size: 11px;
+  margin-bottom: 15px;
+  display: block;
+}
+.date span {
+  color: green;
 }

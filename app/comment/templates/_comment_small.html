@@ -4,18 +4,20 @@
             <span><img width="33px" src="{{ comment.author.gravatar(size=50) }}" alt="Аватар"></span>
             <span>{{ comment.author.name }}</span>
         </a>
-        {% if comment.state == 'develop' %} <small class="dev anim-pulse">требуется доработать</small> {% endif %}
+        {% if comment.state == 'develop' %} <small class="dev anim-pulse">&nbsp;&nbsp;в разработке</small> {% endif %}
     </div>
     <div class="Box-body">
-        <small>
-            {{ comment.timestamp.strftime('%d.%m.%Y') }}
-            к посту: 
+        <small class="date">
+            <span>{{ comment.timestamp.strftime('%d.%m.%Y') }}</span>
+            &nbsp;&nbsp;к посту: 
             {% if not comment.post.id %}
                 удалён
             {% else %}
                  <a href="{{ url_for('post.post_page', id=comment.post.id) }}">{{ comment.post.title }}</a>
             {% endif %}
+        
         </small>
+        <hr>
         <p>
             {% if comment.body_html %}
                 {{ comment.body_html|safe|truncate(400) }}

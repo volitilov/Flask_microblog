@@ -112,20 +112,6 @@ def profile(length):
     app.run(debug=False)
 
 
-# flask generate_fake_data 'count'
-@app.cli.command()
-@click.argument('count', default=10)
-def generate_fake_data(count):
-    '''Генерирует фейковые данные (посты, пользователи)'''
-    from app.utils import (
-        generate_fake_posts, generate_fake_users, add_self_follows
-    )
-
-    generate_fake_users(count)
-    add_self_follows()
-    generate_fake_posts(count)
-
-
 
 # flask deploy
 @app.cli.command()

@@ -20,7 +20,6 @@ Flask-Moment==0.6.0
 Flask-PageDown==0.2.2
 Flask-SQLAlchemy==2.3.2
 Flask-WTF==0.14.2
-ForgeryPy==0.1
 gunicorn==19.8.1
 html5lib==1.0.1
 idna==2.6

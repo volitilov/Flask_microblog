@@ -128,7 +128,7 @@ def profile_page(username):
     
     if not current_user.is_anonymous and \
         current_user.name == username:
-            posts = user.posts.filter(Post.state!='moderator')
+            posts = user.posts.filter(Post.state!='moderation')
             comments = user.comments.filter(Comment.state!='moderation')
     
     return create_response(template='profile.html', data={
@@ -167,7 +167,7 @@ def followers_page(username):
 
     if not current_user.is_anonymous:
         if current_user == user:
-            posts = user.posts.filter(Post.state!='moderator')
+            posts = user.posts.filter(Post.state!='moderation')
             comments = user.comments.filter(Comment.state!='moderation')
     
     page = request.args.get('page', 1, type=int)
@@ -186,7 +186,6 @@ def followers_page(username):
         'follows': follows,
         'follows_count': len(follows),
         'endpoint': 'user.followers_page',
-        'title': 'Подписчики',
         'unfollow_btn': False,
         'count_items': count_items
     })
@@ -208,7 +207,7 @@ def followedBy_page(username):
 
     if not current_user.is_anonymous:
         if current_user == user:
-            posts = user.posts.filter(Post.state!='moderator')
+            posts = user.posts.filter(Post.state!='moderation')
             comments = user.comments.filter(Comment.state!='moderation')
 
     page = request.args.get('page', 1, type=int)
@@ -227,7 +226,6 @@ def followedBy_page(username):
         'follows': follows,
         'follows_count': len(follows),
         'endpoint': 'user.followedBy_page',
-        'title': 'Подписан.',
         'unfollow_url': 'user.unfollow',
         'unfollow_btn': True,
         'count_items': count_items

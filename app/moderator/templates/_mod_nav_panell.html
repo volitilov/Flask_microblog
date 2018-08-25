@@ -4,9 +4,9 @@
         <a class="menu-item {% if data.page == 'dashboard' %}selected{% endif %}" href="{{ url_for('moderator.dashboard_page') }}">
             Dashboard
         </a>
-        <a class="menu-item" href="#">
-            Уведомления
-            <span class="Counter">0</span>
+        <a class="menu-item {% if data.page == 'messages' %}selected{% endif %}" href="{{ url_for('moderator.messages_page') }}">
+            Сообщения
+            <span class="Counter">{{ data.messages.count() }}</span>
         </a>
         <a class="menu-item {% if data.page == 'posts' %}selected{% endif %}" href="{{ url_for('moderator.posts_page') }}">
             Публикации

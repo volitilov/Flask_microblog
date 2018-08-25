@@ -19,6 +19,7 @@ from flask_login import UserMixin
 
 from .role import Role
 from .post import Post
+from .message import Message
 from .. import db, login_manager
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -45,6 +46,7 @@ class User(UserMixin, db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
+    writer = db.Column(db.Boolean, default=False)
     date_registration = db.Column(db.DateTime, default=datetime.utcnow()) 
     last_visit = db.Column(db.DateTime, default=datetime.utcnow())
     avatar_hash = db.Column(db.String(32))
@@ -56,6 +58,12 @@ class User(UserMixin, db.Model):
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
     post_ratings = db.relationship('Post_rating', backref='author', lazy='dynamic')
     notice = db.relationship('Notice', backref='author', lazy='dynamic')
+
+    messages_sent = db.relationship('Message', foreign_keys='Message.sender_id',
+                    backref='author', lazy='dynamic')
+    messages_received = db.relationship('Message', foreign_keys='Message.recipient_id',
+                    backref='recipient', lazy='dynamic')
+    
     followed = db.relationship('Follow', foreign_keys=[Follow.followed_id],
             backref=db.backref('follower', lazy='joined'),
             lazy='dynamic', cascade='all, delete-orphan')

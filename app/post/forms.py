@@ -27,7 +27,7 @@ class Post_form(FlaskForm):
         validators=[
             DataRequired(message='Теги указывать обязательно'), 
             Length(max=100, message='Сумма названий тегов не должна превышать 100 символов'),
-            Regexp(regex='^[A-Za-z][A-Za-z0-9,\s]*$', 
+            Regexp(regex='^[A-Za-zА-Яа-я][А-Яа-яA-Za-z0-9,\s]*$', 
                 message='Имена тегов должны иметь только буквы и числа')])
 
 

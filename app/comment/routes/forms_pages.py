@@ -36,6 +36,7 @@ def addCommentForm_req(id):
     if form.validate():
         body = form.body.data
         comment = Comment(body=body, post=post, author=current_user)
+        comment.state = 'moderation'
         user_settings = UserSettings.query.filter_by(state='custom', profile=comment.post.author).first()
 
         if user_settings.comments_me:

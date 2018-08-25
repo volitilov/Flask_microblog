@@ -6,15 +6,14 @@
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 from flask import request, current_app, url_for, current_app, flash
-
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 from .. import (
     # blueprint
     main,
 
     # forms
-    Search_form,
+    Search_form, Support_form,
 
     # models
     Post, Tag,
@@ -33,7 +32,7 @@ def home_page():
     '''Генерирует стартовую страницу.'''
     return create_response(template='home.html', data={
         'page_title': page_titles['home_page'],
-        'tags': Tag.query.all(),
+        'tags': Tag.query.all()[:5],
         'form': Search_form()
     })
 
@@ -53,9 +52,13 @@ def searchResults_page(data):
     posts, total = Post.search(data, page, count_items)
     posts = posts.filter_by(state='public')
 
-    next_url = url_for('main.search_request', q=data, page=page + 1) \
+    count_page = total // count_items
+    if total - (count_page * count_items):
+        count_page += 1
+
+    next_url = url_for('main.searchResults_page', data=data, page=page + 1) \
         if total > page * count_items else None
-    prev_url = url_for('main.search_request', q=data, page=page - 1) \
+    prev_url = url_for('main.searchResults_page', data=data, page=page - 1) \
         if page > 1 else None
 
     flash(category='success', 
@@ -69,6 +72,44 @@ def searchResults_page(data):
         'total': total,
         'next_url': next_url,
         'prev_url': prev_url,
+        'count_page': range(count_page),
+        'data': data,
         'current_page': page
     })
 
+
+
+@main.route('/all_tags')
+def allTags_page():
+    '''Генерирует страницу всех тегов.'''
+    if current_user.is_anonymous:
+        followed_posts = None
+    else:
+        followed_posts = current_user.followed_posts.filter(Post.state=='public')
+
+    return create_response(template='all_tags.html', data={
+        'page_title': page_titles['allTags_page'],
+        'tags': Tag.query.all(),
+        'all_posts': Post.query.filter_by(state='public'),
+        'followed_posts': followed_posts,
+    })
+
+
+
+@main.route('/support')
+@login_required
+def support_page():
+    '''Генерирует страницу с формой службы поддержки'''
+    form = Support_form()
+
+    if current_user.is_anonymous:
+        followed_posts = None
+    else:
+        followed_posts = current_user.followed_posts.filter(Post.state=='public')
+
+    return create_response(template='support.html', data={
+        'page_title': page_titles['support_page'],
+        'form': form,
+        'all_posts': Post.query.filter_by(state='public'),
+        'followed_posts': followed_posts,
+    })

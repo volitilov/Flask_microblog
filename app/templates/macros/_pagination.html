@@ -4,14 +4,13 @@
             <a {% if not pagination.has_prev %} class="previous_page disabled" {% endif %} 
                 href="{% if pagination.has_prev %} {{ url_for(endpoint,
                 page=pagination.page-1, **kwargs) }} {% else %} # {% endif %}">
-                <!-- &laquo; -->
-                Previous
+                Назад
             </a>
     
             {% for p in pagination.iter_pages() %}
                 {% if p %}
                     {% if p == pagination.page %}
-                        <a class="current selected" href="{{ url_for(endpoint, page=p, **kwargs) }}">{{ p }}</a>
+                        <a class="current selected">{{ p }}</a>
                     {% else %}
                         <a href="{{ url_for(endpoint, page=p, **kwargs) }}">{{ p }}</a>
                     {% endif %}
@@ -23,8 +22,7 @@
             <a {% if not pagination.has_next %} class="next_page disabled" {% endif %} 
                 href="{% if pagination.has_next %} {{ url_for(endpoint,
                     page=pagination.page+1, **kwargs) }} {% else %} # {% endif %}">
-                        <!-- &raquo; -->
-                        Next
+                    Вперёд
             </a>
         </div>
     </section>

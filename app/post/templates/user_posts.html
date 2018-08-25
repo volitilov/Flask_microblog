@@ -14,13 +14,19 @@
             {% include 'components/_nav_user.html' %}
         </aside>
         <div class="three-fourths column">
-            <ul>
-                {% for post in data.page_posts %}
-                    <li>
-                        {% include '_post_small.html' %}
-                    </li>
-                {% endfor %}
-            </ul>
+            {% if data.page_posts %}
+                <ul>
+                    {% for post in data.page_posts %}
+                        <li>
+                            {% include '_post_small.html' %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="Box mt-3 p-3">
+                    <p>На данный момент публикаций нет.</p>
+                </div>
+            {% endif %}
             {% if data.posts.count() > data.posts_per_page %}
                 {{ render_pagination(data.pagination, data.endpoint, username=data.user.name) }}
             {% endif %}

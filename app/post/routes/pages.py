@@ -67,6 +67,9 @@ def editPost_page(id):
 @login_required
 def addPost_page():
     '''Генерирует страницу с формай создания постов.'''
+    if not current_user.writer:
+        flash(message='Вы не можете писать посты пока не станите автором.')
+        return redirect('/posts/63')
     data = get_posts()
     form = AddPost_form()
     return create_response(template='add_post.html', data={
@@ -137,7 +140,7 @@ def userPosts_page(username):
     if not current_user.is_anonymous:
         if current_user.name == username:
             posts = user.posts.filter(Post.state!='moderation')
-            comments = user.comments.filter(Comment.state!='moderator')
+            comments = user.comments.filter(Comment.state!='moderation')
 
     page = request.args.get('page', 1, type=int)
     pagination = posts.order_by(Post.data_creation.desc()).paginate(
@@ -182,11 +185,14 @@ def tagPosts_page(id):
     flash(category='success', 
         message='Показаны результаты запроса по тегу <b>{}</b>'.format(tag.name))
 
+    print(data['all_posts'].count() > count_items)
+
     return create_response(template='posts.html', data={
         'page_title': page_titles['tagPosts_page'],
         'page_posts': tag_posts,
         'pagination': pagination,
         'endpoint': 'post.tagPosts_page',
+        'tag': tag,
         'count_items': count_items,
         'all_posts': data['all_posts'],
         'followed_posts': data['followed_posts']

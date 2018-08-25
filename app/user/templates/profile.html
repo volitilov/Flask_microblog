@@ -37,8 +37,7 @@
                         <h4>{{ data.user.first_name }} {{ data.user.last_name }}</h4>
                     {% endif %}
                     <p>
-                        <span class="text-gray">Зарегестрирован:</span>
-                        <small>{{ data.user.date_registration.strftime('%d.%m.%Y в %H:%M:%S') }}</small>
+                        <small class="date">Зарегестрирован: <span>{{ data.user.date_registration.strftime('%d.%m.%Y в %H:%M:%S') }}</span></small>
                         <br>
                         {% if data.user.last_visit %}
                             <span class="text-gray">Последнее посещение:</span>

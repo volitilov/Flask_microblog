@@ -22,7 +22,7 @@
 						</li>
 					{% endfor %}
 				</ul>
-				{% if data.all_posts.count() > data.count_items %}
+				{% if data.all_posts.count() > data.count_items and data.page_posts|count == data.count_items %}
 					{% if data.tag %}
 						{{ render_pagination(data.pagination, data.endpoint, id=data.tag.id) }}
 					{% else %}

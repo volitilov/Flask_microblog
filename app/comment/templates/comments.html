@@ -12,11 +12,18 @@
             {% include 'components/_nav_user.html' %}
         </aside>
         <div class="three-fourths column">
-            <ul>
-                {% for comment in data.comments %}
-                    {% include '_comment_small.html' %}
-                {% endfor %}
-            </ul>
+            {% if data.comments %}
+                <ul>
+                    {% for comment in data.comments %}
+                        {% include '_comment_small.html' %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% if data.comments.count() == 0 %}
+                <div class="Box mt-3 p-3">
+                    <p>На данный момент пользователь не оставил ни одного комментария.</p>
+                </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

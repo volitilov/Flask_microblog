@@ -4,8 +4,8 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+from flask import url_for
 from datetime import datetime
-
 from markdown2 import markdown
 import bleach
 
@@ -21,7 +21,6 @@ class Comment(db.Model):
     body = db.Column(db.Text, nullable=False)
     body_html = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    disabled = db.Column(db.Boolean)
     state = db.Column(db.String, default='develop')
 
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -59,12 +58,13 @@ class Comment(db.Model):
         body = json_comment['body']
 
         if body is None or body == '':
-            raise ValidationError('Comment does not have a body')
+            raise ValidationError('Комментарий не может быть пустым.')
         return Comment(body=body)
     
 
     def to_json(self):
         json_comment = {
+            'id': self.id,
             'url': url_for('api.get_comment', id=self.id, _external=True),
             'body': self.body,
             'timestamp': self.timestamp,

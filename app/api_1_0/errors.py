@@ -39,6 +39,13 @@ def method_not_allowed(message):
     return response
 
 
+def not_found(message):
+    '''Возвращает ошибку ненайденного контента.'''
+    response = jsonify({'error': 'not_found', 'message': message})
+    response.status_code = 404
+    return response
+
+
 @api.errorhandler(ValidationError)
 def validation_error(e):
     return bad_request(e.args[0])

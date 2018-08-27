@@ -94,8 +94,12 @@ def edit_post(id):
     '''Выполняет запрос на редактирование поста и в случае успеха
     возвращает отредактироаный пост.'''
     post = Post.query.get_or_404(id)
+    
     if g.current_user != post.author:
         return forbidden('Вы не можете редактировать данный пост.')
+
+    if post.state == 'moderation':
+        return forbidden('На данный момент вы не можите редактировать пост.')
     
     post.title = request.json.get('title', post.title)
     post.table_of_contents = request.json.get('table_of_contents', post.table_of_contents)

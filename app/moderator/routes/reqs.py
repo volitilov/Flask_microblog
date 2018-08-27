@@ -60,8 +60,8 @@ def deletePost_request(id):
     notice = Notice(title=title, body=body, author=post.author)
 
     post_r = Post_rating.query.filter_by(post=post).all()
-	for pr in post_r:
-		db.session.delete(pr)
+    for pr in post_r:
+        db.session.delete(pr)
 
     rel_tags = Rel_tag.query.filter_by(post=post).all()
     for r_t in rel_tags:

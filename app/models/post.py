@@ -42,17 +42,20 @@ class Post(SearchableMixin, db.Model):
             lazy='dynamic', cascade='all, delete-orphan')
 
     def to_json(self):
-        json_post = {
+        return {
+            'id': self.id,
             'url': url_for('api.get_post', id=self.id, _external=True),
             'title': self.title,
-            'body': self.text,
-            'body_html': self.body_html,
+            't_contents': self.t_contents_html,
+            'body': self.body_html,
             'timestamp': self.data_creation,
+            'tags': 'tags',
+            'views': self.views,
+            'rating': self.rating,
             'author': url_for('api.get_user', id=self.author_id, _external=True),
             'comments': url_for('api.get_postComments', id=self.id, _external=True),
             'comment_count': self.comments.count()
         }
-        return json_post
 
 
     @staticmethod
@@ -111,14 +114,20 @@ class Post(SearchableMixin, db.Model):
 
     @staticmethod
     def from_json(json_post):
-        title = json_post['title']
-        body = json_post['body']
+        title = json_post.get('title')
+        table_of_contents = json_post.get('table_of_contents')
+        body = json_post.get('body')
+        tags = json_post.get('tags')
 
-        if title is None or title == '':
-            raise ValidationError('post does not have a title')
-        if body is None or body == '':
-            raise ValidationError('post does not have a body')
-        return Post(title=title, text=body)
+        if Post.query.filter_by(title=title).first():
+            raise ValidationError('Данный заголовок уже занят.')
+
+        for key, value in locals().items():
+            if value is None or value == '':
+                raise ValidationError(' [ {} ] - является обязательным.'.format(key))
+
+        return Post(title=title, text=body, state='moderation',
+                table_of_contents=table_of_contents)
 
 
 db.event.listen(Post.text, 'set', Post.on_changed_body)

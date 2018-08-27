@@ -4,7 +4,7 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import request, jsonify
+from flask import request, jsonify, render_template
 
 from . import (
     # blueprint
@@ -22,25 +22,14 @@ from . import (
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-@errors.app_errorhandler(403)
-def forbidden(message):
-    '''Генерирует и обрабатывает 403 ошибку.'''
-    if request.accept_mimetypes.accept_json and \
-        not request.accept_mimetypes.accept_html:
-        response = jsonify({'error': 'forbidden', 'message': message})
-        response.status_code = 403
-        return response
-    return create_response(template='403.html', data={
-        'page_title': page_titles['forbidden']
-    }), 403
-
-
-
 @errors.app_errorhandler(404)
 def page_not_found(e):
     '''Генерирует и обрабатывает 404 ошибку'''
     form = Search_form()
     
+    print(request.accept_mimetypes.accept_json)
+    print(request.accept_mimetypes.accept_html)
+
     if request.accept_mimetypes.accept_json and \
         not request.accept_mimetypes.accept_html:
         response = jsonify({'error': 'not found'})

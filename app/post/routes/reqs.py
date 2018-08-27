@@ -13,7 +13,7 @@ from .. import (
 	post,
 
 	# models
-	Post, Post_rating,
+	Post, Post_rating, Tag, Rel_tag,
 
 	# database
 	db
@@ -45,6 +45,16 @@ def deletePost_request(id):
 	post_r = Post_rating.query.filter_by(post=post).all()
 	for pr in post_r:
 		db.session.delete(pr)
+
+	rel_tags = Rel_tag.query.filter_by(post=post).all()
+    for r_t in rel_tags:
+        tag = r_t.tag
+        tags = Tag.query.filter_by(name=tag.name).all()
+        for t in tags:
+            if t.posts.count() <= 1:
+                db.session.delete(t)
+        
+        db.session.delete(r_t)
 
 	db.session.delete(post)
 	db.session.commit()

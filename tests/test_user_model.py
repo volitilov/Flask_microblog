@@ -23,19 +23,23 @@ class UserModelTestCash(unittest.TestCase):
         db.drop_all()
         self.app_context.pop()
 
+
     def test_password_setter(self):
         u = User(name='test', email='test@mail.ru', password='test')
         self.assertTrue(u.password_hash is not None)
+
 
     def test_no_password_getter(self):
         u = User(name='test', email='test@mail.ru', password='test')
         with self.assertRaises(AttributeError):
             u.password
   
+
     def test_password_verification(self):
         u = User(name='test', email='test@mail.ru', password='test')
         self.assertTrue(u.verify_password('test'))
         self.assertFalse(u.verify_password('iii'))
+
 
     def test_password_salts_are_random(self):
         u = User(name='test', email='test@mail.ru', password='test')
@@ -50,6 +54,7 @@ class UserModelTestCash(unittest.TestCase):
         token = u.generate_confirmation_token()
         self.assertTrue(u.confirm(token))
 
+
     def test_invalid_confirmation_token(self):
         u = User(name='test', email='test@mail.ru', password='test')
         u2 = User(name='test2', email='test2@mail.ru', password='test2')
@@ -59,6 +64,7 @@ class UserModelTestCash(unittest.TestCase):
         token = u.generate_confirmation_token()
         self.assertFalse(u2.confirm(token))
 
+
     def test_expired_confirmation_token(self):
         u = User(name='test', email='test@mail.ru', password='test')
         db.session.add(u)
@@ -66,6 +72,7 @@ class UserModelTestCash(unittest.TestCase):
         token = u.generate_confirmation_token(1)
         time.sleep(2)
         self.assertFalse(u.confirm(token))
+
 
     def test_valid_reset_token(self):
         u = User(name='test', email='test@mail.ru', password='test')
@@ -75,13 +82,15 @@ class UserModelTestCash(unittest.TestCase):
         self.assertTrue(User.reset_password(token, 'qwe'))
         self.assertTrue(u.verify_password('qwe'))
 
+
     def test_invalid_reset_token(self):
         u = User(name='test', email='test@mail.ru', password='test')
         db.session.add(u)
         db.session.commit()
         token = u.generate_resetPassword_token()
-        self.assertFalse(User.reset_password(token+'x', 'qwe'))
+        self.assertFalse(u.reset_password(token+b'x', 'qwe'))
         self.assertTrue(u.verify_password('test'))
+
 
     def test_valid_email_change_token(self):
         u = User(name='test', email='test@mail.ru', password='test')
@@ -90,6 +99,7 @@ class UserModelTestCash(unittest.TestCase):
         token = u.generate_changeEmail_token('susan@example.org')
         self.assertTrue(u.change_email(token))
         self.assertTrue(u.email == 'susan@example.org')
+
 
     def test_invalid_email_change_token(self):
         u = User(name='test', email='test@mail.ru', password='test')
@@ -101,6 +111,7 @@ class UserModelTestCash(unittest.TestCase):
         self.assertFalse(u2.change_email(token))
         self.assertTrue(u2.email == 'test2@mail.ru')
 
+
     def test_duplicate_email_change_token(self):
         u = User(name='test', email='test@mail.ru', password='test')
         u2 = User(name='test2', email='test2@mail.ru', password='test2')
@@ -111,6 +122,7 @@ class UserModelTestCash(unittest.TestCase):
         self.assertFalse(u2.change_email(token))
         self.assertTrue(u2.email == 'test2@mail.ru')
 
+
     def test_is_admin(self):
         admin = User(name='admin', email='volitilov@gmail.com', password='qwe')
         no_admin = User(name='no_admin', email='ex@mail.ru', password='ewq')
@@ -119,12 +131,14 @@ class UserModelTestCash(unittest.TestCase):
         self.assertTrue(admin.is_admin)
         self.assertFalse(no_admin.is_admin)
     
+
     def test_timestamps(self):
         u = User(name='test', email='test@mail.ru', password='test')
         self.assertTrue(
             (datetime.utcnow() - u.date_registration).total_seconds() < 50)
         self.assertTrue(
             (datetime.utcnow() - u.last_visit).total_seconds() < 50)
+
 
     def test_ping(self):
         u = User(name='test', email='test@mail.ru', password='test')
@@ -134,6 +148,7 @@ class UserModelTestCash(unittest.TestCase):
         last_seen_before = u.last_visit
         u.ping()
         self.assertTrue(u.last_visit > last_seen_before)
+
 
     def test_gravatar(self):
         u = User(name='test', email='volitilov@gmail.com', password='test')
@@ -183,6 +198,7 @@ class UserModelTestCash(unittest.TestCase):
     #     db.session.delete(u2)
     #     db.session.commit()
     #     self.assertTrue(Follow.query.count() == 1)
+
 
     def test_to_json(self):
         u = User(name='test', email='test@mail.ru', password='test')

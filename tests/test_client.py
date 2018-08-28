@@ -29,16 +29,16 @@ class FlaskClientTestCase(unittest.TestCase):
     def test_home_page(self):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(b'Stranger' in response.data)
+        self.assertTrue(b'freelance' in response.data)
 
 
     def test_register(self):
         # регистрация новой учётной записи
-        response = self.client.post('/auth/register', data={
+        response = self.client.post('/registration_form_request', data={
             'email': 'test@mail.ru',
-            'username': 'Bob',
-            'password': 'test',
-            'password2': 'test'
+            'username': 'deeplogger2',
+            'password': '12345678',
+            'password2': '12345678'
         })
         self.assertTrue(response.status_code, 302)
 

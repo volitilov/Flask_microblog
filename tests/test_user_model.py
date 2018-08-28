@@ -120,11 +120,11 @@ class UserModelTestCash(unittest.TestCase):
         self.assertFalse(no_admin.is_admin)
     
     def test_timestamps(self):
-        u = User(name='test', email='test@mail.ru', password='test')
+        us = User(name='test', email='test@mail.ru', password='test')
         self.assertTrue(
-            (datetime.utcnow() - u.date_registration).total_seconds() < 50)
+            (datetime.utcnow() - us.date_registration).total_seconds() < 50)
         self.assertTrue(
-            (datetime.utcnow() - u.last_visit).total_seconds() < 50)
+            (datetime.utcnow() - us.last_visit).total_seconds() < 50)
 
     def test_ping(self):
         u = User(name='test', email='test@mail.ru', password='test')

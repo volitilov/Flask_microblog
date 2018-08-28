@@ -7,6 +7,9 @@
 .profile .about blockquote {
   margin: 10px 0;
 }
+.profile h4 {
+  margin-top: 20px;
+}
 .profile .about ol {
   list-style-type: decimal;
 }

@@ -33,7 +33,7 @@ class Post(SearchableMixin, db.Model):
     t_contents_html = db.Column(db.Text)
     views = db.Column(db.Integer, index=True, default=0)
     rating = db.Column(db.Integer, index=True, default=0)
-    state = db.Column(db.String, default='moderation')
+    state = db.Column(db.String, default='develop')
 
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
     ratings = db.relationship('Post_rating', backref='post', lazy='dynamic')
@@ -42,17 +42,19 @@ class Post(SearchableMixin, db.Model):
             lazy='dynamic', cascade='all, delete-orphan')
 
     def to_json(self):
-        json_post = {
+        return {
+            'id': self.id,
             'url': url_for('api.get_post', id=self.id, _external=True),
             'title': self.title,
-            'body': self.text,
-            'body_html': self.body_html,
+            't_contents': self.t_contents_html,
+            'body': self.body_html,
             'timestamp': self.data_creation,
+            'views': self.views,
+            'rating': self.rating,
             'author': url_for('api.get_user', id=self.author_id, _external=True),
             'comments': url_for('api.get_postComments', id=self.id, _external=True),
             'comment_count': self.comments.count()
         }
-        return json_post
 
 
     @staticmethod
@@ -62,11 +64,12 @@ class Post(SearchableMixin, db.Model):
         разметки Markdown в html'''
         allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
             'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 
-            'h3', 'h4', 'h5', 'h6', 'p', 'img', 'br', 'table', 'tbody', 'thead', 'td', 
-            'th', 'tr', 'figcaption', '```', 'iframe', 'span']
+            'h3', 'h4', 'h5', 'h6', 'p', 'img', 'br', 'table', 'tbody', 
+            'tfoot', 'thead', 'td', 
+            'th', 'tr', '```', 'iframe', 'span', 'font']
 
         allowed_attrs = ['href', 'rel', 'alt', 'title', 'style', 'width', 'height', 
-            'src', 'target', 'id']
+            'src', 'target', 'id', 'color']
         allowed_style = ['color', 'width', 'height']
         allowed_protocols=['http', 'https']
         
@@ -92,7 +95,7 @@ class Post(SearchableMixin, db.Model):
 
         def change_url(attrs, new=False):
             p = urlparse(attrs[(None, u'href')])
-            if p.netloc not in ['my-domain.com', 'other-domain.com']:
+            if p.netloc not in ['blacklist.com', 'other-domain.com']:
                 attrs[(None, u'rel')] = u'nofollow'
                 attrs[(None, u'href')] = u'/posts/{}{}'.format(target.id, attrs[(None, u'href')])
             else:
@@ -110,14 +113,20 @@ class Post(SearchableMixin, db.Model):
 
     @staticmethod
     def from_json(json_post):
-        title = json_post['title']
-        body = json_post['body']
+        title = json_post.get('title')
+        table_of_contents = json_post.get('table_of_contents')
+        body = json_post.get('body')
+        tags = json_post.get('tags')
 
-        if title is None or title == '':
-            raise ValidationError('post does not have a title')
-        if body is None or body == '':
-            raise ValidationError('post does not have a body')
-        return Post(title=title, text=body)
+        if Post.query.filter_by(title=title).first():
+            raise ValidationError('Данный заголовок уже занят.')
+
+        for key, value in locals().items():
+            if value is None or value == '':
+                raise ValidationError(' [ {} ] - является обязательным.'.format(key))
+
+        return Post(title=title, text=body, state='moderation',
+                table_of_contents=table_of_contents)
 
 
 db.event.listen(Post.text, 'set', Post.on_changed_body)

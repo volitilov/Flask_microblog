@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/nav_user.css') }}" />
     <link rel="stylesheet" href="{{ url_for('user.static', filename='css/follow.css') }}">
 {% endblock %}
 {% from 'macros/_pagination.html' import render_pagination %}
@@ -13,27 +14,26 @@
         </aside>
         <div class="three-fourths column">
             <div class="Box my-3 follow">
-                    <div class="Box-header">
-                        <small>{{ data.title }}</small>
-                    </div>
-                    {% for follow in data.follows %}
-                        {% if follow.user != data.user %}
-                            <div class="Box-row">
-                                <a class="user-avatar" href="{{ url_for('user.profile_page', username=follow.user.name) }}">
-                                    <span><img class="Avatar" src="{{ follow.user.gravatar(size=32) }}"></span>
-                                    <span class="mb-1">{{ follow.user.name }}</span>
-                                </a>
-                                {% if not current_user.is_anonymous and current_user == data.user %}
-                                    {% if data.unfollow_btn %}
-                                        <a class="btn btn-sm btn-danger" role="btn" href="{{ url_for('user.unfollow_request', user_id=follow.user.id) }}">Отписаться</a>
-                                    {% else %}
-                                        <a class="btn btn-sm btn-danger" role="btn" href="{{ url_for('user.unsubscribe_request', user_id=follow.user.id) }}">Отписать</a>
-                                    {% endif %}
+                {% if (data.follows_count - 1) == 0 %}
+                    <p class="p-3">Ну тут нечиго нет...</p>
+                {% endif %}
+                {% for follow in data.follows %}
+                    {% if follow.user != data.user %}
+                        <div class="Box-row">
+                            <a class="user-avatar" href="{{ url_for('user.profile_page', username=follow.user.name) }}">
+                                <span><img class="Avatar" src="{{ follow.user.gravatar(size=32) }}"></span>
+                                <span>{{ follow.user.name }}</span>
+                            </a>
+                            {% if not current_user.is_anonymous and current_user == data.user %}
+                                {% if data.unfollow_btn %}
+                                    <a class="btn btn-sm btn-danger" role="btn" href="{{ url_for('user.unfollow_request', user_id=follow.user.id) }}">Отписаться</a>
+                                {% else %}
+                                    <a class="btn btn-sm btn-danger" role="btn" href="{{ url_for('user.unsubscribe_request', user_id=follow.user.id) }}">Отписать</a>
                                 {% endif %}
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
             </div>
             {% if data.follows_count > data.count_items %}
                 {{ render_pagination(data.pagination, data.endpoint, user_id=data.user.id) }}

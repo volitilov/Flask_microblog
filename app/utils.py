@@ -9,11 +9,9 @@ from functools import wraps
 
 from flask import (
 	make_response, render_template, request, current_app, url_for,
-	redirect, flash
+	redirect, flash, abort
 )
 from sqlalchemy.exc import IntegrityError
-import forgery_py as forgery
-
 from flask_login import current_user, login_required
 
 from . import db
@@ -30,42 +28,6 @@ def create_response(template, data):
 	if request.args.get('next') is not None: 
 		resp.set_cookie(key='next', value=request.args.get('next'))
 	return resp
-
-
-
-def generate_fake_posts(count=100):
-	'''Генерирует фейковые посты в заданном кол-ве.'''
-	user_count = User.query.count()
-	for i in range(count):
-		u = User.query.offset(randint(0, user_count - 1)).first()
-		p = Post(title=forgery.lorem_ipsum.title(),
-				text=forgery.lorem_ipsum.sentences(randint(1, 4)),
-				author=u,
-				data_creation=forgery.date.date(True))
-		db.session.add(p)
-		db.session.commit()
-
-
-
-def generate_fake_users(count=100):
-	'''Генерирует фейковых пользователей в заданном кол-ве.'''
-	i = 0
-	while i < count:
-		u = User(email=forgery.internet.email_address(),
-			name=forgery.internet.user_name(True),
-			password=forgery.lorem_ipsum.word(),
-			confirmed=True,
-			first_name=forgery.name.first_name(),
-			last_name=forgery.name.last_name(),
-			location=forgery.address.country(),
-			about_me=forgery.lorem_ipsum.sentence(),
-			date_registration=forgery.date.date(True))
-		db.session.add(u)
-		try:
-			db.session.commit()
-			i +=1
-		except IntegrityError:
-			db.session.rollback()
 
 
 
@@ -117,10 +79,8 @@ def is_moderator(func):
     @login_required
     def wrap(*args, **kwargs):
         if not current_user.is_moderator:
-            flash(category='warn', message='Ты не являешся модератором.')
-            return redirect(url_for('main.home_page'))
-        else:
-            return func(*args, **kwargs)
+            abort(403)
+        return func(*args, **kwargs)
     return wrap
 
 
@@ -131,8 +91,6 @@ def is_admin(func):
     @login_required
     def wrap(*args, **kwargs):
         if not current_user.is_admin:
-            flash(category='warn', message='Ты не являешся администратором.')
-            return redirect(url_for('main.home_page'))
-        else:
-            return func(*args, **kwargs)
+            abort(403)
+        return func(*args, **kwargs)
     return wrap

@@ -19,7 +19,7 @@ from .. import (
     AddNotice_form,
 
     # utils
-    create_response,
+    create_response, is_admin,
 
     # data
     page_titles
@@ -54,7 +54,7 @@ def notice_page():
 
 
 @notice.route('/notice/add')
-@login_required
+@is_admin
 def addNotice_page():
     form = AddNotice_form()
 

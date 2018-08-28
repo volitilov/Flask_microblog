@@ -4,7 +4,7 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import flash, current_app, url_for, redirect, jsonify
+from flask import flash, current_app, url_for, redirect, jsonify, abort
 from flask_login import current_user, login_required
 
 from .. import (
@@ -61,7 +61,7 @@ def addPostForm_req():
         db.session.add_all(rel_tags)
         db.session.commit()
 
-        flash(message='Пост отправлен на модерацию')
+        flash(category='success', message='Пост успешно сохранён.')
         return jsonify({'next_url': url_for(endpoint='main.home_page')})
 
     return jsonify({'errors': flash_errors(form)})
@@ -77,8 +77,7 @@ def editPostForm_req(id):
     post = Post.query.get_or_404(id)
 
     if current_user != post.author:
-        flash(category='warn', message='Вы не являетесь автором публикации.')
-        return redirect(url_for('post.posts_page'))
+        abort(403)
 
     if post.state == 'moderation':
         return redirect(url_for('post.post_page', id=post.id))
@@ -88,7 +87,6 @@ def editPostForm_req(id):
         post.title = form.title.data
         post.text = form.text.data
         post.table_of_contents = form.contents.data
-        post.state = 'moderation'
 
         all_tags = []
         rel_tags = []
@@ -111,7 +109,7 @@ def editPostForm_req(id):
         db.session.add_all(rel_tags)
         db.session.commit()
 
-        flash(message='Пост отправлен на модерацию.')
-        return jsonify({'next_url': url_for('post.userPosts_page', username=current_user.name)})
+        flash(category='success', message='Пост успешно сохранён.')
+        return jsonify({'next_url': url_for('post.editPost_page', id=post.id)})
     
     return jsonify({'errors': flash_errors(form)})

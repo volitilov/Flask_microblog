@@ -59,11 +59,19 @@ body {
     display: inline-block;
   }
 }
-
+.Box, .Box-header, .menu, .menu-heading {
+  border-color: #e1e4e8;
+}
 .Box-header {
   padding-top: 10px;
   padding-bottom: 5px;
   background-color: transparent;
+  .dev {
+    color: red;
+  }
+  .btn {
+    float: right;
+  }
   small {
       display: inline-block;
       vertical-align: middle;
@@ -80,4 +88,99 @@ body {
 }
 .flask-moment {
   display: inline-block;
+}
+.logo {
+  figure {
+      margin: 0;
+      padding-top: 6px;
+      span {
+          display: block;
+          background-color: green;
+          border-radius: 4px;
+          width: 27px;
+          height: 27px;
+          position: absolute;
+          margin-top: 8px;
+          color: green;
+          font-weight: bold;
+          font-size: 21px;
+          padding: 0 4px;
+      }
+      img {
+          width: 35px;
+          height: 35px;
+          position: absolute;
+          margin-top: 5px;
+      }
+  }
+  figcaption {
+      margin-left: 37px;
+      h4 {
+          color: green;
+          margin-top: 3px;
+          margin-bottom: 0;
+          padding-bottom: 0;
+      }
+      p {
+          color: #24292e;
+          font-size: 12px;
+          margin-top: -5px;
+          padding-top: 0;
+      }
+  }
+}
+#scrollUp {
+  display: none;
+}
+
+.user-avatar {
+  height: 25px;
+  color: #24292e;
+  background-color: #f3f5f8;
+  padding: 5px 10px 5px 0;
+  border-radius: 20px 3px 3px 20px;
+  &:hover {
+    background-color: #e1e4e8;
+    text-decoration: none;
+  }
+  img {
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+  }
+  span {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+    font-size: 12px;
+  }
+  span:nth-child(1) {
+    margin-top: 4px;
+  }
+  span:nth-child(2) {
+    margin-top: -2px;
+  }
+}
+.menu-heading {
+  cursor: pointer;
+  span {
+      vertical-align: middle;
+      display: inline-block;
+  }
+  span:last-child {
+      float: right;
+  }
+  i {
+      padding: 0;
+      margin-top: 0;
+      margin-right: -5px;
+  }
+}
+.date {
+  font-size: 11px;
+  margin-bottom: 15px;
+  display: block;
+  span {
+    color: green;
+  }
 }

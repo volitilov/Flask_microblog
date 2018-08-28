@@ -17,6 +17,7 @@ class Rel_tag(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow())
 
 
+
 class Tag(db.Model):
     '''Инициализирует теги.'''
     __tablename__ = 'tags'

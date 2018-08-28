@@ -12,6 +12,11 @@
             {% include 'admin/_nav_panell.html' %}
         </aside>
         <div class="three-fourths column">
+            {% if not data.comments %}
+                <div class="Box mt-3 p-3">
+                    <p>На данный момент комментариев нет...</p>
+                </div>
+            {% endif %}
             <ul>
                 {% for comment in data.comments %}
                     <li class="Box my-3 comment">

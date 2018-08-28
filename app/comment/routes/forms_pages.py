@@ -4,7 +4,7 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import redirect, request, url_for, flash, jsonify
+from flask import redirect, request, url_for, flash, jsonify, abort
 from flask_login import current_user, login_required
 
 from .. import (
@@ -36,6 +36,7 @@ def addCommentForm_req(id):
     if form.validate():
         body = form.body.data
         comment = Comment(body=body, post=post, author=current_user)
+        comment.state = 'moderation'
         user_settings = UserSettings.query.filter_by(state='custom', profile=comment.post.author).first()
 
         if user_settings.comments_me:
@@ -79,7 +80,6 @@ def editCommentForm_req(comment_id):
         else:
             return jsonify({'errors': flash_errors(form)})
 	
-    flash(category='warn', message='У вас не достаточно прав для редактирования данного контента')
-    return redirect(url_for('main.home_page'))
+    abort(403)
 
     

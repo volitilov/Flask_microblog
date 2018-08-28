@@ -1,50 +1,12 @@
 header {
-  border-bottom: 1px solid #d1d5da;
-  background-color: #f3f5f8;
+  border-bottom: 1px solid #e1e4e8;
+  background-color: #fff;
 }
 header .container {
   padding: 0;
 }
 header a:hover {
   text-decoration: none;
-}
-header figure {
-  margin: 0;
-  padding-top: 6px;
-}
-header figure span {
-  display: block;
-  background-color: green;
-  border-radius: 4px;
-  width: 27px;
-  height: 27px;
-  position: absolute;
-  margin-top: 8px;
-  color: green;
-  font-weight: bold;
-  font-size: 21px;
-  padding: 0 4px;
-}
-header figure img {
-  width: 35px;
-  height: 35px;
-  position: absolute;
-  margin-top: 5px;
-}
-header figcaption {
-  margin-left: 37px;
-}
-header figcaption h4 {
-  color: green;
-  margin-top: 3px;
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
-header figcaption p {
-  color: #24292e;
-  font-size: 12px;
-  margin-top: -5px;
-  padding-top: 0;
 }
 header nav {
   float: right;

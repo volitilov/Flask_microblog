@@ -10,17 +10,13 @@
 
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_normalize.css') }}" />
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_primer.css') }}">
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_highlight.min.css') }}">
 		
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
 		<!-- components -->
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/components/header.css') }}" />
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/components/nav_publications.css') }}" />
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/components/nav_user.css') }}" />
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/components/flash.css') }}" />
-		
-		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_atom-one-light.css') }}" /> -->
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/helpers/_monokai-sublime.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/components/footer.css') }}" />
+
 		<link href="{{ url_for('static', filename='css/fonts/material_icons.css') }}" rel="stylesheet">
 
 		<title>
@@ -35,9 +31,6 @@
 	<body class="anim-fade-in">
 		<div class="anim-grow-x bg-green"></div>
 		{% include 'components/_header.html' %}
-		
-		<script src="{{ url_for('static', filename='js/helpers/code_highlight.min.js') }}"></script>
-		<script>hljs.initHighlightingOnLoad();</script>
 		
 		<div class="container main">
 			{% with messages = get_flashed_messages(with_categories=true) %} 
@@ -54,6 +47,7 @@
 			{% endwith %}
 			{% block content %}{% endblock %}
 		</div>
+		{% include 'components/_footer.html' %}
 
 		<!-- Optional JavaScript -->
 		<script src="{{ url_for('static', filename='js/helpers/jquery.min.js') }}"></script>

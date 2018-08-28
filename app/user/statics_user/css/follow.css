@@ -1,12 +1,14 @@
+.follow .user-avatar {
+  padding: 10px 10px 10px 0;
+}
 .follow .user-avatar img {
   border-radius: 50%;
-  width: 50px;
+  width: 40px;
+  height: 40px;
 }
 .follow .user-avatar span {
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 5px;
   font-size: 14px;
+  font-weight: bold;
 }
 .follow .user-avatar span:nth-child(2) {
   margin-top: -5px;
@@ -16,5 +18,5 @@
 }
 .follow .btn {
   float: right;
-  margin-top: 13px;
+  margin-top: 12px;
 }

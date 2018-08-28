@@ -5,6 +5,8 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+from flask import current_app
+
 from .. import (
     # blueprint
     moderator,
@@ -16,7 +18,7 @@ from .. import (
     is_moderator, create_response,
 
     # models
-    Post,
+    Post, Message, User,
 
     # data
     page_titles, get_data
@@ -34,6 +36,7 @@ def dashboard_page():
         'title_page': page_titles['dashboard_page'],
         'posts': data['posts'],
         'comments': data['comments'],
+        'messages': data['messages'],
         'page': 'dashboard'
     })
 
@@ -49,6 +52,7 @@ def posts_page():
         'title_page': page_titles['posts_page'],
         'posts': data['posts'],
         'comments': data['comments'],
+        'messages': data['messages'],
         'page': 'posts'
     })
 
@@ -66,6 +70,7 @@ def post_page(id):
         'posts': data['posts'],
         'post': post,
         'comments': data['comments'],
+        'messages': data['messages'],
         'tags': tags
     })
 
@@ -85,5 +90,23 @@ def returnPost_page(id):
         'form': form,
         'post': post,
         'comments': data['comments'],
+        'messages': data['messages'],
         'posts': data['posts']
+    })
+
+
+
+@moderator.route('/moderator/messages/')
+def messages_page():
+    '''Генерирует страницу сообщений службы поддержки'''
+    data = get_data()
+
+    print(data['messages'])
+
+    return create_response(template='mod_messages.html', data={
+        'title_page': page_titles['messages_page'],
+        'page': 'messages',
+        'posts': data['posts'],
+        'comments': data['comments'],
+        'messages': data['messages']
     })

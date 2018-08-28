@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% from 'macros/_formhelpers.html' import render_field %}
-{% block style %}{% endblock %}
+{% block style %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/components/nav_publications.css') }}" />
+	<link rel="stylesheet" href="{{ url_for('post.static', filename='css/post.css') }}">
+{% endblock %}
 {% block scripts %}
 	<script src="{{ url_for('static', filename='js/scripts/ajax_form.js') }}"></script>
 {% endblock %}
@@ -16,6 +19,10 @@
 		<div class="Box my-3">
 			<div class="Box-header">
 				<small>Редактирование поста.</small>
+				<a class="btn btn-sm btn-outline ml-3" style="margin-top:-4px;" target="_blank" 
+					href="{{ url_for('post.post_page', id=data.post.id) }}">
+					Посмотреть
+				</a>
 			</div>
 			<div class="Box-body">
 				<form action="{{ url_for('post.editPostForm_req', id=data.post.id) }}" method="POST">
@@ -45,10 +52,14 @@
 						</dl>
 					{% endif %}
 					<br>
-					<button class="btn btn-sm btn-primary" type="submit">Сохранить пост</button>
+					<p class="note">Чтобы не потерять внесённые изменения перед публикацией, сохраните их.</p>
+					<hr>
+					<button class="btn btn-sm btn-primary" type="submit">Сохранить</button>
+					<a class="btn btn-sm btn-blue"
+						href="{{ url_for('post.sendModerationPost_request', id=data.post.id) }}">Опубликовать</a>
 					<a href="{{ url_for('post.deletePost_request', id=data.post.id) }}" 
-						class="btn btn-sm btn-danger" role="button">Удалить пост</a>
-					<a href="javascript:history.go(-1)" class="btn btn-sm" role="button">Отмена</a>
+						class="btn btn-sm btn-danger" role="button">Удалить</a>
+					<a href="javascript:history.go(-1)" class="btn btn-sm" role="button">Назад</a>
 				</form>
 			</div>
 		</div>

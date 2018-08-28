@@ -19,7 +19,7 @@ from .. import (
     AddNotice_form,
 
     # models
-    Post, Notice,
+    Post, Notice, Tag, Rel_tag, Post_rating,
 
     # database
     db
@@ -58,6 +58,20 @@ def deletePost_request(id):
     title = 'Модерация публикаций'
     body = '''Пост: <b>{}</b> <br> не прошёл модерацию и был удалён'''.format(post.title)
     notice = Notice(title=title, body=body, author=post.author)
+
+    post_r = Post_rating.query.filter_by(post=post).all()
+    for pr in post_r:
+        db.session.delete(pr)
+
+    rel_tags = Rel_tag.query.filter_by(post=post).all()
+    for r_t in rel_tags:
+        tag = r_t.tag
+        tags = Tag.query.filter_by(name=tag.name).all()
+        for t in tags:
+            if t.posts.count() <= 1:
+                db.session.delete(t)
+        
+        db.session.delete(r_t)
 
     db.session.add(notice)
     db.session.delete(post)

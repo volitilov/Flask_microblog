@@ -36,10 +36,3 @@ var StickyElement = function(node) {
 };
   
 var demo = new StickyElement(j('#sticky'));
-
-
-
-// свернуть навигацию по публикациям для удобного чтения
-j('.nav-publications .menu').children('.menu-item').each(function(index, item) {
-    j(item).toggle(250);
-});

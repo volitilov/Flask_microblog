@@ -1,6 +1,9 @@
 <section class="nav nav-left">
     <nav class="menu">
-        <span class="menu-heading">Персоналные настройки</span>
+        <span class="menu-heading">
+            <span>Персоналные настройки</span>
+            <span><i class="material-icons">arrow_drop_down</i></span>
+        </span>
         <a class="menu-item {% if data.page == 'edit_profile' %}selected{% endif %}" href="{{ url_for('user.editProfile_page') }}">Настройки профиля</a>
         <a class="menu-item {% if data.page == 'edit_account' %}selected{% endif %}" href="{{ url_for('user.editAccount_page') }}">Настройки аккаунта</a>
         <a class="menu-item {% if data.page == 'edit_notice' %}selected{% endif %}" href="{{ url_for('user.editNotice_page') }}">Настройки уведомлений</a>

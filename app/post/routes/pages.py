@@ -5,7 +5,8 @@
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-from flask import request, flash, current_app, redirect, url_for
+import urllib
+from flask import request, flash, current_app, redirect, url_for, abort
 from flask_login import current_user, login_required
 
 from .. import (
@@ -39,8 +40,7 @@ def editPost_page(id):
     post = Post.query.get_or_404(id)
 
     if current_user != post.author:
-        flash(category='warn', message='Вы не являетесь автором публикации.')
-        return redirect(url_for('post.posts_page'))
+        abort(403)
     
     if post.state == 'moderation':
         return redirect(url_for('post.post_page', id=post.id))
@@ -67,6 +67,9 @@ def editPost_page(id):
 @login_required
 def addPost_page():
     '''Генерирует страницу с формай создания постов.'''
+    if not current_user.writer:
+        flash(message='Вы не можете писать посты пока не станите автором.')
+        return redirect('/posts/63')
     data = get_posts()
     form = AddPost_form()
     return create_response(template='add_post.html', data={
@@ -137,7 +140,7 @@ def userPosts_page(username):
     if not current_user.is_anonymous:
         if current_user.name == username:
             posts = user.posts.filter(Post.state!='moderation')
-            comments = user.comments.filter(Comment.state!='moderator')
+            comments = user.comments.filter(Comment.state!='moderation')
 
     page = request.args.get('page', 1, type=int)
     pagination = posts.order_by(Post.data_creation.desc()).paginate(
@@ -182,11 +185,14 @@ def tagPosts_page(id):
     flash(category='success', 
         message='Показаны результаты запроса по тегу <b>{}</b>'.format(tag.name))
 
+    print(data['all_posts'].count() > count_items)
+
     return create_response(template='posts.html', data={
         'page_title': page_titles['tagPosts_page'],
         'page_posts': tag_posts,
         'pagination': pagination,
         'endpoint': 'post.tagPosts_page',
+        'tag': tag,
         'count_items': count_items,
         'all_posts': data['all_posts'],
         'followed_posts': data['followed_posts']
@@ -211,7 +217,7 @@ def post_page(id):
     if current_user.is_anonymous:
         rating_bool = False
     else:
-        if Post_rating.query.filter_by(post=post).filter_by(author=current_user).first():
+        if Post_rating.query.filter_by(post=post, author=current_user).first():
             rating_bool = True
 
         if post.author == current_user:
@@ -220,13 +226,14 @@ def post_page(id):
     if post.state == 'public' or post.state == 'develop' \
         and post.author == current_user:
         return create_response(template='post.html', data={
-            'page_title': page_titles['post_page'] + post.title,
+            'page_title': post.title,
             'post': post,
             'comments': post.comments.filter(Comment.state=='public'),
             'rating_bool': rating_bool,
             'tags': tags,
             'all_posts': data['all_posts'],
-            'followed_posts': data['followed_posts']
+            'followed_posts': data['followed_posts'],
+            'base_url': request.base_url
         })
     if post.state == 'moderation':
         state_body = 'Находится на модерации'
@@ -250,7 +257,8 @@ def byViewingPosts_page():
     count_items = current_app.config['APP_POSTS_PER_PAGE']
 
     page = request.args.get('page', 1, type=int)
-    pagination = data['all_posts'].paginate(page, 
+    posts = data['all_posts'].order_by(Post.views.desc())
+    pagination = posts.paginate(page, 
         per_page=count_items, error_out=False)
 
     return create_response(template='posts.html', data={
@@ -273,7 +281,8 @@ def byRatingPosts_page():
     count_items = current_app.config['APP_POSTS_PER_PAGE']
 
     page = request.args.get('page', 1, type=int)
-    pagination = data['all_posts'].paginate(page, 
+    posts = data['all_posts'].order_by(Post.rating.desc())
+    pagination = posts.paginate(page, 
         per_page=count_items, error_out=False)
 
     return create_response(template='posts.html', data={

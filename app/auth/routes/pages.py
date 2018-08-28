@@ -38,6 +38,9 @@ def unconfirmed_page():
 @auth.route(rule='/login')
 def login_page():
     '''Генерирует страницу авторизации'''
+    if not current_user.is_anonymous:
+        return redirect(url_for('main.home_page'))
+        
     form = Login_form()
     return create_response(template='login.html', data={
         'form': form,

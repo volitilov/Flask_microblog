@@ -11,7 +11,7 @@
 
 {% block content %}
 	<section class="home mt-3">
-		<div class="blankslate">
+		<div class="Box p-5">
 			<h3>This is a blank slate</h3>
 			<p>Равным образом укрепление и развитие структуры позволяет выполнять 
 				важные задания по разработке направлений прогрессивного развития. 
@@ -26,6 +26,7 @@
 					{{ data.form.csrf_token }}
 					{{ render_field(data.form.q, placeholder='Найти публикацию', class="form-control") }}
 				</form>
+				<hr>
 				<div class="tags mt-6">
 					<ul>
 						{% for tag in data.tags %}
@@ -36,6 +37,8 @@
 							</li>
 						{% endfor %}
 					</ul>
+					<br>
+					<p>Смотреть <a href="{{ url_for('main.allTags_page') }}">все теги...</a></p>
 				</div>
 		</div>
     </section>

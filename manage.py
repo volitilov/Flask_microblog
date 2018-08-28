@@ -16,6 +16,7 @@ from app.models.post import Post
 from app.models.tag import Tag, Rel_tag
 from app.models.comment import Comment
 from app.models.notice import Notice
+from app.models.message import Message
 from app.models.post_rating import Post_rating
 
 from flask_migrate import Migrate, MigrateCommand
@@ -55,7 +56,7 @@ def make_shell_context():
     '''Запускает shell со сконфигурированым контекстом'''
     return dict(app=app, db=database, User=User, Post=Post, Role=Role, 
         Follow=Follow, Comment=Comment, Notice=Notice, UserSettings=UserSettings,
-        Post_rating=Post_rating, Tag=Tag, Rel_tag=Rel_tag)
+        Post_rating=Post_rating, Tag=Tag, Rel_tag=Rel_tag, Message=Message)
 
 
 # flask test
@@ -111,20 +112,6 @@ def profile(length):
     app.run(debug=False)
 
 
-# flask generate_fake_data 'count'
-@app.cli.command()
-@click.argument('count', default=10)
-def generate_fake_data(count):
-    '''Генерирует фейковые данные (посты, пользователи)'''
-    from app.utils import (
-        generate_fake_posts, generate_fake_users, add_self_follows
-    )
-
-    generate_fake_users(count)
-    add_self_follows()
-    generate_fake_posts(count)
-
-
 
 # flask deploy
 @app.cli.command()
@@ -138,27 +125,6 @@ def deploy():
 
     # обновляет пользователей как читающих самих себя
     add_self_follows()
-
-
-
-@app.cli.command()
-def set_data():
-    '''Записывает необходимые данные в оперативку'''
-    client = app.memory
-
-    client.set(key='post_count', value=Post.query.count())
-    print('\nЗаписано в память кол-во постов.')
-    
-    client.set(key='user_count', value=User.query.count())
-    print('Записано в память кол-во пользователей.')
-    
-    client.set(key='comment_count', value=Comment.query.count())
-    print('Записано в память кол-во комментариев.')
-
-    client.set(key='notice_count', value=Notice.query.count())
-    print('Записано в память кол-во уведомлений.')
-
-    print('Работа завершена \n')
 
 
 

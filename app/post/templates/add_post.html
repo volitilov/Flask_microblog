@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 {% from 'macros/_formhelpers.html' import render_field %}
+{% block style %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/components/nav_publications.css') }}" />
+	<link rel="stylesheet" href="{{ url_for('post.static', filename='css/post.css') }}">
+{% endblock %}
 {% block scripts %}
 	<script src="{{ url_for('static', filename='js/scripts/ajax_form.js') }}"></script>
 {% endblock %}
@@ -17,6 +21,13 @@
 				<small>Форма добавления постов</small>
 			</div>
 			<div class="Box-body">
+				<p class="note">Если вы не разу не публиковали на данном ресурсе 
+					предворительно прочитайте <a href="/posts/2">документацию</a>, это 
+					поможет избежать много лишней работы. В частности оглавление 
+					должно соответствовать <a href="/posts/2#3">документации</a>, иначе публикация не пройдёт
+					модерацию.
+				</p>
+				<hr>
 				<form action="{{ url_for('post.addPostForm_req') }}" method="POST">
 					{{ data.form.csrf_token }}
 					{{ render_field(data.form.title, class="form-control") }}
@@ -43,9 +54,9 @@
 							<dd>{{ data.form.tags(class="form-control") }}</dd>
 						</dl>
 					{% endif %}
-					<br>
-					<button class="btn btn-primary" type="submit">Добавить пост</button>
-					<a href="javascript:history.go(-1)" class="btn btn-sm" role="button">Отмена</a>
+					<br><hr>
+					<button class="btn btn-primary" type="submit">Сохранить</button>
+					<a href="javascript:history.go(-1)" class="btn btn-sm" role="button">Назад</a>
 				</form>
 			</div>
 		</div>

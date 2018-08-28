@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% from 'macros/_formhelpers.html' import render_field %}
+{% block scripts %}
+	<script src="{{ url_for('static', filename='js/scripts/ajax_form.js') }}"></script>
+{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+<section class="columns">
+	<aside class="one-fourth column">
+		{% include 'components/_nav_publications.html' %}
+	</aside>
+	<div class="three-fourths column">
+		<div class="Box mt-3">
+			<div class="Box-header">
+				<small>Форма отправки сообщений в службу поддержки</small>
+			</div>
+			<div class="Box-body">
+                <form action="{{ url_for('main.supportForm_req') }}" method="POST">
+                    {{ data.form.csrf_token }}
+                    {{ render_field(data.form.title, class="form-control", 
+                        placeholder='Опишите вашу проблему в двух словах.') }}
+                    {{ render_field(data.form.body, rows=10, cols=60, class="form-control",
+                        placeholder='Раскажите о вашей проблеме чуть подробнее.') }}
+					<button class="btn btn-sm btn-primary" type="submit">Отправить</button>
+					<a href="javascript:history.go(-1)" class="btn btn-sm" role="button">Отмена</a>
+                </form>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/nav_publications.css') }}" />
+{% endblock %}
+{% block scripts %}{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+	<section>
+        <aside class="one-fourth column">
+            {% include 'components/_nav_publications.html' %}
+        </aside>
+        <div class="three-fourths column">
+            <div class="Box mt-3 p-3">
+                <div class="tags">
+                    <ul>
+                        {% for tag in data.tags %}
+                            <li>
+                                <a href="{{ url_for('post.tagPosts_page', id=tag.id) }}" class="Label Label--gray-darker mx-1 p-2">
+                                    {{ tag.name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

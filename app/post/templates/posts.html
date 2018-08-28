@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% from 'macros/_pagination.html' import render_pagination %}
 {% block style %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/components/nav_publications.css') }}" />
 	<link rel="stylesheet" href="{{ url_for('post.static', filename='css/post.css') }}" />
 {% endblock %}
 {% block scripts %}{% endblock %}
@@ -21,7 +22,7 @@
 						</li>
 					{% endfor %}
 				</ul>
-				{% if data.all_posts.count() > data.count_items %}
+				{% if data.all_posts.count() > data.count_items and data.page_posts|count == data.count_items %}
 					{% if data.tag %}
 						{{ render_pagination(data.pagination, data.endpoint, id=data.tag.id) }}
 					{% else %}

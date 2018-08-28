@@ -291,7 +291,6 @@ class User(UserMixin, db.Model):
             'location': self.location,
             'date_registration': self.date_registration,
             'last_visit': self.last_visit,
-            'notice': 'notice',
             'posts_url': url_for('api.get_userPosts', id=self.id),
             'followed_posts_url': url_for('api.get_userFollowedPosts', id=self.id),
             'post_count': self.posts.count()

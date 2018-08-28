@@ -7,9 +7,16 @@
 from flask import g, jsonify, request
 from flask_httpauth import HTTPBasicAuth
 
-from . import api
-from .errors import unauthorized, forbidden
-from ..models.user import User
+from . import (
+    # blueprint
+    api,
+
+    # errors handler
+    unauthorized, forbidden,
+
+    # models
+    User
+)
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

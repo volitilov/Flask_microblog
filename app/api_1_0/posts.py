@@ -2,17 +2,26 @@
 
 # - обработка GET-запросов на получения постов
 # - обработка POST-запросов добавляющих новые посты
+# - обработка GET-запросов на получение постов пользователя 
+# - обработка GET-запросов на постов читаемых пользователем
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 from flask import jsonify, request, url_for, current_app, g
 
-from . import api
-from .errors import forbidden
-from .. import db
-from ..models.post import Post
-from ..models.comment import Comment
-from ..models.tag import Tag, Rel_tag
+from . import (
+    # blueprint
+    api,
+
+    # error handler
+    forbidden,
+
+    # database
+    db,
+
+    # models
+    Post, Comment, User, Tag, Rel_tag
+)
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -130,3 +139,30 @@ def edit_post(id):
     db.session.commit()
 
     return jsonify({'message': 'Пост отправлен на модерацию.'}), 201
+
+
+
+@api.route('/users/<int:id>/posts/')
+def get_userPosts(id):
+    '''Возвращает посты написаные пользователем'''
+    user = User.query.get(id)
+    if not user:
+        return not_found(message='Такого пользователя нет.')
+    
+    posts = user.posts.filter_by(state='public')
+    posts = [post.to_json() for post in posts]
+    return jsonify(posts)
+
+
+
+@api.route('/users/<int:id>/followed_posts/')
+def get_userFollowedPosts(id):
+    '''Возвращает посты пользователя на которого подписан запрашиваемый
+    пользователь'''
+    user = User.query.get(id)
+    if not user:
+        return not_found(message='Такого пользователя нет.')
+        
+    followed_posts = user.followed_posts.filter(Post.state=='public')
+    followed_posts = [post.to_json() for post in followed_posts]
+    return jsonify(followed_posts)

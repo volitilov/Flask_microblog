@@ -8,11 +8,19 @@
 
 from flask import jsonify, request, g
 
-from . import api
-from .errors import forbidden, not_found
-from ..models.comment import Comment
-from ..models.post import Post
-from .. import db
+from . import (
+    # blueprint
+    api,
+
+    # error handler
+    forbidden, not_found,
+
+    # models
+    Comment, Post,
+
+    # database
+    db
+)
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

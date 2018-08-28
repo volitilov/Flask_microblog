@@ -49,7 +49,6 @@ class Post(SearchableMixin, db.Model):
             't_contents': self.t_contents_html,
             'body': self.body_html,
             'timestamp': self.data_creation,
-            'tags': 'tags',
             'views': self.views,
             'rating': self.rating,
             'author': url_for('api.get_user', id=self.author_id, _external=True),

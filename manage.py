@@ -78,7 +78,7 @@ def test(name):
 
     - all --> запускает все вышеперечисленные тесты
     '''
-    import unittest, subprocess, sys
+    import unittest, subprocess
 
     if name == 'app':
         tests_basic = unittest.TestLoader().discover('tests/app/')
@@ -126,10 +126,19 @@ def test_cov():
     cov = coverage.coverage(branch=True, include='app/*')
     cov.start()
 
-    tests = unittest.TestLoader().discover('tests')
-    print()
+    import shutil
+    os.makedirs('tests/all', exist_ok=True)
+    for folder, subFolders, files in os.walk('tests'):
+        for file in files:
+            _, ext = os.path.splitext(file)
+            if ext == '.py':
+                f = os.path.abspath(folder+'/'+file)
+                shutil.copy(f, 'tests/all/{}'.format(file))
+    
+    tests = unittest.TestLoader().discover('tests/all')
+    os.system('echo "\n\033[92mALL_TESTS: \033[0m"')
     unittest.TextTestRunner(verbosity=2).run(tests)
-    print()
+    shutil.rmtree('tests/all/')
 
     cov.stop()
     cov.save()

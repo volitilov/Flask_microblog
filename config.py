@@ -29,6 +29,8 @@ class Config:
     APP_FOLLOWERS_PER_PAGE = 10
     APP_NOTICE_PER_PAGE = 5
 
+    FLASK_COVERAGE = True
+
     # включает запись информации о запросах
     SQLALCHEMY_RECORD_QUERIES = True
     # устанавливает порог выше которого запросы считаются медленными

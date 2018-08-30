@@ -61,15 +61,62 @@ def make_shell_context():
 
 # flask test
 @app.cli.command()
-def test():
-    '''Запускает модульные тесты'''
-    import unittest, subprocess
-    tests = unittest.TestLoader().discover('tests')
-    print()
-    unittest.TextTestRunner(verbosity=2).run(tests)
-    print()
+@click.argument('name')
+def test(name):
+    '''
+    Запускает модульные тесты пример:
+
+    flask test name - где "name" может быть следеющим:
+
+    - app --> базовое тестирование приложения
+
+    - api --> тестирование api
+
+    - client --> тестирование клиента
+
+    - models --> тестирование моделей
+
+    - all --> запускает все вышеперечисленные тесты
+    '''
+    import unittest, subprocess, sys
+
+    if name == 'app':
+        tests_basic = unittest.TestLoader().discover('tests/app/')
+        os.system('echo "\n\033[92mTESTS_BASICS: \033[0m"')
+        unittest.TextTestRunner(verbosity=2).run(tests_basic)
+
+    if name == 'api':
+        tests_api = unittest.TestLoader().discover('tests/api/')
+        os.system('echo "\n\033[92mTESTS_API: \033[0m"')
+        unittest.TextTestRunner(verbosity=2).run(tests_api)
+
+    if name == 'client':
+        tests_client = unittest.TestLoader().discover('tests/client/')
+        os.system('echo "\n\033[92mTESTS_CLIENT: \033[0m"')
+        unittest.TextTestRunner(verbosity=2).run(tests_client)
+
+    if name == 'models':
+        tests_models = unittest.TestLoader().discover('tests/models/')
+        os.system('echo "\n\033[92mTESTS_MODELS: \033[0m"')
+        unittest.TextTestRunner(verbosity=2).run(tests_models)
+
+    if name == 'all':
+        import shutil
+        os.makedirs('tests/all', exist_ok=True)
+        for folder, subFolders, files in os.walk('tests'):
+            for file in files:
+                _, ext = os.path.splitext(file)
+                if ext == '.py':
+                    f = os.path.abspath(folder+'/'+file)
+                    shutil.copy(f, 'tests/all/{}'.format(file))
         
+        tests = unittest.TestLoader().discover('tests/all')
+        os.system('echo "\n\033[92mALL_TESTS: \033[0m"')
+        unittest.TextTestRunner(verbosity=2).run(tests)
+        shutil.rmtree('tests/all/')
+
     subprocess.call('rm -r data_test.sqlite', shell=True)
+
 
 
 # flask test_cov
@@ -97,13 +144,13 @@ def test_cov():
     subprocess.call('rm -r data_test.sqlite', shell=True)
 
 
+
 # flask profile
 @app.cli.command()
 @click.option('--length', default=15, 
     help='Number of functions to include in the profiler report.')
 def profile(length):
     '''Запускает приложение с профилированием запросов'''
-
     from werkzeug.contrib.profiler import ProfilerMiddleware, MergeStream
 
     abs_path = os.path.abspath('')

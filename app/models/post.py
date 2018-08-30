@@ -43,16 +43,15 @@ class Post(SearchableMixin, db.Model):
 
     def to_json(self):
         return {
-            'id': self.id,
-            'url': url_for('api.get_post', id=self.id, _external=True),
+            'url': url_for('api.get_post', id=self.id),
             'title': self.title,
             't_contents': self.t_contents_html,
             'body': self.body_html,
             'timestamp': self.data_creation,
             'views': self.views,
             'rating': self.rating,
-            'author': url_for('api.get_user', id=self.author_id, _external=True),
-            'comments': url_for('api.get_postComments', id=self.id, _external=True),
+            'author': url_for('api.get_user', id=self.author_id),
+            'comments': url_for('api.get_postComments', id=self.id),
             'comment_count': self.comments.count()
         }
 

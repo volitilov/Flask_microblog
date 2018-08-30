@@ -6,4 +6,5 @@ migrations/
 .gitexcludes
 .venv/
 tmp/
+.env
 node_modules/

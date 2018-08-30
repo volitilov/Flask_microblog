@@ -7,4 +7,5 @@ migrations/
 .venv/
 .env
 tmp/
+.env
 node_modules/

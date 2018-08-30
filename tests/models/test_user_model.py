@@ -140,6 +140,7 @@ class ModelUser_test(unittest.TestCase):
             (datetime.utcnow() - us.date_registration).seconds < 500)
 
 
+
     def test_ping(self):
         u = User(name='test', email='test@mail.ru', password='test')
         db.session.add(u)
@@ -197,6 +198,7 @@ class ModelUser_test(unittest.TestCase):
         db.session.delete(u2)
         db.session.commit()
         self.assertTrue(Follow.query.count() == 1)
+
 
 
     def test_to_json(self):

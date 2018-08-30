@@ -29,7 +29,7 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv()
 
 
-app = create_app(os.getenv('APP_ENV'))
+app = create_app(os.environ.get('APP_ENV', default='development'))
 migrate = Migrate(app, database)
 
 if not app.debug:

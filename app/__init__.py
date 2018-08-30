@@ -18,7 +18,7 @@ from .extensions import (
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-def create_app(config_name):
+def create_app(config_name='development'):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
 

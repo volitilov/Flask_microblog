@@ -12,14 +12,14 @@ load_dotenv()
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 class Config:
-    SECRET_KEY = os.getenv('SECRET_KEY')
-    WTF_CSRF_SECRET_KEY = os.getenv('WTF_CSRF_SECRET_KEY')
+    SECRET_KEY = os.environ.get('SECRET_KEY', default=os.urandom(8))
+    WTF_CSRF_SECRET_KEY = os.environ.get('WTF_CSRF_SECRET_KEY', default=os.urandom(8))
 
-    RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY')
-    RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY')
+    RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY', default='')
+    RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY', default='')
     RECAPTCHA_DATA_ATTRS = {'theme': 'light'}
 
-    ELASTICSEARCH_URL = os.getenv('ELASTICSEARCH_URL')
+    ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL', default='')
 
     # включение / отключение CSRF
     WTF_CSRF_ENABLED = True
@@ -28,6 +28,8 @@ class Config:
     APP_POSTS_PER_PAGE = 5
     APP_FOLLOWERS_PER_PAGE = 10
     APP_NOTICE_PER_PAGE = 5
+
+    FLASK_COVERAGE = True
 
     # включает запись информации о запросах
     SQLALCHEMY_RECORD_QUERIES = True
@@ -46,20 +48,19 @@ class Config:
 
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024
 
-    APP_MAIL_SENDER = 'Admin volitilov@gmail.com'
-    APP_MAIL_SUBJECT_PREFIX = '[ voliTilov ] '
-    APP_ADMIN = os.getenv('APP_ADMIN')
-    APP_MODERATOR = os.getenv('APP_MODERATOR')
+    APP_MAIL_SENDER = 'volitilov@gmail.com'
+    APP_ADMIN = os.environ.get('APP_ADMIN', default='volitilov@gmail.com') 
+    APP_MODERATOR = os.environ.get('APP_MODERATOR', default='volitilov@gmail.com')
 
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 465
-    MAIL_USERNAME = os.getenv('MAIL_USERNAME')
-    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME', default='test')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', default='test123')
     MAIL_USE_SSL = True
     MAIL_DEFAULT_SENDER = MAIL_USERNAME
 
-    VK_APP_SECRET_KEY = os.getenv('VK_APP_SECRET_KEY')
-    VK_APP_ID = os.getenv('VK_APP_ID')
+    VK_APP_SECRET_KEY = os.environ.get('VK_APP_SECRET_KEY', default='')
+    VK_APP_ID = os.environ.get('VK_APP_ID', default='')
     VK_VERSION = '5.52'
     VK_AUTHORIZATION_URL = 'https://oauth.vk.com/authorize'
 
@@ -72,13 +73,13 @@ class DevelopmentConfig(Config):
     FLASK_DEBUG = True
 
     # путь к файлу к базе данных.
-    SQLALCHEMY_DATABASE_URI = os.getenv('DEV_DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL', default='')
 
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.environ.get('PROD_DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('PROD_DATABASE_URL', 
+        default='sqlite:///' + os.path.join(basedir, 'data.sqlite'))
 
     @classmethod
     def init_app(cls, app):
@@ -93,7 +94,7 @@ class ProductionConfig(Config):
 
         if getattr(cls, 'MAIL_USERNAME', None) is not None:
             credentials = (cls.MAIL_USERNAME, cls.MAIL_PASSWORD)
-            if getattr(cls, 'MAIL_USE_TLS', None):
+            if getattr(cls, 'MAIL_USE_SSL', None):
                 secure = ()
         mail_handler = SMTPHandler(
             mailhost=(cls.MAIL_SERVER, cls.MAIL_PORT),

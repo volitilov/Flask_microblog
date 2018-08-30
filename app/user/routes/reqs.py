@@ -99,6 +99,10 @@ def deleteAccount_request():
         db.session.delete(post)
     for comment in user.comments:
         db.session.delete(comment)
+
+    u_settings = UserSettings.query.filter_by(profile=user).all()
+    for i in u_settings:
+        db.session.delete(i)
         
     db.session.delete(user)
     db.session.commit()

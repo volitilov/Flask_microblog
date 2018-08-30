@@ -64,12 +64,11 @@ class Comment(db.Model):
 
     def to_json(self):
         json_comment = {
-            'id': self.id,
-            'url': url_for('api.get_comment', id=self.id, _external=True),
+            'url': url_for('api.get_comment', id=self.id),
             'body': self.body,
             'timestamp': self.timestamp,
-            'author': url_for('api.get_user', id=self.author_id, _external=True),
-            'post': url_for('api.get_post', id=self.post_id, _external=True)
+            'author': url_for('api.get_user', id=self.author_id),
+            'post': url_for('api.get_post', id=self.post_id)
         }
         return json_comment
 

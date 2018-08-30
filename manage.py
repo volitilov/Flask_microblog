@@ -28,6 +28,7 @@ from dotenv import load_dotenv, find_dotenv
 # окружение приложения
 load_dotenv()
 
+
 app = create_app(os.getenv('APP_ENV'))
 migrate = Migrate(app, database)
 

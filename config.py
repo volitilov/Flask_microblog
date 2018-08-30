@@ -12,8 +12,8 @@ load_dotenv()
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 class Config:
-    SECRET_KEY = os.getenv('SECRET_KEY')
-    WTF_CSRF_SECRET_KEY = os.getenv('WTF_CSRF_SECRET_KEY')
+    SECRET_KEY = os.getenv('SECRET_KEY') or os.urandom(8)
+    WTF_CSRF_SECRET_KEY = os.getenv('WTF_CSRF_SECRET_KEY') or os.urandom(8)
 
     RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY')
     RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY')
@@ -48,15 +48,14 @@ class Config:
 
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024
 
-    APP_MAIL_SENDER = 'Admin volitilov@gmail.com'
-    APP_MAIL_SUBJECT_PREFIX = '[ voliTilov ] '
-    APP_ADMIN = os.getenv('APP_ADMIN')
-    APP_MODERATOR = os.getenv('APP_MODERATOR')
+    APP_MAIL_SENDER = 'volitilov@gmail.com'
+    APP_ADMIN = os.getenv('APP_ADMIN') or 'volitilov@gmail.com'
+    APP_MODERATOR = os.getenv('APP_MODERATOR') or 'volitilov@gmail.com'
 
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 465
-    MAIL_USERNAME = os.getenv('MAIL_USERNAME')
-    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
+    MAIL_USERNAME = os.getenv('MAIL_USERNAME') or 'test'
+    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD') or 'test123'
     MAIL_USE_SSL = True
     MAIL_DEFAULT_SENDER = MAIL_USERNAME
 
@@ -95,7 +94,7 @@ class ProductionConfig(Config):
 
         if getattr(cls, 'MAIL_USERNAME', None) is not None:
             credentials = (cls.MAIL_USERNAME, cls.MAIL_PASSWORD)
-            if getattr(cls, 'MAIL_USE_TLS', None):
+            if getattr(cls, 'MAIL_USE_SSL', None):
                 secure = ()
         mail_handler = SMTPHandler(
             mailhost=(cls.MAIL_SERVER, cls.MAIL_PORT),

@@ -8,3 +8,4 @@ script:
   - export FLASK_APP=manage.py
   - export FLASK_ENV='development'
   - flask test app
+  - flask test models

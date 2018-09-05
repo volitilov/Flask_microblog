@@ -1,19 +1,28 @@
 <section class="nav nav-left">
     <nav class="menu">
         <span class="menu-heading">Информация о пользователе</span>
-        <a class="menu-item" href="#">
+        <a class="menu-item {% if data.page == 'dashboard' %}selected{% endif %}" 
+            href="{{ url_for('admin.dashboard_page') }}">
+            Dashboard
+        </a>
+        <a class="menu-item {% if data.page == 'roles' %}selected{% endif %}" 
+            href="{{ url_for('admin.adminRoles_page') }}">
             Роли
         </a>
-        <a class="menu-item" href="#">
+        <a class="menu-item {% if data.page == 'notice' %}selected{% endif %}" 
+            href="{{ url_for('admin.adminNotice_page') }}">
             Уведомления
         </a>
-        <a class="menu-item" href="#">
+        <a class="menu-item {% if data.page == 'users' %}selected{% endif %}" 
+            href="{{ url_for('admin.adminUsers_page') }}">
             Пользователи
         </a>
-        <a class="menu-item" href="#">
+        <a class="menu-item {% if data.page == 'posts' %}selected{% endif %}" 
+            href="{{ url_for('admin.adminPosts_page') }}">
             Публикации
         </a>
-        <a class="menu-item" href="#">
+        <a class="menu-item {% if data.page == 'comments' %}selected{% endif %}" 
+            href="{{ url_for('admin.adminComments_page') }}">
             Комментарии
         </a>
         <a class="menu-item" href="#">

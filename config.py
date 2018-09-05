@@ -29,6 +29,12 @@ class Config:
     APP_FOLLOWERS_PER_PAGE = 10
     APP_NOTICE_PER_PAGE = 5
 
+    # admin
+    ADMIN_POSTS_PER_PAGE = 10
+    ADMIN_USERS_PER_PAGE = 10
+    ADMIN_NOTICE_PER_PAGE = 10
+    ADMIN_COMMENTS_PER_PAGE = 10
+
     FLASK_COVERAGE = True
 
     # включает запись информации о запросах
@@ -36,8 +42,6 @@ class Config:
     # устанавливает порог выше которого запросы считаются медленными
     FLASKY_SLOW_DB_QUERY_TIME = 0.5
 
-    # папка, где храняться файлы SQLAlchemy-migrate
-    SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
     # отслеживет изменение объектов и испускает сигналы
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

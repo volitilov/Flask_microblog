@@ -11,7 +11,13 @@
         </aside>
         <div class="three-fourths column">
             <div class="Box">
-                <h1>Dashboard</h1>
+                {% for role in data.roles %}
+                    <div class="Box-row">
+                        <a href="{{ url_for('admin.adminRoleUsers_page', role=role.name) }}">
+                            {{ role.name }}
+                        </a>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>

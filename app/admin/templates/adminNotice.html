@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% from 'macros/_pagination.html' import render_pagination %}
+{% block style %}{% endblock %}
+{% block scripts %}{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+    <div class="columns mt-3">
+        <aside class="one-fourth column">
+            {% include '_nav_panell.html' %}
+        </aside>
+        <div class="three-fourths column">
+            <div class="Box mb-3">
+                {% for notice in data.page_notice %}
+                    <div class="Box-row">
+                        <a href="#">
+                            {% if notice.body_html %}
+                                {{ notice.body_html|safe }}
+                            {% else %}
+                                {{ notice.body|safe }}
+                            {% endif %}
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+            {% if data.all_notice.count() > data.count_items %}
+                {{ render_pagination(data.pagination, data.endpoint) }}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

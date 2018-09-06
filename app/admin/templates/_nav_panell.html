@@ -25,7 +25,8 @@
             href="{{ url_for('admin.adminComments_page') }}">
             Комментарии
         </a>
-        <a class="menu-item" href="#">
+        <a class="menu-item {% if data.page == 'tags' %}selected{% endif %}" 
+            href="{{ url_for('admin.adminTags_page') }}">
             Теги
         </a>
     </nav>

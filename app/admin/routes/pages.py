@@ -13,7 +13,7 @@ from .. import (
     admin,
 
     # models
-    User, Role, Notice, Post, Comment,
+    User, Role, Notice, Post, Comment, Tag,
     
     # utils
     create_response, is_admin,
@@ -138,3 +138,22 @@ def adminComments_page():
     })
 
 
+@admin.route('/tags')
+@is_admin
+def adminTags_page():
+    tags = Tag.query
+    count_items = current_app.config['ADMIN_TAGS_PER_PAGE']
+
+    page = request.args.get('page', 1, type=int)
+    pagination = tags.paginate(
+        page, per_page=count_items, error_out=False)
+
+    return create_response(template='adminTags.html', data={
+        'page': 'tags',
+        'all_tags': tags,
+        'pagination': pagination,
+        'page_tags': pagination.items,
+        'endpoint': 'admin.adminTags_page',
+        'title_page': page_titles['adminTags_page'],
+        'count_items': count_items
+    })

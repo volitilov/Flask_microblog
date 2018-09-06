@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% from 'macros/_pagination.html' import render_pagination %}
+{% block style %}{% endblock %}
+{% block scripts %}{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+    <div class="columns mt-3">
+        <aside class="one-fourth column">
+            {% include '_nav_panell.html' %}
+        </aside>
+        <div class="three-fourths column">
+            <div class="Box mb-3">
+                {% for tag in data.page_tags %}
+                    <div class="Box-row">
+                        <a href="{{ url_for('post.tagPosts_page', id=tag.id) }}" class="Label Label--gray-darker mx-1 p-2">
+                            {{ tag.name }}
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+            {% if data.all_tags.count() > data.count_items %}
+                {{ render_pagination(data.pagination, data.endpoint) }}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

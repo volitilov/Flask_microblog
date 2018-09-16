@@ -14,9 +14,7 @@ from ..utils import create_response, flash_errors
 
 errors = Blueprint(
     name='errors', 
-    import_name=__name__, 
-    static_folder='statics_errors', 
-    template_folder='templates'
+    import_name=__name__
 )
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

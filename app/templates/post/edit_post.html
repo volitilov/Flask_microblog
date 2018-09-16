@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% from 'macros/_formhelpers.html' import render_field %}
+{% block style %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/components/nav_publications.css') }}" />
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/post.css') }}">
+{% endblock %}
+{% block scripts %}
+	<script src="{{ url_for('static', filename='js/scripts/ajax_form.js') }}"></script>
+{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+<section class="columns">
+	<aside class="one-fourth column">
+		{% include 'components/_nav_publications.html' %}
+	</aside>
+	<div class="three-fourths column">
+		<div class="Box my-3">
+			<div class="Box-header">
+				<small>Редактирование поста.</small>
+				<a class="btn btn-sm btn-outline ml-3" style="margin-top:-4px;" target="_blank" 
+					href="{{ url_for('post.post_page', id=data.post.id) }}">
+					Посмотреть
+				</a>
+			</div>
+			<div class="Box-body">
+				<form action="{{ url_for('post.editPostForm_req', id=data.post.id) }}" method="POST">
+					{{ data.form.csrf_token }}
+					{{ data.form.id(type="hidden", value=data.post.id) }}
+					{{ render_field(data.form.title, value=data.post.title, class="form-control") }}
+					{{ render_field(data.form.contents, rows=10, class="form-control") }}
+					{{ render_field(data.form.text, rows=10, class="form-control") }}
+					{% if data.form.tags.errors %}
+						<dl class="form-group errored">
+							<dt>{{ data.form.tags.label }}</dt>
+							<p class="note">
+								Введите теги через запятую, регистр не имеет значения, так как будет преобразован в нижний.
+							</p>
+							<dd>{{ data.form.tags(class="form-control") }}</dd>
+							{% for error in data.form.tags.errors %}
+								<dd class="error">{{ error }}</dd>
+							{% endfor %}
+						</dl>
+					{% else %}
+						<dl class="form-group">
+							<dt>{{ data.form.tags.label }}</dt>
+							<p class="note">
+								Введите теги через запятую, регистр не имеет значения, так как будет преобразован в нижний.
+							</p>
+							<dd>{{ data.form.tags(class="form-control") }}</dd>
+						</dl>
+					{% endif %}
+					<br>
+					<p class="note">Чтобы не потерять внесённые изменения перед публикацией, сохраните их.</p>
+					<hr>
+					<button class="btn btn-sm btn-primary" type="submit">Сохранить</button>
+					<a class="btn btn-sm btn-blue"
+						href="{{ url_for('post.sendModerationPost_request', id=data.post.id) }}">Опубликовать</a>
+					<a href="{{ url_for('post.deletePost_request', id=data.post.id) }}" 
+						class="btn btn-sm btn-danger" role="button">Удалить</a>
+					<a href="javascript:history.go(-1)" class="btn btn-sm" role="button">Назад</a>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>
+
+{% endblock %}

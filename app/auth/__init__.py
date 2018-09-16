@@ -22,9 +22,7 @@ from ..utils import create_response, flash_errors
 
 auth = Blueprint(
     name='auth', 
-    import_name=__name__, 
-    static_folder='statics_auth',
-    template_folder='templates'
+    import_name=__name__
 )
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

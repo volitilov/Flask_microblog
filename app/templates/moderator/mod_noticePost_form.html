@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% from 'macros/_formhelpers.html' import render_field %}
+{% block scripts %}
+	<script src="{{ url_for('static', filename='js/scripts/ajax_form.js') }}"></script>
+{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+<section class="columns mt-3">
+	<aside class="one-fourth column">
+		{% include 'moderator/_mod_nav_panell.html' %}
+	</aside>
+	<div class="three-fourths column">
+		<div class="Box">
+			<div class="Box-header">
+				<small>Форма добавления уведомления</small>
+			</div>
+			<div class="Box-body">
+				<p>Пост: <a href="{{ url_for('post.post_page', id=data.post.id) }}">{{ data.post.title }}</a></p>
+				<p>Автор: <a href="{{ url_for('user.profile_page', username=data.post.author.name) }}">{{ data.post.author.name }}</a></p>
+				<hr>
+                <form action="{{ url_for('moderator.returnPostForm_req', id=data.post.id) }}" method="POST">
+                    {{ data.form.csrf_token }}
+                    {{ render_field(data.form.body, rows=10, cols=60, class="form-control") }}
+					<button class="btn btn-sm btn-primary" type="submit">Отправить</button>
+					<a href="javascript:history.go(-1)" class="btn btn-sm" role="button">Отмена</a>
+                </form>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}

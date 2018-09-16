@@ -36,7 +36,7 @@ def page_not_found(e):
         response.status_code = 404
         return response
 
-    return create_response(template='404.html', data={
+    return create_response(template='errors/404.html', data={
         'page_title': page_titles['page_not_found'],
         'form': form
     }), 404
@@ -51,7 +51,7 @@ def internal_server_error(e):
         response = jsonify({'error': 'internal server error'})
         response.status_code = 500
         return response
-    return create_response(template='500.html', data={
+    return create_response(template='errors/500.html', data={
         'page_title': page_titles['internal_server_error']
     }), 500
 

@@ -32,7 +32,7 @@ def dashboard_page():
     '''Генерирует панель модератора.'''
     data = get_data()
 
-    return create_response('mod_dashboard.html', data={
+    return create_response('moderator/mod_dashboard.html', data={
         'title_page': page_titles['dashboard_page'],
         'posts': data['posts'],
         'comments': data['comments'],
@@ -48,7 +48,7 @@ def posts_page():
     '''Генерирует страницу публикаций для модерации.'''
     data = get_data()
 
-    return create_response('mod_posts.html', data={
+    return create_response('moderator/mod_posts.html', data={
         'title_page': page_titles['posts_page'],
         'posts': data['posts'],
         'comments': data['comments'],
@@ -65,7 +65,7 @@ def post_page(id):
     post = Post.query.get_or_404(id)
     tags = post.tags.all()
 
-    return create_response(template='mod_post.html', data={
+    return create_response(template='moderator/mod_post.html', data={
         'title_page': page_titles['post_page'],
         'posts': data['posts'],
         'post': post,
@@ -85,7 +85,7 @@ def returnPost_page(id):
     form = AddNotice_form()
     post = Post.query.get_or_404(id)
 
-    return create_response(template='mod_noticePost_form.html', data={
+    return create_response(template='moderator/mod_noticePost_form.html', data={
         'title_page': page_titles['returnPost_page'],
         'form': form,
         'post': post,
@@ -103,7 +103,7 @@ def messages_page():
 
     print(data['messages'])
 
-    return create_response(template='mod_messages.html', data={
+    return create_response(template='moderator/mod_messages.html', data={
         'title_page': page_titles['messages_page'],
         'page': 'messages',
         'posts': data['posts'],

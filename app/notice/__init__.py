@@ -21,9 +21,7 @@ from ..utils import create_response, flash_errors, is_admin
 
 notice = Blueprint(
     name='notice', 
-    import_name=__name__,
-    static_folder='statics_notice',
-    template_folder='templates'
+    import_name=__name__
 )
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

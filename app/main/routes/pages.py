@@ -30,7 +30,7 @@ from .. import (
 @main.route('/')
 def home_page():
     '''Генерирует стартовую страницу.'''
-    return create_response(template='home.html', data={
+    return create_response(template='main/home.html', data={
         'page_title': page_titles['home_page'],
         'tags': Tag.query.all()[:5],
         'form': Search_form()
@@ -64,7 +64,7 @@ def searchResults_page(data):
     flash(category='success', 
         message='Показаны результаты по запросу: <br><b>{}</b>'.format(data))
 
-    return create_response(template='search_results.html', data={
+    return create_response(template='main/search_results.html', data={
         'page_title': page_titles['searchResults_page'],
         'page_posts': posts,
         'all_posts': Post.query.filter_by(state='public'),
@@ -87,7 +87,7 @@ def allTags_page():
     else:
         followed_posts = current_user.followed_posts.filter(Post.state=='public')
 
-    return create_response(template='all_tags.html', data={
+    return create_response(template='main/all_tags.html', data={
         'page_title': page_titles['allTags_page'],
         'tags': Tag.query.all(),
         'all_posts': Post.query.filter_by(state='public'),
@@ -107,7 +107,7 @@ def support_page():
     else:
         followed_posts = current_user.followed_posts.filter(Post.state=='public')
 
-    return create_response(template='support.html', data={
+    return create_response(template='main/support.html', data={
         'page_title': page_titles['support_page'],
         'form': form,
         'all_posts': Post.query.filter_by(state='public'),

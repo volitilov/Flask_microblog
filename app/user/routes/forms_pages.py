@@ -167,7 +167,7 @@ def editNotice_page():
     form.comment_moderated.data = user_settings.comment_moderated
     form.post_moderated.data = user_settings.post_moderated
 
-    return create_response(template='edit_notice.html', data={
+    return create_response(template='user/edit_notice.html', data={
         'page_title': page_titles['editNotice_page'],
         'page': 'edit_notice',
         'form': form

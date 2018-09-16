@@ -27,7 +27,7 @@ from .. import (
 @admin.route('/')
 @is_admin
 def dashboard_page():
-    return create_response(template='dashboard.html', data={
+    return create_response(template='admin/dashboard.html', data={
         'page': 'dashboard',
         'title_page': page_titles['dashboard_page']
     })
@@ -37,7 +37,7 @@ def dashboard_page():
 @is_admin
 def adminRoles_page():
     roles = Role.query.all()
-    return create_response(template='adminRoles.html', data={
+    return create_response(template='admin/adminRoles.html', data={
         'page': 'roles',
         'roles': roles,
         'title_page': page_titles['adminRoles_page']
@@ -48,7 +48,7 @@ def adminRoles_page():
 @is_admin
 def adminRoleUsers_page(role):
     role = Role.query.filter_by(name=role).first()
-    return create_response(template='adminRoleUsers.html', data={
+    return create_response(template='admin/adminRoleUsers.html', data={
         'users': role.users,
         'title_page': page_titles['adminRoleUsers_page']
     })
@@ -64,7 +64,7 @@ def adminNotice_page():
     pagination = notice.paginate(
         page, per_page=count_items, error_out=False)
 
-    return create_response(template='adminNotice.html', data={
+    return create_response(template='admin/adminNotice.html', data={
         'page': 'notice',
         'all_notice': notice,
         'pagination': pagination,
@@ -85,7 +85,7 @@ def adminUsers_page():
     pagination = users.paginate(
         page, per_page=count_items, error_out=False)
 
-    return create_response(template='adminUsers.html', data={
+    return create_response(template='admin/adminUsers.html', data={
         'page': 'users',
         'all_users': users,
         'pagination': pagination,
@@ -106,7 +106,7 @@ def adminPosts_page():
     pagination = posts.paginate(
         page, per_page=count_items, error_out=False)
 
-    return create_response(template='adminPosts.html', data={
+    return create_response(template='admin/adminPosts.html', data={
         'page': 'posts',
         'all_posts': posts,
         'pagination': pagination,
@@ -127,7 +127,7 @@ def adminComments_page():
     pagination = comments.paginate(
         page, per_page=count_items, error_out=False)
 
-    return create_response(template='adminComments.html', data={
+    return create_response(template='admin/adminComments.html', data={
         'page': 'comments',
         'all_comments': comments,
         'pagination': pagination,
@@ -148,7 +148,7 @@ def adminTags_page():
     pagination = tags.paginate(
         page, per_page=count_items, error_out=False)
 
-    return create_response(template='adminTags.html', data={
+    return create_response(template='admin/adminTags.html', data={
         'page': 'tags',
         'all_tags': tags,
         'pagination': pagination,

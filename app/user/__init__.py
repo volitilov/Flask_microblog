@@ -27,9 +27,7 @@ from .data import page_titles
 
 user = Blueprint(
     name='user', 
-    import_name=__name__,
-    static_folder='statics_user',
-    template_folder='templates'
+    import_name=__name__
 )
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

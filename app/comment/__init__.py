@@ -21,9 +21,7 @@ from .forms import AddComment_form
 
 comment = Blueprint(
     name='comment', 
-    import_name=__name__, 
-    static_folder='statics_comments',
-    template_folder='templates'
+    import_name=__name__
 )
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

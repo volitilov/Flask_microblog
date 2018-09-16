@@ -54,20 +54,15 @@ class Config:
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024
 
     APP_MAIL_SENDER = 'volitilov@gmail.com'
-    APP_ADMIN = os.environ.get('APP_ADMIN', default='volitilov@gmail.com') 
-    APP_MODERATOR = os.environ.get('APP_MODERATOR', default='volitilov@gmail.com')
+    APP_ADMIN = os.environ.get('APP_ADMIN') 
+    APP_MODERATOR = os.environ.get('APP_MODERATOR')
 
-    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_SERVER = 'smtp.mail.ru'
     MAIL_PORT = 465
-    MAIL_USERNAME = os.environ.get('MAIL_USERNAME', default='test')
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', default='test123')
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     MAIL_USE_SSL = True
     MAIL_DEFAULT_SENDER = MAIL_USERNAME
-
-    VK_APP_SECRET_KEY = os.environ.get('VK_APP_SECRET_KEY', default='')
-    VK_APP_ID = os.environ.get('VK_APP_ID', default='')
-    VK_VERSION = '5.52'
-    VK_AUTHORIZATION_URL = 'https://oauth.vk.com/authorize'
 
     @staticmethod
     def init_app(app): pass

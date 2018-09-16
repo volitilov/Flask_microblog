@@ -49,7 +49,7 @@ def adminReturnComment_page(username, id):
         com = i.comments.filter_by(state='moderation')
         comments.extend(com)
 
-    return create_response(template='admin/noticeComment_form.html', data={
+    return create_response(template='user/admin/noticeComment_form.html', data={
         'title_page': page_titles['adminReturnComment_page'],
         'form': form,
         'comment': comment,
@@ -66,7 +66,7 @@ def changeEmail_page():
     form = ChangeEmail_form()
     form.email.data = current_user.email
 
-    return create_response(template='change_email.html', data={
+    return create_response(template='user/change_email.html', data={
         'page_title': page_titles['changeEmail_page'],
         'form': form
     })
@@ -79,7 +79,7 @@ def changePassword_page():
     '''Генерирует и обрабатывает страницу изменения пароля'''
     form = ChangePassword_form()
 
-    return create_response(template='change_password.html', data={
+    return create_response(template='user/change_password.html', data={
         'page_title': page_titles['changePassword_page'],
         'form': form
     })
@@ -93,7 +93,7 @@ def changeLogin_page():
     form = ChangeLogin_form()
     form.name.data = current_user.name
 
-    return create_response(template='change_login.html', data={
+    return create_response(template='user/change_login.html', data={
         'page_title': page_titles['changeLogin_page'],
         'form': form
     })
@@ -111,7 +111,7 @@ def editProfile_page():
     form.about.data = current_user.about_me
     form.location.data = current_user.location
     
-    return create_response(template='edit_profile.html', data={
+    return create_response(template='user/edit_profile.html', data={
         'page_title': page_titles['editProfile_page'],
         'page': 'edit_profile',
         'form': form
@@ -131,7 +131,7 @@ def profile_page(username):
             posts = user.posts.filter(Post.state!='moderation')
             comments = user.comments.filter(Comment.state!='moderation')
     
-    return create_response(template='profile.html', data={
+    return create_response(template='user/profile.html', data={
         'page_title': page_titles['profile_page'],
         'page': 'profile',
         'user': user,
@@ -145,7 +145,7 @@ def profile_page(username):
 @login_required
 def editAccount_page():
     '''Генерирует страницу редактирования аккаунта.'''
-    return create_response(template='edit_account.html', data={
+    return create_response(template='user/edit_account.html', data={
         'page_title': page_titles['editAccount_page'],
         'page': 'edit_account'
     })
@@ -176,7 +176,7 @@ def followers_page(username):
     follows = [{'user': item.follower, 'timestamp': item.timestamp} 
                 for item in pagination.items] 
 
-    return create_response(template='followers.html', data={
+    return create_response(template='user/followers.html', data={
         'page_title': page_titles['followers_page'],
         'page': 'followers',
         'user': user,
@@ -216,7 +216,7 @@ def followedBy_page(username):
     follows = [{'user': item.followed, 'timestamp': item.timestamp} 
                 for item in pagination.items]
 
-    return create_response(template='followers.html', data={
+    return create_response(template='user/followers.html', data={
         'page_title': page_titles['followedBy_page'],
         'page': 'followed',
         'user': user,
@@ -247,7 +247,7 @@ def adminDashboard_page(username):
 
     user = User.query.filter_by(name=username).first()
 
-    return create_response(template='admin/dashboard.html', data={
+    return create_response(template='user/admin/dashboard.html', data={
         'title_page': page_titles['adminDashboard_page'],
         'page': 'dashboard',
         'comments': comments,
@@ -271,7 +271,7 @@ def adminComments_page(username):
     
     posts = Post.query.filter_by(state='moderation')
     
-    return create_response(template='admin/comments.html', data={
+    return create_response(template='user/admin/comments.html', data={
         'title_page': page_titles['adminComments_page'],
         'page': 'comments',
         'comments': comments,
@@ -308,7 +308,7 @@ def adminComment_page(username, id):
             'state_body': state_body
         })
     else:
-        return create_response(template='admin/comment.html', data={
+        return create_response(template='user/admin/comment.html', data={
             'title_page': page_titles['adminComment_page'],
             'comment': comment,
             'comments': comments,

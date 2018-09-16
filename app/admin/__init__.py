@@ -20,9 +20,7 @@ from ..utils import create_response, is_admin
 
 admin = Blueprint(
     name='admin',
-    import_name=__name__, 
-    static_folder='statics_admin',
-    template_folder='templates',
+    import_name=__name__,
     url_prefix='/admin'
 )
 

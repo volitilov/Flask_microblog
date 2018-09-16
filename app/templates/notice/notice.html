@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% from 'macros/_pagination.html' import render_pagination %}
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/nav_user.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/notice.css') }}">
+{% endblock %}
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/scripts/close_notice.js') }}"></script>
+{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+    <div class="columns notice">
+        <aside class="one-fourth column my-3">
+            {% include 'components/_nav_user.html' %}
+        </aside>
+        <div class="three-fourths column">
+            {% if data.notice %}
+                <ul>
+                    {% for notice in data.notice %}
+                        <li class="Box my-3" id=notice_{{ notice.id }}>
+                            <div class="Box-body">
+                                <span class="close">&times;</span>
+                                <small class="date">
+                                    когда: <span>{{ notice.timestamp.strftime('%d.%m.%Y') }}</span>
+                                </small>
+                                {% if notice.body_html %}
+                                    {{ notice.body_html|safe }}
+                                {% else %}
+                                    {{ notice.body|safe }}
+                                {% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="Box mt-3 p-3">
+                    <p>На данный момент у вас нет уведомлений.</p>
+                    <p>Может вы забыли что-то включить в <a href="{{ url_for('user.editNotice_page') }}">настройках</a>?</p>
+                </div>
+            {% endif %}
+            {% if data.notice_count > data.notice_per_page %}
+                {{ render_pagination(data.pagination, data.endpoint) }}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

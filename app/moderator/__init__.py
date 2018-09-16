@@ -24,9 +24,7 @@ from ..utils import create_response, flash_errors, is_moderator
 
 moderator = Blueprint(
     name='moderator', 
-    import_name=__name__,
-    static_folder='statics_moderator',
-    template_folder='templates' 
+    import_name=__name__
 )
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

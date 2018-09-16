@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% from 'macros/_formhelpers.html' import render_field %}
+{% block style %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/page_errors.css') }}">
+{% endblock %}
+{% block scripts %}
+	<script src="{{ url_for('static', filename='js/scripts/ajax_form.js') }}"></script>
+{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+	<section class="page_errors mt-3">
+		<div class="blankslate">
+			<h1>404 ошибка</h1>
+			<h4>Страница не найдена</h4>
+			<hr>
+			<h5>Отчего возникает ошибка 404?</h5>
+			<p>
+				В основном, ошибка 404 (Not Found, документ не найден) связана с тем, 
+				что пользователь неправильно вводит URL ссылки на файл расположенный на 
+				сайте, или этого файла не существует.
+			</p>
+			<hr><br>
+			<p>Попробуйте найти схожий контент</p>
+			<form class="mt-4" action="{{ url_for('main.searchForm_req') }}" method="POST">
+				{{ data.form.csrf_token }}
+				{{ render_field(data.form.q, placeholder='Найти публикацию', class="form-control") }}
+				<button class="btn" type="submit">Найти</button>
+			</form>
+		</div>
+	</section>
+{% endblock %}

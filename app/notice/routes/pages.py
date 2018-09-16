@@ -39,7 +39,7 @@ def notice_page():
     pagination = notice.order_by(Notice.timestamp.desc()).paginate(
         page, per_page=count_items, error_out=False)
 
-    return create_response(template='notice.html', data={
+    return create_response(template='notice/notice.html', data={
         'page_title': page_titles['notice_page'],
         'notice': pagination.items,
         'posts': posts,
@@ -58,7 +58,7 @@ def notice_page():
 def addNotice_page():
     form = AddNotice_form()
 
-    return create_response(template='add_notice.html', data={
+    return create_response(template='notice/add_notice.html', data={
         'page_title': page_titles['addNotice_page'],
         'form': form,
     })

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% from 'macros/_pagination.html' import render_pagination %}
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/follow.css') }}">
+{% endblock %}
+{% block scripts %}{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+    <div class="columns mt-3">
+        <aside class="one-fourth column">
+            {% include 'admin/_nav_panell.html' %}
+        </aside>
+        <div class="three-fourths column">
+            <div class="Box follow mb-3">
+                {% for user in data.page_users %}
+                    <div class="Box-row">
+                        <a class="user-avatar" href="#">
+                            <span><img class="Avatar" src="{{ user.gravatar(size=32) }}"></span>
+                            <span>{{ user.name }}</span>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+            {% if data.all_users.count() > data.count_items %}
+                {{ render_pagination(data.pagination, data.endpoint) }}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

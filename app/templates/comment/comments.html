@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/nav_user.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/comment.css') }}">
+{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+    <div class="columns">
+        <aside class="one-fourth column my-3">
+            {% include 'components/_nav_user.html' %}
+        </aside>
+        <div class="three-fourths column">
+            {% if data.comments %}
+                <ul>
+                    {% for comment in data.comments %}
+                        {% include 'comment/_comment_small.html' %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% if data.comments.count() == 0 %}
+                <div class="Box mt-3 p-3">
+                    <p>На данный момент пользователь не оставил ни одного комментария.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

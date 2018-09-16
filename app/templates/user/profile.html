@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/nav_user.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/profile.css') }}">
+{% endblock %}
+{% block scripts %}
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
+    {{ moment.lang('ru') }}
+{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+    <section class="columns mt-3">
+        <aside class="one-fourth column">
+            {% include 'components/_nav_user.html' %}
+        </aside>
+        <div class="three-fourths column">
+            <article class="Box profile">
+                <div class="Box-header">
+                    <small>Профиль пользователя</small>
+                </div>
+                <div class="Box-body">
+                    {% if data.user.photo_url %}
+                        <a class="user-avatar">
+                            <span><img src="{{ url_for('uploads', filename=data.user.photo_url) }}" alt="Аватар"></span>
+                            <span>{{ data.user.name }}</span>
+                        </a>
+                    {% else %}
+                        <a class="user-avatar">
+                            <span><img src="{{ data.user.gravatar(size=50) }}" alt="Аватар"></span>
+                            <span>{{ data.user.name }}</span>
+                        </a>
+                    {% endif %}
+                    {% if data.user.first_name or data.user.last_name %}
+                        <h4>{{ data.user.first_name }} {{ data.user.last_name }}</h4>
+                    {% endif %}
+                    <p>
+                        <small class="date">Зарегестрирован: <span>{{ data.user.date_registration.strftime('%d.%m.%Y в %H:%M:%S') }}</span></small>
+                        <br>
+                        {% if data.user.last_visit %}
+                            <span class="text-gray">Последнее посещение:</span>
+                            <small>{{ moment(data.user.last_visit).fromNow() }}</small>
+                        {% endif %}
+                    </p>
+                    <br>
+                    <span class="text-gray">Рейтинг автора: <b>{{ data.user.rating }}</b></span>
+                    <hr>
+                    <p><b>Обо мне:</b></p>
+                    <div class="about">
+                        {% if data.user.about %}
+                            {% if data.user.about_me_html %}
+                                {{ data.user.about_me_html|safe }}
+                            {% else %}
+                                {{ data.user.about_me|safe }}
+                            {% endif %}
+                        {% else %}
+                            <p>Пока не могу про себя нечего разказать.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+{% endblock %}

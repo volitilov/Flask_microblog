@@ -21,9 +21,7 @@ from .data import get_posts, page_titles
 
 post = Blueprint(
     name='post', 
-    import_name=__name__,
-    static_folder='statics_post',
-    template_folder='templates'
+    import_name=__name__
 )
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

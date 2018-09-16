@@ -53,7 +53,7 @@ def editPost_page(id):
         tags.append(rel_tag.tag.name)
     form.tags.data = ', '.join(tags)
 
-    return create_response(template='edit_post.html', data={
+    return create_response(template='post/edit_post.html', data={
         'page_title': page_titles['editPost_page'],
         'form': form,
         'post': post,
@@ -72,7 +72,7 @@ def addPost_page():
         return redirect('/posts/63')
     data = get_posts()
     form = AddPost_form()
-    return create_response(template='add_post.html', data={
+    return create_response(template='post/add_post.html', data={
         'page_title': page_titles['addPost_page'],
         'form': form,
         'all_posts': data['all_posts'],
@@ -91,7 +91,7 @@ def posts_page():
     pagination = posts.paginate(
         page, per_page=count_items, error_out=False)
 
-    return create_response(template='posts.html', data={
+    return create_response(template='post/posts.html', data={
         'page_title': page_titles['posts_page'],
         'pagination': pagination,
         'all_posts': posts,
@@ -116,7 +116,7 @@ def followedPosts_page():
     pagination = data['followed_posts'].order_by(Post.data_creation.desc()).paginate(
         page, per_page=count_items, error_out=False)
 
-    return create_response(template='posts.html', data={
+    return create_response(template='post/posts.html', data={
         'page_title': page_titles['followedPosts_page'],
         'pagination': pagination,
         'page_posts': pagination.items,
@@ -146,7 +146,7 @@ def userPosts_page(username):
     pagination = posts.order_by(Post.data_creation.desc()).paginate(
         page, per_page=count_items, error_out=False)
 
-    return create_response(template='user_posts.html', data={
+    return create_response(template='post/user_posts.html', data={
         'page_title': page_titles['userPosts_page'],
         'page': 'user_posts',
         'page_posts': pagination.items,
@@ -187,7 +187,7 @@ def tagPosts_page(id):
 
     print(data['all_posts'].count() > count_items)
 
-    return create_response(template='posts.html', data={
+    return create_response(template='post/posts.html', data={
         'page_title': page_titles['tagPosts_page'],
         'page_posts': tag_posts,
         'pagination': pagination,
@@ -225,7 +225,7 @@ def post_page(id):
 
     if post.state == 'public' or post.state == 'develop' \
         and post.author == current_user:
-        return create_response(template='post.html', data={
+        return create_response(template='post/post.html', data={
             'page_title': post.title,
             'post': post,
             'comments': post.comments.filter(Comment.state=='public'),
@@ -240,7 +240,7 @@ def post_page(id):
     if post.state == 'develop':
         state_body = 'Находится на доработке'
     if post.state != 'public':
-        return create_response(template='state.html', data={
+        return create_response(template='post/state.html', data={
             'page_title': 'Стадия контента',
             'state_title': 'Пост',
             'state_body': state_body,
@@ -261,7 +261,7 @@ def byViewingPosts_page():
     pagination = posts.paginate(page, 
         per_page=count_items, error_out=False)
 
-    return create_response(template='posts.html', data={
+    return create_response(template='post/posts.html', data={
         'page_title': page_titles['byViewingPosts_page'],
         'page': 'post_views',
         'page_posts': pagination.items,
@@ -285,7 +285,7 @@ def byRatingPosts_page():
     pagination = posts.paginate(page, 
         per_page=count_items, error_out=False)
 
-    return create_response(template='posts.html', data={
+    return create_response(template='post/posts.html', data={
         'page_title': page_titles['byRatingPosts_page'],
         'page': 'post_ratings',
         'page_posts': pagination.items,

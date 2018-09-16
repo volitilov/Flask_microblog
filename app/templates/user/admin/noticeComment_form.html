@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% from 'macros/_formhelpers.html' import render_field %}
+{% block scripts %}
+	<script src="{{ url_for('static', filename='js/scripts/ajax_form.js') }}"></script>
+{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+<section class="columns mt-3">
+	<aside class="one-fourth column">
+		{% include 'user/admin/_nav_panell.html' %}
+	</aside>
+	<div class="three-fourths column">
+		<div class="Box">
+			<div class="Box-header">
+				<small>Форма добавления уведомления</small>
+			</div>
+			<div class="Box-body">
+				<p>Комментарий: <a href="{{ url_for('user.adminComment_page', username=current_user.name, id=data.comment.id) }}">комментарий</a></p>
+				<p>Автор: <a href="{{ url_for('user.profile_page', username=data.comment.author.name) }}">{{ data.comment.author.name }}</a></p>
+				<hr>
+                <form action="{{ url_for('user.adminReturnCommentForm_req', username=current_user.name, id=data.comment.id) }}" method="POST">
+					{{ data.form.csrf_token }}
+					<p class="note">
+						Напишите о причине возврата, чтобы он смог доработать свой комментарий.
+					</p>
+                    {{ render_field(data.form.body, rows=10, cols=60, class="form-control") }}
+					<button class="btn btn-sm btn-primary" type="submit">Отправить</button>
+					<a href="javascript:history.go(-1)" class="btn btn-sm" role="button">Отмена</a>
+                </form>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}

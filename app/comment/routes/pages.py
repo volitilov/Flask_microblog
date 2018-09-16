@@ -38,7 +38,7 @@ def comments_page(username):
 
     comments = data['comments'].order_by(Comment.timestamp.desc())
 
-    return create_response(template='comments.html', data={
+    return create_response(template='comment/comments.html', data={
         'page_title': page_titles['comments_page'],
         'page': 'comments',
         'comments': comments,
@@ -57,7 +57,7 @@ def comment_page(id):
 
     if comment.state == 'public' or comment.state == 'develop' \
         and user == current_user:
-            return create_response(template='comment.html', data={
+            return create_response(template='comment/comment.html', data={
                 'page_title': page_titles['comment_page'],
                 'comment': comment,
                 'posts': data['posts'],
@@ -70,7 +70,7 @@ def comment_page(id):
     if comment.state == 'develop':
         state_body = 'Находится на доработке'
     if comment.state != 'public':
-        return create_response(template='state.html', data={
+        return create_response(template='comment/state.html', data={
             'page_title': 'Стадия контента',
             'state_title': 'Комментарий',
             'all_posts': data['posts'],
@@ -85,7 +85,7 @@ def comment_page(id):
 def addComment_page(id):
     '''Генерирует страницу для добавления комментария'''
     form = AddComment_form()
-    return create_response(template='add_comment.html', data={
+    return create_response(template='comment/add_comment.html', data={
         'page_title': page_titles['addComment_page'],
         'post': Post.query.get_or_404(id),
         'all_posts': Post.query.filter_by(state='public'),
@@ -114,7 +114,7 @@ def editComment_page(comment_id):
                 id=comment.id))
         
         form.body.data = comment.body
-        return create_response(template='edit_comment.html', data={
+        return create_response(template='comment/edit_comment.html', data={
             'page_title': page_titles['editComment_page'],
             'form': form,
             'comment': comment,

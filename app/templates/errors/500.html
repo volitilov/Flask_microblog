@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% from 'macros/_formhelpers.html' import render_field %}
+{% block style %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/page_errors.css') }}">
+{% endblock %}
+
+<!-- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+{% block content %}
+	<section class="page_errors mt-3">
+		<div class="blankslate">
+			<h1>500 ошибка</h1>
+			<h4>Внутренняя ошибка сервера</h4>
+		</div>
+	</section>
+{% endblock %}

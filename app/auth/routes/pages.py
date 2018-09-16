@@ -30,7 +30,7 @@ def unconfirmed_page():
 	'''Генерирует страницу с предложением потвердить свою учетную запись'''
 	if current_user.is_anonymous or current_user.confirmed:
 		return redirect(url_for('main.home_page'))
-	return create_response(template='unconfirmed.html', data={
+	return create_response(template='auth/unconfirmed.html', data={
 		'page_title': page_titles['unconfirmed_page']
 	})
 
@@ -42,7 +42,7 @@ def login_page():
         return redirect(url_for('main.home_page'))
         
     form = Login_form()
-    return create_response(template='login.html', data={
+    return create_response(template='auth/login.html', data={
         'form': form,
         'page_title': page_titles['login_page']
     })
@@ -53,7 +53,7 @@ def login_page():
 def registration_page():
     '''Генерирует страницу регистрации'''
     form = Registration_form()
-    return create_response(template='registr.html', data={
+    return create_response(template='auth/registr.html', data={
         'form': form,
         'page_title': page_titles['registration_page']
     })
@@ -64,7 +64,7 @@ def registration_page():
 def resetPassword_page():
     '''Генерирует страницу запроса для сброса пароля'''
     form = PasswordResetRequest_form()
-    return create_response(template='reset_password_request.html', data={
+    return create_response(template='auth/reset_password_request.html', data={
         'page_title': page_titles['resetPassword_page'],
         'form': form
     })
@@ -75,7 +75,7 @@ def resetPassword_page():
 def passwordReset_page(token):
     '''Обрабатывает запрос на изменения пароля'''
     form = PasswordReset_form()
-    return create_response(template='reset_password.html', data={
+    return create_response(template='auth/reset_password.html', data={
         'page_title': page_titles['passwordReset_page'],
         'form': form,
 		'token': token
